@@ -157,7 +157,7 @@ dependencies = [
 [[package]]
 name = "prost"
 version = "0.9.0"
-source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#cfed201ce4b043ced669555f0fdf73b4117f22d9"
+source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#fa391b21059cac21186e4c0f9d558a9a1fe6b16a"
 dependencies = [
  "bytes",
  "prost-derive",
@@ -166,7 +166,7 @@ dependencies = [
 [[package]]
 name = "prost-build"
 version = "0.9.1"
-source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#cfed201ce4b043ced669555f0fdf73b4117f22d9"
+source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#fa391b21059cac21186e4c0f9d558a9a1fe6b16a"
 dependencies = [
  "bytes",
  "heck",
@@ -185,7 +185,7 @@ dependencies = [
 [[package]]
 name = "prost-derive"
 version = "0.9.0"
-source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#cfed201ce4b043ced669555f0fdf73b4117f22d9"
+source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#fa391b21059cac21186e4c0f9d558a9a1fe6b16a"
 dependencies = [
  "anyhow",
  "itertools",
@@ -197,7 +197,7 @@ dependencies = [
 [[package]]
 name = "prost-types"
 version = "0.9.0"
-source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#cfed201ce4b043ced669555f0fdf73b4117f22d9"
+source = "git+https://github.com/neoeinstein/prost.git?branch=protoc-gen-prost#fa391b21059cac21186e4c0f9d558a9a1fe6b16a"
 dependencies = [
  "bytes",
  "prost",
@@ -225,9 +225,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.2.10"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8383f39639269cde97d255a32bdb68c047337295414940c68bdd30c2e13203ff"
+checksum = "8380fe0152551244f0747b1bf41737e0f8a74f97a14ccefd1148187271634f3c"
 dependencies = [
  "bitflags",
 ]

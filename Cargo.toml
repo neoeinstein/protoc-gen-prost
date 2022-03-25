@@ -10,6 +10,13 @@ edition = "2021"
 
 [dependencies]
 heck = "0.4.0"
-prost-build = { version = "0.9.1", git = "https://github.com/tokio-rs/prost", branch = "master", default-features = false }
-prost-types = { version = "0.9.0", git = "https://github.com/tokio-rs/prost", branch = "master", default-features = false }
-prost = { version = "0.9.0", git = "https://github.com/tokio-rs/prost", branch = "master", default-features = false }
+prost-build = { version = "0.9.1", default-features = false }
+prost-types = { version = "0.9.0", default-features = false }
+prost = { version = "0.9.0", default-features = false }
+pbjson-build = "0.2.3"
+
+[patch.crates-io]
+prost-build = { git = "https://github.com/tokio-rs/prost", branch = "master" }
+prost-types = { git = "https://github.com/tokio-rs/prost", branch = "master" }
+prost = { git = "https://github.com/tokio-rs/prost", branch = "master" }
+pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }

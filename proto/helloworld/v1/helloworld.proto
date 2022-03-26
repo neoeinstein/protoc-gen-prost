@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package helloworld.v1;
 
+import "google/protobuf/duration.proto";
+
 enum Politeness {
     POLITENESS_UNSPECIFIED = 0;
     POLITENESS_RUDE = 1;
@@ -12,4 +14,5 @@ enum Politeness {
 message HelloWorld {
     string name = 1;
     Politeness politeness = 2;
+    google.protobuf.Duration duration = 3;
 }

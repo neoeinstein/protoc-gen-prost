@@ -1,0 +1,7 @@
+version: v1
+plugins:
+  - name: prost
+    out: gen
+    path: ../target/debug/protoc-gen-prost
+    opt:
+      - bytes=.

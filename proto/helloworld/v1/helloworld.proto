@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package helloworld.v1;
+
+enum Politeness {
+    POLITENESS_UNSPECIFIED = 0;
+    POLITENESS_RUDE = 1;
+    POLITENESS_POLITE = 2;
+    POLITENESS_TOO_NICE = 3;
+}
+
+message HelloWorld {
+    string name = 1;
+    Politeness politeness = 2;
+}

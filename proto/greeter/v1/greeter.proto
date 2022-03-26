@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package greeter.v1;
+
+import "helloworld/v1/helloworld.proto";
+
+message GreeterRequest {
+    oneof greeting {
+        helloworld.v1.HelloWorld hello_world = 1;
+    }
+}

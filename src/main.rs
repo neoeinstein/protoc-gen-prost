@@ -16,11 +16,6 @@ fn main() -> Result<()> {
         )
     })?;
 
-    dbg!(&request.proto_file.len());
-    dbg!(&request.file_to_generate);
-    dbg!(&request.compiler_version);
-    dbg!(&request.parameter);
-
     let result = match request.parameter().parse::<Parameters>() {
         Ok(params) => params.run(request.file_to_generate, request.proto_file),
         Err(err) => Err(io::Error::new(io::ErrorKind::InvalidInput, err)),

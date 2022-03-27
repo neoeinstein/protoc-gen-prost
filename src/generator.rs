@@ -6,9 +6,13 @@ use std::ops::DerefMut;
 use prost_types::compiler::code_generator_response::{Feature, File};
 use prost_types::compiler::CodeGeneratorResponse;
 
-pub mod core;
-pub mod file_descriptor_set;
-pub mod include_file;
+mod core;
+mod file_descriptor_set;
+mod include_file;
+
+pub use self::core::CoreProstGenerator;
+pub use self::file_descriptor_set::FileDescriptorSetGenerator;
+pub use self::include_file::IncludeFileGenerator;
 
 /// A code generation result
 pub type Result = std::result::Result<Vec<File>, Error>;

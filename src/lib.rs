@@ -1,14 +1,46 @@
 #![doc = include_str!("../README.md")]
 
+use self::generator::{
+    CoreProstGenerator, FileDescriptorSetGenerator, Generator, IncludeFileGenerator,
+};
 use once_cell::sync::Lazy;
 use prost::Message;
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
+use prost_types::compiler::CodeGeneratorRequest;
 use prost_types::FileDescriptorProto;
 use std::collections::{BTreeMap, HashSet};
 use std::{cmp, fmt, str};
 
-pub mod generators;
+pub mod generator;
+
+/// Execute the core _Prost!_ generator from a raw [`CodeGeneratorRequest`]
+pub fn execute(raw_request: &[u8]) -> generator::Result {
+    let request = CodeGeneratorRequest::decode(raw_request)?;
+    let params = request.parameter().parse::<Parameters>()?;
+
+    let module_request_set = ModuleRequestSet::new(
+        request.file_to_generate,
+        request.proto_file,
+        raw_request,
+        params.prost.default_package_filename(),
+    )?;
+
+    let generators: Vec<Box<dyn Generator>> = if let Some(include_file) = params.include_file {
+        let gen = IncludeFileGenerator::new(include_file);
+
+        vec![Box::new(gen)]
+    } else {
+        let core = CoreProstGenerator::new(params.prost.to_prost_config());
+        let fds = FileDescriptorSetGenerator;
+
+        vec![Box::new(core), Box::new(fds)]
+    };
+
+    let files = generators.into_iter().generate(&module_request_set)?;
+
+    Ok(files)
+}
 
 /// A set of requests to generate code for a series of modules
 pub struct ModuleRequestSet {

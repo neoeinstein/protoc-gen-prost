@@ -1,4 +1,4 @@
-use crate::generators::{Generator, Result};
+use crate::generator::{Generator, Result};
 use crate::ModuleRequestSet;
 use once_cell::sync::Lazy;
 use prost_build::Module;

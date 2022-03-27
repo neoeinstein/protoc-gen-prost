@@ -1,4 +1,4 @@
-use crate::generators::Generator;
+use crate::generator::Generator;
 use crate::ModuleRequestSet;
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;

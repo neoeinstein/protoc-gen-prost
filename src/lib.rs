@@ -5,11 +5,9 @@ use prost_build::Module;
 use prost_types::compiler::{code_generator_response, CodeGeneratorResponse};
 use prost_types::FileDescriptorProto;
 use std::collections::{BTreeMap, HashSet};
-use std::fmt::Write;
 use std::{cmp, fmt, str};
 
 pub mod generators;
-pub mod util;
 
 /// A set of requests to generate code for a series of modules
 pub struct ModuleRequestSet {
@@ -408,7 +406,7 @@ impl fmt::Display for OrderableModule {
             f.write_str(first)?;
         }
         for part in parts {
-            f.write_char('.')?;
+            f.write_str("::")?;
             f.write_str(part)?;
         }
         Ok(())

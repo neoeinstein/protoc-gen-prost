@@ -192,7 +192,6 @@ dependencies = [
 name = "protoc-gen-prost"
 version = "0.1.1"
 dependencies = [
- "heck",
  "prost",
  "prost-build",
  "prost-types",

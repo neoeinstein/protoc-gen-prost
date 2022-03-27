@@ -1,5 +1,5 @@
 use crate::generators::{Generator, Result};
-use crate::{util, ModuleRequestSet};
+use crate::ModuleRequestSet;
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
 
@@ -38,7 +38,7 @@ impl Generator for IncludeFileGenerator {
                 for module_part in module.parts().skip(prefix) {
                     content.push_str(&indent);
                     content.push_str("pub mod ");
-                    content.push_str(&util::package_part_to_rust_module_name(module_part));
+                    content.push_str(module_part);
                     content.push_str(" {\n");
                     indent.push_str("    ");
                 }

@@ -2,10 +2,15 @@
 name = "protoc-gen-prost"
 version = "0.1.1"
 authors = ["Marcus Griep <marcus@griep.us>"]
-description = "Coming soon…"
+description = "Protocol Buffers compiler plugin powered by Prost!"
+repository = "https://github.com/neoeinstein/protoc-gen-prost"
+homepage = "https://github.com/neoeinstein/protoc-gen-prost"
+documentation = "https://docs.rs/protoc-gen-prost"
 license = "Apache-2.0"
 edition = "2021"
 readme = "README.md"
+keywords = ["protobuf", "serialization", "prost"]
+categories = ["encoding"]
 exclude = [
     "proto"
 ]

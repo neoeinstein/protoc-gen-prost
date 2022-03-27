@@ -121,3 +121,22 @@ Within the include file:
 
 * `<proto_package>`: Appends to the module defined for this package
 
+Here is an example for _buf_ using the [`protoc-gen-prost-serde`] plugin:
+
+[`protoc-gen-prost-serde`]: https://github.com/neoeinstein/protoc-gen-prost-serde
+
+```yaml
+version: v1
+plugins:
+  - name: prost
+    out: gen
+    opt:
+      - include_file
+  - name: prost
+    out: gen
+    opt:
+      - bytes=.
+      - file_descriptor_set
+  - name: prost-serde
+    out: gen
+```

@@ -3,7 +3,7 @@
 use once_cell::sync::Lazy;
 use prost::Message;
 use prost_build::Module;
-use prost_types::compiler::{code_generator_response, CodeGeneratorResponse};
+use prost_types::compiler::code_generator_response::File;
 use prost_types::FileDescriptorProto;
 use std::collections::{BTreeMap, HashSet};
 use std::{cmp, fmt, str};
@@ -133,15 +133,12 @@ impl ModuleRequest {
     }
 
     /// Creates a code generation file from the output
-    pub(crate) fn write_to_file<F: FnOnce(&mut String)>(
-        &self,
-        f: F,
-    ) -> Option<code_generator_response::File> {
+    pub(crate) fn write_to_file<F: FnOnce(&mut String)>(&self, f: F) -> Option<File> {
         self.output_filename.as_deref().map(|name| {
             let mut content = String::new();
             f(&mut content);
 
-            code_generator_response::File {
+            File {
                 name: Some(name.to_owned()),
                 content: Some(content),
                 ..Default::default()
@@ -153,15 +150,12 @@ impl ModuleRequest {
     ///
     /// This is generally a good way to add includes referencing the output
     /// of other plugins or to directly append to the main file.
-    pub fn append_to_file<F: FnOnce(&mut String)>(
-        &self,
-        f: F,
-    ) -> Option<code_generator_response::File> {
+    pub fn append_to_file<F: FnOnce(&mut String)>(&self, f: F) -> Option<File> {
         self.output_filename.as_deref().map(|name| {
             let mut content = String::new();
             f(&mut content);
 
-            code_generator_response::File {
+            File {
                 name: Some(name.to_owned()),
                 content: Some(content),
                 insertion_point: Some("module".to_owned()),
@@ -333,24 +327,6 @@ impl fmt::Display for InvalidParameter {
 }
 
 impl std::error::Error for InvalidParameter {}
-
-/// Extension trait for unwraping an error into a [`CodeGeneratorResponse`]
-pub trait CodeGeneratorResult {
-    /// Unwraps the value into a code generator response
-    fn unwrap_into_response(self) -> CodeGeneratorResponse;
-}
-
-impl<E> CodeGeneratorResult for Result<CodeGeneratorResponse, E>
-where
-    E: fmt::Display,
-{
-    fn unwrap_into_response(self) -> CodeGeneratorResponse {
-        self.unwrap_or_else(|e| CodeGeneratorResponse {
-            error: Some(e.to_string()),
-            ..Default::default()
-        })
-    }
-}
 
 /// A wire-compatible reader of a [`CodeGeneratorRequest`]
 ///

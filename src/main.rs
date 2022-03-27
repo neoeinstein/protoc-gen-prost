@@ -1,17 +1,17 @@
 use prost::Message;
-use prost_types::compiler::{CodeGeneratorRequest, CodeGeneratorResponse};
+use prost_types::compiler::CodeGeneratorRequest;
 use protoc_gen_prost::generators::core::CoreProstGenerator;
 use protoc_gen_prost::generators::file_descriptor_set::FileDescriptorSetGenerator;
 use protoc_gen_prost::generators::include_file::IncludeFileGenerator;
-use protoc_gen_prost::generators::{Generator, GeneratorPipeline};
-use protoc_gen_prost::{CodeGeneratorResult, ModuleRequestSet, Parameters};
+use protoc_gen_prost::generators::{Generator, GeneratorResultExt};
+use protoc_gen_prost::{generators, ModuleRequestSet, Parameters};
 use std::io::{self, Read, Write};
 
 fn main() -> io::Result<()> {
     let mut buf = Vec::new();
     io::stdin().read_to_end(&mut buf)?;
 
-    let response = inner(buf.as_slice()).unwrap_into_response();
+    let response = inner(buf.as_slice()).unwrap_codegen_response();
 
     buf.clear();
     response.encode(&mut buf).expect("error encoding response");
@@ -20,9 +20,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-fn inner(
-    raw_request: &[u8],
-) -> Result<CodeGeneratorResponse, Box<dyn std::error::Error + Send + Sync + 'static>> {
+fn inner(raw_request: &[u8]) -> generators::Result {
     let request = CodeGeneratorRequest::decode(raw_request)?;
     let params = request.parameter().parse::<Parameters>()?;
 
@@ -44,9 +42,7 @@ fn inner(
         vec![Box::new(core), Box::new(fds)]
     };
 
-    let response = generators
-        .into_iter()
-        .collect_code_generator_response(&module_request_set);
+    let files = generators.into_iter().generate(&module_request_set)?;
 
-    Ok(response)
+    Ok(files)
 }

@@ -15,47 +15,50 @@ pub type Result = std::result::Result<Vec<File>, Error>;
 /// A code generation error
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
+/// Extension function to assist in converting [`Result`] into a [`CodeGeneratorResponse`]
+pub trait GeneratorResultExt {
+    /// Unwrap a [`Result`], producing the relevant [`CodeGeneratorResponse`]
+    fn unwrap_codegen_response(self) -> CodeGeneratorResponse;
+}
+
+impl GeneratorResultExt for Result {
+    fn unwrap_codegen_response(self) -> CodeGeneratorResponse {
+        match self {
+            Ok(file) => CodeGeneratorResponse {
+                file,
+                supported_features: Some(Feature::Proto3Optional as u64),
+                ..Default::default()
+            },
+            Err(error) => error_to_codegen_response(&*error),
+        }
+    }
+}
+
+fn error_to_codegen_response(error: &dyn std::error::Error) -> CodeGeneratorResponse {
+    CodeGeneratorResponse {
+        error: Some(error.to_string()),
+        supported_features: Some(Feature::Proto3Optional as u64),
+        ..Default::default()
+    }
+}
+
 /// A code generator
 pub trait Generator {
     /// Generate one or more files based on the input request
     fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result;
 }
 
-/// Extension trait for collecting code generation [`Result`]s into a [`CodeGeneratorResponse`]
-pub trait GeneratorPipeline {
-    /// Collect code generation results with the specified input request set
-    fn collect_code_generator_response(
-        &mut self,
-        module_request_set: &ModuleRequestSet,
-    ) -> CodeGeneratorResponse;
-}
-
-impl<I> GeneratorPipeline for I
+impl<I> Generator for I
 where
     I: Iterator,
     I::Item: DerefMut<Target = dyn Generator>,
 {
-    fn collect_code_generator_response(
-        &mut self,
-        module_request_set: &ModuleRequestSet,
-    ) -> CodeGeneratorResponse {
+    fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
         let mut file = Vec::new();
         for mut generator in self {
-            match generator.deref_mut().generate(module_request_set) {
-                Ok(generated) => file.extend(generated),
-                Err(err) => {
-                    return CodeGeneratorResponse {
-                        error: Some(err.to_string()),
-                        supported_features: Some(Feature::Proto3Optional as u64),
-                        ..Default::default()
-                    }
-                }
-            }
+            let generated = generator.deref_mut().generate(module_request_set)?;
+            file.extend(generated);
         }
-        CodeGeneratorResponse {
-            file,
-            supported_features: Some(Feature::Proto3Optional as u64),
-            ..Default::default()
-        }
+        Ok(file)
     }
 }

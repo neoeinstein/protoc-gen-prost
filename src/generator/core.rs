@@ -1,5 +1,4 @@
-use crate::generator::Generator;
-use crate::ModuleRequestSet;
+use crate::{Generator, ModuleRequestSet, Result};
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
 
@@ -8,7 +7,7 @@ pub struct CoreProstGenerator {
 }
 
 impl Generator for CoreProstGenerator {
-    fn generate(&mut self, module_request_set: &ModuleRequestSet) -> super::Result {
+    fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
         let prost_requests = module_request_set
             .requests()
             .flat_map(|(module, request)| {

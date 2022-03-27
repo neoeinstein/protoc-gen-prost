@@ -1,12 +1,11 @@
-use crate::generator::Generator;
-use crate::{ModuleRequest, ModuleRequestSet};
+use crate::{Generator, ModuleRequest, ModuleRequestSet, Result};
 use prost_types::compiler::code_generator_response::File;
 use std::fmt::Write;
 
 pub struct FileDescriptorSetGenerator;
 
 impl Generator for FileDescriptorSetGenerator {
-    fn generate(&mut self, module_request_set: &ModuleRequestSet) -> super::Result {
+    fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
         let files = module_request_set
             .requests()
             .filter_map(|(_, request)| Self::generate_one(request))

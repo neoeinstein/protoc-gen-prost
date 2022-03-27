@@ -201,20 +201,20 @@ impl ModuleRequest {
 ///
 /// [`Generator`]: crate::Generator
 #[derive(Debug, Default)]
-pub struct Parameters {
+struct Parameters {
     /// Prost parameters, used to generate [`prost_build::Config`]
-    pub prost: ProstParameters,
+    prost: ProstParameters,
 
     /// Whether a file descriptor set has been requested in each module
-    pub file_descriptor_set: bool,
+    file_descriptor_set: bool,
 
     /// Whether to generate an include file with an optional filename
-    pub include_file: Option<Option<String>>,
+    include_file: Option<Option<String>>,
 }
 
 /// Parameters used to configure the underlying Prost generator
 #[derive(Debug, Default)]
-pub struct ProstParameters {
+struct ProstParameters {
     btree_map: Vec<String>,
     bytes: Vec<String>,
     disable_comments: Vec<String>,
@@ -228,7 +228,7 @@ pub struct ProstParameters {
 
 impl ProstParameters {
     /// Builds a [`prost_build::Config`] from the parameters
-    pub fn to_prost_config(&self) -> prost_build::Config {
+    fn to_prost_config(&self) -> prost_build::Config {
         let mut config = prost_build::Config::new();
         config.btree_map(self.btree_map.iter());
         config.bytes(self.bytes.iter());
@@ -258,7 +258,7 @@ impl ProstParameters {
         config
     }
 
-    pub fn default_package_filename(&self) -> &str {
+    fn default_package_filename(&self) -> &str {
         self.default_package_filename.as_deref().unwrap_or("_")
     }
 
@@ -349,7 +349,7 @@ impl str::FromStr for Parameters {
 
 /// An invalid parameter
 #[derive(Debug)]
-pub struct InvalidParameter(String);
+struct InvalidParameter(String);
 
 impl fmt::Display for InvalidParameter {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

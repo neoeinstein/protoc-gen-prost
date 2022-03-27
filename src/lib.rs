@@ -14,7 +14,7 @@ mod generator;
 
 pub use self::generator::{Error, Generator, GeneratorResultExt, Result};
 
-/// Execute the core _Prost!_ generator from a raw [`CodeGeneratorRequest`]
+/// Execute the core _Prost!_ generator from an encoded [`CodeGeneratorRequest`]
 pub fn execute(raw_request: &[u8]) -> generator::Result {
     let request = CodeGeneratorRequest::decode(raw_request)?;
     let params = request.parameter().parse::<Parameters>()?;
@@ -199,7 +199,7 @@ impl ModuleRequest {
 
 /// Parameters use to configure [`Generator`]s built into `protoc-gen-prost`
 ///
-/// [`Generator`]: crate::generators::Generator
+/// [`Generator`]: crate::Generator
 #[derive(Debug, Default)]
 pub struct Parameters {
     /// Prost parameters, used to generate [`prost_build::Config`]

@@ -1,5 +1,6 @@
 #![doc = include_str!("../README.md")]
 
+use once_cell::sync::Lazy;
 use prost::Message;
 use prost_build::Module;
 use prost_types::compiler::{code_generator_response, CodeGeneratorResponse};
@@ -53,17 +54,17 @@ impl ModuleRequestSet {
             |mut acc, (proto, raw)| {
                 let module = Module::from_protobuf_package_name(proto.package());
                 let proto_filename = proto.name();
-                let entry = acc
-                    .entry(OrderableModule(module.clone()))
-                    .or_insert_with(|| {
-                        let mut request = ModuleRequest::new(proto.package().to_owned());
-                        if input_protos.contains(proto_filename) {
-                            request.with_output_filename(
-                                module.to_file_name_or(default_package_filename),
-                            );
-                        }
-                        request
-                    });
+                let entry = acc.entry(OrderableModule(module)).or_insert_with(|| {
+                    let mut request = ModuleRequest::new(proto.package().to_owned());
+                    if input_protos.contains(proto_filename) {
+                        let filename = match proto.package() {
+                            "" => default_package_filename.to_owned(),
+                            package => format!("{package}.rs"),
+                        };
+                        request.with_output_filename(filename);
+                    }
+                    request
+                });
 
                 entry.push_file_descriptor_proto(proto, raw);
                 acc
@@ -163,7 +164,7 @@ impl ModuleRequest {
             code_generator_response::File {
                 name: Some(name.to_owned()),
                 content: Some(content),
-                insertion_point: Some(self.proto_package_name.clone()),
+                insertion_point: Some("module".to_owned()),
                 ..Default::default()
             }
         })
@@ -272,17 +273,18 @@ impl ProstParameters {
     }
 }
 
+static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
+    regex::Regex::new(
+        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
+    )
+    .unwrap()
+});
+
 impl str::FromStr for Parameters {
     type Err = InvalidParameter;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut ret_val = Self::default();
-        let re = regex::Regex::new(
-            r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
-        )
-        .unwrap();
-
-        // let params = s.split(',');
-        for capture in re.captures_iter(s) {
+        for capture in PARAMETER.captures_iter(s) {
             let param = capture
                 .get(1)
                 .expect("any captured group will at least have the param name")

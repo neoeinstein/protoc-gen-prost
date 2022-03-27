@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package helloworld.submodule.v1;
+package helloworld.abstract.v1;
 
 enum Wow {
     WOW_UNSPECIFIED = 0;

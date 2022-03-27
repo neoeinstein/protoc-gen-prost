@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package helloworld.self.v1alpha1;
+
+message EmptyMessage {}

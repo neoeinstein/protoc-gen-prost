@@ -54,7 +54,7 @@ In addition, the following options can also be specified:
   Generally when using this option, you should provide all protobuf files
   that you want to appear in the tree structure generated in the include
   file. When specified, no other generation occurs. See below for usage with
-  _buf_. `<value>` defaults to `lib.rs` if not specified.
+  _buf_. `<value>` defaults to `mod.rs` if not specified.
 
 A note on parameter values:
 
@@ -108,10 +108,16 @@ plugins:
 
 When building output, `protoc-gen-prost` adds insertion points inside modules
 to make it easy to add more trait implementations. These insertion points
-are placed in each module and in the include file, if one was generated. The
-insertion point in each file is labeled with the protobuf package name. For
-example, insertion point for package `helloworld.v1` will be:
+are placed in each module and in the include file, if one was generated.
+Output module files are named based on the untransformed protobuf package
+name. Thus a package named `helloworld.abstract.v1` will have an output
+filename of `helloworld.abstract.v1.rs`.
 
-```text
-// @@protoc_insertion_point(helloworld.v1)
-```
+Within module files (`<proto_package>.rs`):
+
+* `module`: Appends to the end of the module file
+
+Within the include file:
+
+* `<proto_package>`: Appends to the module defined for this package
+

@@ -30,15 +30,15 @@ This tool supports all the same options from `prost-build`. For more
 information on the effects of these settings, see the related documentation
 from that crate:
 
-* `btree_map=<proto_path>`: [btree_map](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.btree_map)
-* `bytes=<proto_path>`: [bytes](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.bytes)
-* `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.default_package_filename)
-* `disable_comments=<proto_path>`: [disable_comments](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.disable_comments)
-* `extern_path=<proto_path>=<rust_path>`:  [extern_path](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.extern_path)
-* `compile_well_known_types(=<boolean>)`: [compile_well_known_types](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.compile_well_known_types)
-* `retain_enum_prefix(=<boolean>)`:  [retain_enum_prefix](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.retain_enum_prefix)
-* `field_attribute=<proto_path>=<attribute>`: [field_attribute](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.field_attribute)
-* `type_attribute=<proto_path>=<attribute>`: [type_attribute](https://docs.rs/prost-build/0.9.0/prost_build/struct.Config.html#method.type_attribute)
+* `btree_map=<proto_path>`: [btree_map](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.btree_map)
+* `bytes=<proto_path>`: [bytes](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.bytes)
+* `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
+* `disable_comments=<proto_path>`: [disable_comments](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.disable_comments)
+* `extern_path=<proto_path>=<rust_path>`:  [extern_path](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.extern_path)
+* `compile_well_known_types(=<boolean>)`: [compile_well_known_types](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.compile_well_known_types)
+* `retain_enum_prefix(=<boolean>)`:  [retain_enum_prefix](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.retain_enum_prefix)
+* `field_attribute=<proto_path>=<attribute>`: [field_attribute](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.field_attribute)
+* `type_attribute=<proto_path>=<attribute>`: [type_attribute](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.type_attribute)
 
 In addition, the following options can also be specified:
 

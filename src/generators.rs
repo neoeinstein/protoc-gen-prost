@@ -30,7 +30,7 @@ pub trait GeneratorPipeline {
     ) -> CodeGeneratorResponse;
 }
 
-impl<'a, I> GeneratorPipeline for I
+impl<I> GeneratorPipeline for I
 where
     I: Iterator,
     I::Item: DerefMut<Target = dyn Generator>,
@@ -46,6 +46,7 @@ where
                 Err(err) => {
                     return CodeGeneratorResponse {
                         error: Some(err.to_string()),
+                        supported_features: Some(Feature::Proto3Optional as u64),
                         ..Default::default()
                     }
                 }

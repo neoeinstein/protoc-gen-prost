@@ -3,7 +3,14 @@ plugins:
   - name: prost
     out: gen
     path: ../target/debug/protoc-gen-prost
+    strategy: all
     opt:
-      - bytes=.
+      - include_file
+  - name: prost
+    out: gen
+    path: ../target/debug/protoc-gen-prost
+    opt:
+#      - bytes=.
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
+      - file_descriptor_set

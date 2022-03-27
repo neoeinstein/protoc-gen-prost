@@ -3,8 +3,15 @@ syntax = "proto3";
 package greeter.v1;
 
 import "helloworld/v1/helloworld.proto";
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.MessageOptions {
+    string my_extension = 50001;
+}
 
 message GreeterRequest {
+    option (my_extension) = "is it there?";
+
     oneof greeting {
         helloworld.v1.HelloWorld hello_world = 1;
     }

@@ -1,47 +1,52 @@
 use prost::Message;
-use prost_types::compiler::{code_generator_response, CodeGeneratorRequest, CodeGeneratorResponse};
-use protoc_gen_prost::Parameters;
-use std::io;
-use std::io::{Error, ErrorKind, Result};
-use std::io::{Read, Write};
+use prost_types::compiler::{CodeGeneratorRequest, CodeGeneratorResponse};
+use protoc_gen_prost::generators::core::CoreProstGenerator;
+use protoc_gen_prost::generators::file_descriptor_set::FileDescriptorSetGenerator;
+use protoc_gen_prost::generators::include_file::IncludeFileGenerator;
+use protoc_gen_prost::generators::{Generator, GeneratorPipeline};
+use protoc_gen_prost::{CodeGeneratorResult, ModuleRequestSet, Parameters};
+use std::io::{self, Read, Write};
 
-fn main() -> Result<()> {
+fn main() -> io::Result<()> {
     let mut buf = Vec::new();
-    std::io::stdin().read_to_end(&mut buf)?;
+    io::stdin().read_to_end(&mut buf)?;
 
-    let request = CodeGeneratorRequest::decode(&*buf).map_err(|error| {
-        Error::new(
-            ErrorKind::InvalidInput,
-            format!("invalid FileDescriptorSet: {}", error),
-        )
-    })?;
+    let response = inner(buf.as_slice()).unwrap_into_response();
 
-    let result = match request.parameter().parse::<Parameters>() {
-        Ok(params) => params.run(request.file_to_generate, request.proto_file),
-        Err(err) => Err(io::Error::new(io::ErrorKind::InvalidInput, err)),
-    };
-
-    let response = match result {
-        Ok(file) => CodeGeneratorResponse {
-            file,
-            supported_features: Some(code_generator_response::Feature::Proto3Optional as u64),
-            ..CodeGeneratorResponse::default()
-        },
-        Err(error) => CodeGeneratorResponse {
-            error: Some(error.to_string()),
-            supported_features: Some(code_generator_response::Feature::Proto3Optional as u64),
-            ..CodeGeneratorResponse::default()
-        },
-    };
-
-    let mut out = Vec::new();
-    response.encode(&mut out).map_err(|error| {
-        Error::new(
-            ErrorKind::InvalidInput,
-            format!("invalid FileDescriptorSet: {}", error),
-        )
-    })?;
-    std::io::stdout().write_all(&out)?;
+    buf.clear();
+    response.encode(&mut buf).expect("error encoding response");
+    io::stdout().write_all(&buf)?;
 
     Ok(())
+}
+
+fn inner(
+    raw_request: &[u8],
+) -> Result<CodeGeneratorResponse, Box<dyn std::error::Error + Send + Sync + 'static>> {
+    let request = CodeGeneratorRequest::decode(raw_request)?;
+    let params = request.parameter().parse::<Parameters>()?;
+
+    let module_request_set = ModuleRequestSet::new(
+        request.file_to_generate,
+        request.proto_file,
+        raw_request,
+        params.prost.default_package_filename(),
+    )?;
+
+    let generators: Vec<Box<dyn Generator>> = if let Some(include_file) = params.include_file {
+        let gen = IncludeFileGenerator::new(include_file);
+
+        vec![Box::new(gen)]
+    } else {
+        let core = CoreProstGenerator::new(params.prost.to_prost_config());
+        let fds = FileDescriptorSetGenerator;
+
+        vec![Box::new(core), Box::new(fds)]
+    };
+
+    let response = generators
+        .into_iter()
+        .collect_code_generator_response(&module_request_set);
+
+    Ok(response)
 }

@@ -1,5 +1,5 @@
 use prost::Message;
-use protoc_gen_prost::generator::GeneratorResultExt;
+use protoc_gen_prost::GeneratorResultExt;
 use std::io::{self, Read, Write};
 
 fn main() -> io::Result<()> {

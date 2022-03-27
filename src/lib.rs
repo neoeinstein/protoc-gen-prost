@@ -1,8 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-use self::generator::{
-    CoreProstGenerator, FileDescriptorSetGenerator, Generator, IncludeFileGenerator,
-};
+use self::generator::{CoreProstGenerator, FileDescriptorSetGenerator, IncludeFileGenerator};
 use once_cell::sync::Lazy;
 use prost::Message;
 use prost_build::Module;
@@ -12,7 +10,9 @@ use prost_types::FileDescriptorProto;
 use std::collections::{BTreeMap, HashSet};
 use std::{cmp, fmt, str};
 
-pub mod generator;
+mod generator;
+
+pub use self::generator::{Error, Generator, GeneratorResultExt, Result};
 
 /// Execute the core _Prost!_ generator from a raw [`CodeGeneratorRequest`]
 pub fn execute(raw_request: &[u8]) -> generator::Result {
@@ -56,7 +56,7 @@ impl ModuleRequestSet {
         proto_file: Vec<FileDescriptorProto>,
         raw_request: &[u8],
         default_package_filename: &str,
-    ) -> Result<Self, prost::DecodeError>
+    ) -> std::result::Result<Self, prost::DecodeError>
     where
         I: IntoIterator<Item = String>,
     {
@@ -267,7 +267,7 @@ impl ProstParameters {
         param: &str,
         key: Option<&str>,
         value: Option<&str>,
-    ) -> Result<(), ()> {
+    ) -> std::result::Result<(), ()> {
         match (param, key, value) {
             ("btree_map", Some(value), None) => self.btree_map.push(value.to_string()),
             ("bytes", Some(value), None) => self.bytes.push(value.to_string()),
@@ -308,7 +308,7 @@ static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
 
 impl str::FromStr for Parameters {
     type Err = InvalidParameter;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         let mut ret_val = Self::default();
         for capture in PARAMETER.captures_iter(s) {
             let param = capture

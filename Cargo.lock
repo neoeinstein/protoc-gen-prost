@@ -127,6 +127,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "87f3e037eac156d1775da914196f0f37741a274155e34a0b7e427c35d2a2ecb9"
 
 [[package]]
+name = "pbjson-build"
+version = "0.2.3"
+source = "git+https://github.com/neoeinstein/pbjson?branch=protoc-plugin-compat#10c0ab658c772c95763240b87e90990d5df0af89"
+dependencies = [
+ "heck",
+ "itertools",
+ "prost",
+ "prost-types",
+]
+
+[[package]]
 name = "petgraph"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -134,6 +145,16 @@ checksum = "4a13a2fa9d0b63e5f22328828741e523766fff0ee9e779316902290dff3f824f"
 dependencies = [
  "fixedbitset",
  "indexmap",
+]
+
+[[package]]
+name = "prettyplease"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b83ec2d0af5c5c556257ff52c9f98934e243b9fd39604bfb2a9b75ec2e97f18"
+dependencies = [
+ "proc-macro2",
+ "syn",
 ]
 
 [[package]]
@@ -206,6 +227,51 @@ dependencies = [
 ]
 
 [[package]]
+name = "protoc-gen-prost-crate"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "protoc-gen-prost",
+ "regex",
+]
+
+[[package]]
+name = "protoc-gen-prost-serde"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "pbjson-build",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "protoc-gen-prost",
+ "regex",
+]
+
+[[package]]
+name = "protoc-gen-prost-validate"
+version = "0.0.1"
+
+[[package]]
+name = "protoc-gen-tonic"
+version = "0.1.0"
+dependencies = [
+ "heck",
+ "once_cell",
+ "prettyplease",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "protoc-gen-prost",
+ "regex",
+ "syn",
+ "tonic-build",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -249,9 +315,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "1.0.89"
+version = "1.0.90"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ea297be220d52398dcc07ce15a209fce436d361735ac1db700cab3b6cdfb9f54"
+checksum = "704df27628939572cd88d33f171cd6f896f4eaca85252c6e0a72d8d8287ee86f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -270,6 +336,18 @@ dependencies = [
  "redox_syscall",
  "remove_dir_all",
  "winapi",
+]
+
+[[package]]
+name = "tonic-build"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9403f1bafde247186684b230dc6f38b5cd514584e8bec1dd32514be4745fa757"
+dependencies = [
+ "proc-macro2",
+ "prost-build",
+ "quote",
+ "syn",
 ]
 
 [[package]]

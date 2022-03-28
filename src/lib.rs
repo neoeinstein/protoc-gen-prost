@@ -46,7 +46,7 @@ impl ModuleRequestSet {
         input_protos: I,
         proto_file: Vec<FileDescriptorProto>,
         raw_request: &[u8],
-        default_package_filename: &str,
+        default_package_filename: Option<&str>,
     ) -> std::result::Result<Self, prost::DecodeError>
     where
         I: IntoIterator<Item = String>,
@@ -57,7 +57,7 @@ impl ModuleRequestSet {
             input_protos,
             proto_file,
             raw_protos,
-            default_package_filename,
+            default_package_filename.unwrap_or("_"),
         ))
     }
 
@@ -246,8 +246,8 @@ impl ProstParameters {
         config
     }
 
-    fn default_package_filename(&self) -> &str {
-        self.default_package_filename.as_deref().unwrap_or("_")
+    fn default_package_filename(&self) -> Option<&str> {
+        self.default_package_filename.as_deref()
     }
 
     fn try_handle_parameter(

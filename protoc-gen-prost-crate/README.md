@@ -57,7 +57,7 @@ view of the protobuf schemas and correctly identify dependencies for the
 input files.
 
 The following will just produce an include file `mod.rs` in the output `gen`
-directory:
+directory without any conditional compilation feature flags:
 
 ```yaml
 version: v1
@@ -65,6 +65,8 @@ plugins:
   - name: prost-crate
     out: gen
     strategy: all
+    opt:
+      - no_features
 ```
 
 When using the `gen_crate` option, later Rust generators should generate
@@ -73,14 +75,14 @@ into the `src` directory which will be created by this plugin:
 ```yaml
 version: v1
 plugins:
-  - name: prost-crate
-    out: gen
-    strategy: all
-    opt:
-      - gen_crate=Cargo.toml.tpl
   - name: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
+  - name: prost-crate
+    out: gen
+    strategy: all
+    opt:
+      - gen_crate=Cargo.toml.tpl
 ```

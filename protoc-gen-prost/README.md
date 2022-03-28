@@ -82,25 +82,22 @@ plugins:
 ```
 
 If an include file or generated crate is desired, then that should be run
-as a distinct step, generally before any other `protoc-gen-prost` step, as in the
-following example. For more information, see the [`protoc-gen-prost-crate`]
-plugin.
-
-[`protoc-gen-prost-crate`]: https://github.com/neoeinstein/protoc-gen-prost-crate
+as a distinct step, as in the following example. For more information, see
+the `protoc-gen-prost-crate` plugin.
 
 ```yaml
 version: v1
 plugins:
-  - name: prost-crate
-    out: gen
-    strategy: all
-    opt:
-      - gen_crate=Cargo.toml.tpl
   - name: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
+  - name: prost-crate
+    out: gen
+    strategy: all
+    opt:
+      - gen_crate=Cargo.toml.tpl
 ```
 
 ## Extensions
@@ -120,23 +117,21 @@ Within the include file:
 
 * `<proto_package>`: Appends to the module defined for this package
 
-Here is an example for _buf_ using the [`protoc-gen-prost-serde`] plugin:
-
-[`protoc-gen-prost-serde`]: https://github.com/neoeinstein/protoc-gen-prost-serde
+Here is an example for _buf_ using the `protoc-gen-prost-serde` plugin:
 
 ```yaml
 version: v1
 plugins:
-  - name: prost-crate
-    out: gen
-    strategy: all
-    opt:
-      - gen_crate=Cargo.toml.tpl
   - name: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
   - name: prost-serde
+    out: gen/src
+  - name: prost-crate
     out: gen
+    strategy: all
+    opt:
+      - gen_crate=Cargo.toml.tpl
 ```

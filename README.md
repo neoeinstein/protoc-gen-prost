@@ -39,11 +39,6 @@ each of those folders for more information.
 ```yaml
 version: v1
 plugins:
-  - name: prost-crate
-    out: gen
-    strategy: all
-    opt:
-      - gen_crate=Cargo.toml.tpl
   - name: prost
     out: gen/src
     opt:
@@ -53,8 +48,14 @@ plugins:
       - file_descriptor_set
   - name: prost-serde
     out: gen/src
-    opt:
-      - extern_path=.google.protobuf=::pbjson_types
   - name: tonic
     out: gen/src
+    opt:
+      - compile_well_known_types
+      - extern_path=.google.protobuf=::pbjson_types
+  - name: prost-crate
+    out: gen
+    strategy: all
+    opt:
+      - gen_crate=Cargo.toml.tpl
 ```

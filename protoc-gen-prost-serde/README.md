@@ -65,8 +65,8 @@ plugins:
     out: gen
 ```
 
-`protoc-gen-prost-serde` is compatible with the the `include_file` option from
-`protoc-gen-prost`:
+`protoc-gen-prost-serde` is also compatible with the `protoc-gen-prost-crate`
+plugin:
 
 ```yaml
 version: v1
@@ -74,12 +74,13 @@ plugins:
   - name: prost
     out: gen
     opt:
-      - include_file
-  - name: prost
-    out: gen
-    opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
   - name: prost-serde
     out: gen
+  - name: prost-crate
+    strategy: all
+    out: gen
+    opt:
+      - no_features
 ```

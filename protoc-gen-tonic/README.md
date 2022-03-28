@@ -82,23 +82,28 @@ plugins:
 If you have specified `compile_well_known_types` or `extern_path` on any
 earlier step, those should also be specified for this step.
 
+Pulling all of these together, you can compile a ready-made crate for a gRPC
+service with types that can be JSON serialized using the following example.
+Then you can depend on this crate from the binary that will host the server
+or use the client.
+
 ```yaml
 version: v1
 plugins:
   - name: prost
-    out: gen
-    opt:
-      - include_file
-  - name: prost
-    out: gen
+    out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
   - name: prost-serde
-    out: gen
+    out: gen/src
   - name: tonic
-    out: gen
+    out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
+  - name: prost
+    out: gen
+    opt:
+      - gen_crate=Cargo.toml.tpl
 ```

@@ -27,6 +27,12 @@ each of those folders for more information.
 * _[protoc-gen-prost-validate]_: Generate validators based on embedded metadata
 * _[protoc-gen-tonic]_: Tonic gRPC service generation
 
+[protoc-gen-prost]: protoc-gen-prost/README.md
+[protoc-gen-prost-crate]: protoc-gen-prost-crate/README.md
+[protoc-gen-prost-serde]: protoc-gen-prost-serde/README.md
+[protoc-gen-prost-validate]: protoc-gen-prost-validate/README.md
+[protoc-gen-tonic]: protoc-gen-tonic/README.md
+
 ## Example `buf.gen.yaml`
 
 ```yaml

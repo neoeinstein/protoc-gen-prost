@@ -8,7 +8,7 @@ use prost_types::compiler::code_generator_response::File;
 use prost_types::compiler::CodeGeneratorRequest;
 use prost_types::FileDescriptorProto;
 use std::collections::{BTreeMap, HashSet};
-use std::{cmp, fmt, str};
+use std::{fmt, str};
 
 mod generator;
 
@@ -35,7 +35,7 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
 
 /// A set of requests to generate code for a series of modules
 pub struct ModuleRequestSet {
-    requests: BTreeMap<OrderableModule, ModuleRequest>,
+    requests: BTreeMap<Module, ModuleRequest>,
 }
 
 impl ModuleRequestSet {
@@ -77,7 +77,7 @@ impl ModuleRequestSet {
             |mut acc, (proto, raw)| {
                 let module = Module::from_protobuf_package_name(proto.package());
                 let proto_filename = proto.name();
-                let entry = acc.entry(OrderableModule(module)).or_insert_with(|| {
+                let entry = acc.entry(module).or_insert_with(|| {
                     let mut request = ModuleRequest::new(proto.package().to_owned());
                     if input_protos.contains(proto_filename) {
                         let filename = match proto.package() {
@@ -99,12 +99,12 @@ impl ModuleRequestSet {
 
     /// An ordered iterator of all requests
     pub fn requests(&self) -> impl Iterator<Item = (&Module, &ModuleRequest)> {
-        self.requests.iter().map(|(k, v)| (&k.0, v))
+        self.requests.iter()
     }
 
     /// Retrieve the request for the given module
     pub fn for_module(&self, module: &Module) -> Option<&ModuleRequest> {
-        self.requests.get(&OrderableModule(module.clone()))
+        self.requests.get(module)
     }
 }
 
@@ -357,53 +357,4 @@ impl std::error::Error for InvalidParameter {}
 struct RawProtos {
     #[prost(bytes = "vec", repeated, tag = "15")]
     proto_file: Vec<Vec<u8>>,
-}
-
-#[derive(PartialEq, Eq)]
-struct OrderableModule(Module);
-
-impl Ord for OrderableModule {
-    fn cmp(&self, other: &Self) -> cmp::Ordering {
-        let mut my_path = self.0.parts();
-        let mut other_path = other.0.parts();
-
-        loop {
-            let (my_part, other_part) = (my_path.next(), other_path.next());
-            match (my_part, other_part) {
-                (Some(my_part), Some(other_part)) => match my_part.cmp(other_part) {
-                    cmp::Ordering::Equal => (),
-                    ord => return ord,
-                },
-                (Some(_), None) => return cmp::Ordering::Greater,
-                (None, Some(_)) => return cmp::Ordering::Less,
-                (None, None) => return cmp::Ordering::Equal,
-            }
-        }
-    }
-}
-
-impl PartialOrd for OrderableModule {
-    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
-        Some(Self::cmp(self, other))
-    }
-}
-
-impl fmt::Debug for OrderableModule {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt(self, f)
-    }
-}
-
-impl fmt::Display for OrderableModule {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut parts = self.0.parts();
-        if let Some(first) = parts.next() {
-            f.write_str(first)?;
-        }
-        for part in parts {
-            f.write_str("::")?;
-            f.write_str(part)?;
-        }
-        Ok(())
-    }
 }

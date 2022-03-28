@@ -1,8 +1,6 @@
 //! Code generator modules
 
 use crate::ModuleRequestSet;
-use std::ops::DerefMut;
-
 use prost_types::compiler::code_generator_response::{Feature, File};
 use prost_types::compiler::CodeGeneratorResponse;
 
@@ -10,9 +8,9 @@ mod core;
 mod file_descriptor_set;
 mod include_file;
 
-pub use self::core::CoreProstGenerator;
-pub use self::file_descriptor_set::FileDescriptorSetGenerator;
-pub use self::include_file::IncludeFileGenerator;
+pub(crate) use self::core::CoreProstGenerator;
+pub(crate) use self::file_descriptor_set::FileDescriptorSetGenerator;
+pub(crate) use self::include_file::IncludeFileGenerator;
 
 /// A code generation result
 pub type Result = std::result::Result<Vec<File>, Error>;
@@ -50,19 +48,36 @@ fn error_to_codegen_response(error: &dyn std::error::Error) -> CodeGeneratorResp
 pub trait Generator {
     /// Generate one or more files based on the input request
     fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result;
+
+    /// Chain multiple generators together, returning their composite output
+    fn chain<G>(self, next: G) -> ChainedGenerator<Self, G>
+    where
+        Self: Sized,
+    {
+        ChainedGenerator {
+            generator1: self,
+            generator2: next,
+        }
+    }
 }
 
-impl<I> Generator for I
+/// A chain of generators, executed sequentially
+///
+/// Executes `G1` followed by `G2`, returning generated files in the same order as
+/// produced. Execution short circuits in the event `G1` returns an error.
+pub struct ChainedGenerator<G1, G2> {
+    generator1: G1,
+    generator2: G2,
+}
+
+impl<G1, G2> Generator for ChainedGenerator<G1, G2>
 where
-    I: Iterator,
-    I::Item: DerefMut<Target = dyn Generator>,
+    G1: Generator,
+    G2: Generator,
 {
     fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
-        let mut file = Vec::new();
-        for mut generator in self {
-            let generated = generator.deref_mut().generate(module_request_set)?;
-            file.extend(generated);
-        }
-        Ok(file)
+        let mut files = self.generator1.generate(module_request_set)?;
+        files.extend(self.generator2.generate(module_request_set)?);
+        Ok(files)
     }
 }

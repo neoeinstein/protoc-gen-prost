@@ -26,18 +26,13 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         params.prost.default_package_filename(),
     )?;
 
-    let generators: Vec<Box<dyn Generator>> = if let Some(include_file) = params.include_file {
-        let gen = IncludeFileGenerator::new(include_file);
-
-        vec![Box::new(gen)]
+    let files = if let Some(include_file) = params.include_file {
+        IncludeFileGenerator::new(include_file).generate(&module_request_set)?
     } else {
-        let core = CoreProstGenerator::new(params.prost.to_prost_config());
-        let fds = FileDescriptorSetGenerator;
-
-        vec![Box::new(core), Box::new(fds)]
+        CoreProstGenerator::new(params.prost.to_prost_config())
+            .chain(FileDescriptorSetGenerator)
+            .generate(&module_request_set)?
     };
-
-    let files = generators.into_iter().generate(&module_request_set)?;
 
     Ok(files)
 }

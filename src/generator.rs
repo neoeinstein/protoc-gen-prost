@@ -79,3 +79,16 @@ where
         Ok(files)
     }
 }
+
+impl<G> Generator for Option<G>
+where
+    G: Generator,
+{
+    fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
+        if let Some(slf) = self {
+            slf.generate(module_request_set)
+        } else {
+            Ok(Vec::new())
+        }
+    }
+}

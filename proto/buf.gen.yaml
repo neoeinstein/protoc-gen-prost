@@ -1,16 +1,16 @@
 version: v1
 plugins:
-  - name: prost
+  - name: prost-crate
     out: gen
-    path: ../target/debug/protoc-gen-prost
+    path: ../../protoc-gen-prost-crate/target/debug/protoc-gen-prost-crate
     strategy: all
     opt:
-      - include_file
+      - gen_crate=Cargo.toml.tpl
   - name: prost
-    out: gen
+    out: gen/src
     path: ../target/debug/protoc-gen-prost
     opt:
-#      - bytes=.
+      - bytes=.
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set

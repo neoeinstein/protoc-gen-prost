@@ -50,11 +50,6 @@ In addition, the following options can also be specified:
   exposure of useless or excess information. In addition, this module
   embeds the raw file descriptors without having first decoded them with
   _Prost!_, ensuring that extensions and unexpected tags are preserved.
-* `include_file(=<value>)`: Generates an include file for the files provided.
-  Generally when using this option, you should provide all protobuf files
-  that you want to appear in the tree structure generated in the include
-  file. When specified, no other generation occurs. See below for usage with
-  _buf_. `<value>` defaults to `mod.rs` if not specified.
 
 A note on parameter values:
 
@@ -86,17 +81,21 @@ plugins:
       - type_attribute=.helloworld.v1.HelloWorld=#[derive(Eq\, Hash)]
 ```
 
-If an include file is also desired, then that should be run as a distinct
-step, generally before any other `protoc-gen-prost` step, as in the
-following example:
+If an include file or generated crate is desired, then that should be run
+as a distinct step, generally before any other `protoc-gen-prost` step, as in the
+following example. For more information, see the [`protoc-gen-prost-crate`]
+plugin.
+
+[`protoc-gen-prost-crate`]: https://github.com/neoeinstein/protoc-gen-prost-crate
 
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - name: prost-crate
     out: gen
+    strategy: all
     opt:
-      - include_file
+      - gen_crate=Cargo.toml.tpl
   - name: prost
     out: gen
     opt:
@@ -128,12 +127,13 @@ Here is an example for _buf_ using the [`protoc-gen-prost-serde`] plugin:
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - name: prost-crate
     out: gen
+    strategy: all
     opt:
-      - include_file
+      - gen_crate=Cargo.toml.tpl
   - name: prost
-    out: gen
+    out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set

@@ -25,13 +25,14 @@ each of those folders for more information.
 * _[protoc-gen-prost-crate]_: Generates an include file and cargo manifest for turn-key crates
 * _[protoc-gen-prost-serde]_: Canonical JSON serialization of protobuf types
 * _[protoc-gen-prost-validate]_: Generate validators based on embedded metadata
-* _[protoc-gen-tonic]_: Tonic gRPC service generation
+* _[protoc-gen-tonic]_: gRPC service generation for the _[Tonic]_ framework
 
 [protoc-gen-prost]: protoc-gen-prost/README.md
 [protoc-gen-prost-crate]: protoc-gen-prost-crate/README.md
 [protoc-gen-prost-serde]: protoc-gen-prost-serde/README.md
 [protoc-gen-prost-validate]: protoc-gen-prost-validate/README.md
 [protoc-gen-tonic]: protoc-gen-tonic/README.md
+[Tonic]: https://github.com/hyperium/tonic
 
 ## Example `buf.gen.yaml`
 

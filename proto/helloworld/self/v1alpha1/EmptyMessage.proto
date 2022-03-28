@@ -2,4 +2,11 @@ syntax = "proto3";
 
 package helloworld.self.v1alpha1;
 
+import "helloworld/v1/helloworld.proto";
+import "google/protobuf/duration.proto";
+
 message EmptyMessage {}
+
+service EmptyService {
+    rpc MyRpc(helloworld.v1.HelloWorld) returns (google.protobuf.Duration);
+}

@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-use self::generator::{CoreProstGenerator, FileDescriptorSetGenerator, IncludeFileGenerator};
+use self::generator::{CoreProstGenerator, FileDescriptorSetGenerator};
 use once_cell::sync::Lazy;
 use prost::Message;
 use prost_build::Module;
@@ -26,13 +26,9 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         params.prost.default_package_filename(),
     )?;
 
-    let files = if let Some(include_file) = params.include_file {
-        IncludeFileGenerator::new(include_file).generate(&module_request_set)?
-    } else {
-        CoreProstGenerator::new(params.prost.to_prost_config())
-            .chain(FileDescriptorSetGenerator)
-            .generate(&module_request_set)?
-    };
+    let files = CoreProstGenerator::new(params.prost.to_prost_config())
+        .chain(FileDescriptorSetGenerator)
+        .generate(&module_request_set)?;
 
     Ok(files)
 }
@@ -202,9 +198,6 @@ struct Parameters {
 
     /// Whether a file descriptor set has been requested in each module
     file_descriptor_set: bool,
-
-    /// Whether to generate an include file with an optional filename
-    include_file: Option<Option<String>>,
 }
 
 /// Parameters used to configure the underlying Prost generator
@@ -326,9 +319,6 @@ impl str::FromStr for Parameters {
                         ret_val.file_descriptor_set = true
                     }
                     ("file_descriptor_set", Some("false"), None) => (),
-                    ("include_file", filename, None) => {
-                        ret_val.include_file = Some(filename.map(|s| s.to_owned()))
-                    }
                     _ => {
                         return Err(InvalidParameter(
                             capture.get(0).unwrap().as_str().to_string(),

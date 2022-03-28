@@ -6,11 +6,9 @@ use prost_types::compiler::CodeGeneratorResponse;
 
 mod core;
 mod file_descriptor_set;
-mod include_file;
 
 pub(crate) use self::core::CoreProstGenerator;
 pub(crate) use self::file_descriptor_set::FileDescriptorSetGenerator;
-pub(crate) use self::include_file::IncludeFileGenerator;
 
 /// A code generation result
 pub type Result = std::result::Result<Vec<File>, Error>;

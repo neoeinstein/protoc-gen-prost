@@ -5,4 +5,3 @@ package helloworld.abstract.v1;
 enum Wow {
     WOW_UNSPECIFIED = 0;
 }
-

@@ -6,7 +6,8 @@ edition = "2021"
 [dependencies]
 prost = "0.9.0"
 pbjson-types = "0.2.3"
-tonic = "0.6.2"
+serde = "1.0"
+tonic = { version = "0.6.2", features = ["compression"] }
 
 [features]
 {{ features }}

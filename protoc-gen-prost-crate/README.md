@@ -86,3 +86,27 @@ plugins:
     opt:
       - gen_crate=Cargo.toml.tpl
 ```
+
+## Cargo manifest template
+
+When using the `gen_crate` option, the template specified will be placed in
+the output folder. The template should include a commented insertion point
+that can be referenced for the placement of the features dependency graph.
+
+`protoc` will insert the computed dependency graph above the insertion point.
+If this commented line is not included, then `protoc` will not know where to
+place the features list and the insertion will be silently skipped.
+
+```toml
+[package]
+name = "my-cool-proto-defs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+prost = "0.10.0"
+
+[features]
+default = []
+# @@protoc_insertion_point(features)
+```

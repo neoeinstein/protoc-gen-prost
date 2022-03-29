@@ -6,8 +6,9 @@ use prost::Message;
 
 use prost_types::compiler::CodeGeneratorRequest;
 
-use protoc_gen_prost::{Error, Generator, ModuleRequestSet, Result};
+use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
 
+use crate::generator::FeaturesGenerator;
 use std::{fmt, str};
 
 mod generator;
@@ -24,28 +25,23 @@ pub fn execute(raw_request: &[u8]) -> Result {
         params.default_package_filename.as_deref(),
     )?;
 
-    let mut generator = match (params.gen_crate, params.include_file) {
-        (Some(template_path), Some(include_path)) => {
-            IncludeFileGenerator::new(Some(include_path), !params.no_features)
-                .chain(Some(create_cargo_generator_from_path(&template_path)?))
-        }
-        (Some(template_path), None) => {
-            IncludeFileGenerator::new(Some("src/lib.rs".to_owned()), !params.no_features)
-                .chain(Some(create_cargo_generator_from_path(&template_path)?))
-        }
-        (None, include_file) => {
-            IncludeFileGenerator::new(include_file, !params.no_features).chain(None)
-        }
+    let include_filename = if matches!(params.gen_crate, Some(_)) {
+        Some(params.include_file.as_deref().unwrap_or("src/lib.rs"))
+    } else {
+        params.include_file.as_deref()
     };
 
-    let files = generator.generate(&module_request_set)?;
+    let include_file_generator = IncludeFileGenerator::new(include_filename);
+    let cargo_crate_generator = params.gen_crate.map(CargoCrateGenerator::new);
+    let features_generator = (!params.no_features)
+        .then(|| FeaturesGenerator::new(include_file_generator.filename().to_owned()));
+
+    let files = include_file_generator
+        .chain(cargo_crate_generator)
+        .chain(features_generator)
+        .generate(&module_request_set)?;
 
     Ok(files)
-}
-
-fn create_cargo_generator_from_path(path: &str) -> std::result::Result<CargoCrateGenerator, Error> {
-    let manifest_template = std::fs::read_to_string(path)?;
-    Ok(CargoCrateGenerator::new(manifest_template))
 }
 
 /// Parameters use to configure [`Generator`]s built into `protoc-gen-prost`

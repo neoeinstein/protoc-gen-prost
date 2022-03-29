@@ -3,23 +3,27 @@ use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
 use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
 
-pub struct IncludeFileGenerator {
-    filename: Option<String>,
-    insert_features: bool,
+const DEFAULT_FILENAME: &str = "mod.rs";
+
+pub(crate) struct IncludeFileGenerator<'a> {
+    filename: &'a str,
 }
 
-impl IncludeFileGenerator {
-    pub fn new(filename: Option<String>, insert_features: bool) -> Self {
+impl<'a> IncludeFileGenerator<'a> {
+    pub(crate) fn new(filename: Option<&'a str>) -> Self {
         Self {
-            filename,
-            insert_features,
+            filename: filename.unwrap_or(DEFAULT_FILENAME),
         }
+    }
+
+    pub(crate) fn filename(&self) -> &str {
+        self.filename
     }
 }
 
-impl Generator for IncludeFileGenerator {
+impl<'a> Generator for IncludeFileGenerator<'a> {
     fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
-        let mut context = CodeGenContext::new(self.insert_features);
+        let mut context = CodeGenContext::new();
         let mut buf = String::new();
 
         let _: () = module_request_set
@@ -38,7 +42,7 @@ impl Generator for IncludeFileGenerator {
         context.finish(&mut buf);
 
         let file = File {
-            name: Some(self.filename.as_deref().unwrap_or("mod.rs").to_string()),
+            name: Some(self.filename.to_string()),
             content: Some(buf),
             ..File::default()
         };
@@ -54,18 +58,16 @@ struct CodeGenContext<'a> {
     last: &'a Module,
     last_prefix: usize,
     indent: String,
-    insert_features: bool,
 }
 
 const INDENT: &str = "    ";
 
 impl<'a> CodeGenContext<'a> {
-    fn new(insert_features: bool) -> Self {
+    fn new() -> Self {
         Self {
             last: &*ROOT_MODULE,
             last_prefix: 0,
             indent: String::new(),
-            insert_features,
         }
     }
 
@@ -99,7 +101,7 @@ impl<'a> CodeGenContext<'a> {
             self.open_module(module_name, buf);
         }
 
-        self.push_feature(package, buf);
+        self.push_attribute_insertion_point(package, buf);
         self.open_module(next.parts().last().unwrap(), buf);
 
         self.last = next;
@@ -109,15 +111,6 @@ impl<'a> CodeGenContext<'a> {
     fn finish(mut self, buf: &mut String) {
         for _ in 0..=self.last_prefix {
             self.close_module(buf)
-        }
-    }
-
-    fn push_feature(&self, package: &str, buf: &mut String) {
-        if self.insert_features {
-            self.push_indent(buf);
-            buf.push_str("#[cfg(feature = \"");
-            buf.push_str(&package.replace('.', "_"));
-            buf.push_str("\")]\n");
         }
     }
 
@@ -131,6 +124,13 @@ impl<'a> CodeGenContext<'a> {
     fn push_insertion_point(&self, package_name: &str, buf: &mut String) {
         self.push_indent(buf);
         buf.push_str("// @@protoc_insertion_point(");
+        buf.push_str(package_name);
+        buf.push_str(")\n");
+    }
+
+    fn push_attribute_insertion_point(&self, package_name: &str, buf: &mut String) {
+        self.push_indent(buf);
+        buf.push_str("// @@protoc_insertion_point(attribute:");
         buf.push_str(package_name);
         buf.push_str(")\n");
     }

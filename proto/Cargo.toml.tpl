@@ -10,16 +10,15 @@ serde = "1.0"
 tonic = { version = "0.6.2", features = ["compression"] }
 
 [features]
-{{ features }}
-# This is probably not what you want, but you can use this template to
-# get started. Remember to keep a spot for `{{ features }}` if you are
-# using that functionality.
+default = []
+# @@protoc_insertion_point(features)
+
+# Remember to keep an insertion point for features if you are using that functionality.
 
 # We're in the middle of everyone upgrading to Prost! 0.10.0. Until that happens, enjoy these patches.
 [patch.crates-io]
 pbjson-types = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
 pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
-tonic-build = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
 tonic = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
 
 [workspace]

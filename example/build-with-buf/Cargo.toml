@@ -1,21 +1,22 @@
 [package]
-name = "proto"
+name = "build-with-buf"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+bytes = "1.1.0"
 prost = "0.10.0"
+pbjson = "0.2.3"
 pbjson-types = "0.2.3"
 serde = "1.0"
 tonic = { version = "0.6.2", features = ["compression"] }
 
-[features]
-{{ features }}
-# This is probably not what you want, but you can use this template to
-# get started. Remember to keep a spot for `{{ features }}` if you are
-# using that functionality.
+[build-dependencies]
+protoc-gen-prost = { version = "0.1.0", path = "../../protoc-gen-prost" }
+protoc-gen-prost-crate = { version = "0.1.0", path = "../../protoc-gen-prost-crate" }
+protoc-gen-prost-serde = { version = "0.1.0", path = "../../protoc-gen-prost-serde" }
+protoc-gen-tonic = { version = "0.1.0", path = "../../protoc-gen-tonic" }
 
-# We're in the middle of everyone upgrading to Prost! 0.10.0. Until that happens, enjoy these patches.
 [patch.crates-io]
 pbjson-types = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
 pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }

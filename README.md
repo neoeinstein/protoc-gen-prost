@@ -59,3 +59,7 @@ plugins:
     opt:
       - gen_crate=Cargo.toml.tpl
 ```
+
+See `example/build-with-buf` for an example of invoking `buf` as part of a
+`build.rs` build script. This may be useful when you want to extend the
+generated files with additional trait or inherent implementations.

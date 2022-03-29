@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package example;
+
+import 'example/ExampleRequest.proto';
+import 'example/ExampleResponse.proto';
+
+service Example {
+    rpc DoTheThing(ExampleRequest) returns (ExampleResponse);
+}

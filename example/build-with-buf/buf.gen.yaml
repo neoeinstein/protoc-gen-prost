@@ -1,0 +1,25 @@
+version: v1
+plugins:
+  - name: prost
+    out: src/gen
+    path: ../../target/debug/protoc-gen-prost
+    opt:
+#      - bytes=.
+      - compile_well_known_types
+      - extern_path=.google.protobuf=::pbjson_types
+      - file_descriptor_set
+  - name: prost-serde
+    out: src/gen
+    path: ../../target/debug/protoc-gen-prost-serde
+  - name: tonic
+    out: src/gen
+    path: ../../target/debug/protoc-gen-tonic
+    opt:
+      - compile_well_known_types
+      - extern_path=.google.protobuf=::pbjson_types
+  - name: prost-crate
+    out: src/gen
+    path: ../../target/debug/protoc-gen-prost-crate
+    strategy: all
+    opt:
+      - no_features

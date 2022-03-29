@@ -10,7 +10,7 @@ plugins:
       - file_descriptor_set
   - name: prost-serde
     out: gen/src
-    path: ../protoc-gen-prost-serde/target/debug/protoc-gen-prost-serde
+    path: ../target/debug/protoc-gen-prost-serde
   - name: tonic
     out: gen/src
     path: ../protoc-gen-tonic/target/debug/protoc-gen-tonic

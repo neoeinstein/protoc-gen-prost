@@ -142,6 +142,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "87f3e037eac156d1775da914196f0f37741a274155e34a0b7e427c35d2a2ecb9"
 
 [[package]]
+name = "pbjson-build"
+version = "0.2.3"
+source = "git+https://github.com/neoeinstein/pbjson?branch=protoc-plugin-compat#a9b4e6d2b57e6e0173ede9b2e9ce6b25fd6b53da"
+dependencies = [
+ "heck",
+ "itertools",
+ "prost",
+ "prost-types",
+]
+
+[[package]]
 name = "petgraph"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -231,6 +242,19 @@ name = "protoc-gen-prost-crate"
 version = "0.1.0"
 dependencies = [
  "once_cell",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "protoc-gen-prost",
+ "regex",
+]
+
+[[package]]
+name = "protoc-gen-prost-serde"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "pbjson-build",
  "prost",
  "prost-build",
  "prost-types",

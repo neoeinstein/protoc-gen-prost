@@ -17,16 +17,8 @@ categories = ["encoding"]
 [dependencies]
 once_cell = "1.10.0"
 pbjson-build = "0.2.3"
-prost-build = { version = "0.9.0", default-features = false }
-prost-types = { version = "0.9.0", default-features = false }
-prost = { version = "0.9.0", default-features = false, features = ["std"] }
+prost-build = { version = "0.10.0", default-features = false }
+prost-types = { version = "0.10.0", default-features = false }
+prost = { version = "0.10.0", default-features = false, features = ["std"] }
 protoc-gen-prost = { version = "0.1.0", path = "../protoc-gen-prost" }
 regex = { version = "1.5.5", default-features = false }
-
-[patch.crates-io]
-pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
-prost-build = { git = "https://github.com/tokio-rs/prost", branch = "master" }
-prost-types = { git = "https://github.com/tokio-rs/prost", branch = "master" }
-prost = { git = "https://github.com/tokio-rs/prost", branch = "master" }
-
-[workspace]

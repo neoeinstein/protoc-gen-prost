@@ -4,7 +4,9 @@ members = [
     "protoc-gen-prost-crate",
     "protoc-gen-prost-serde",
     "protoc-gen-prost-validate",
+    "protoc-gen-tonic",
 ]
 
 [patch.crates-io]
 pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
+tonic-build = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }

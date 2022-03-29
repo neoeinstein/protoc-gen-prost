@@ -163,6 +163,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "prettyplease"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b83ec2d0af5c5c556257ff52c9f98934e243b9fd39604bfb2a9b75ec2e97f18"
+dependencies = [
+ "proc-macro2",
+ "syn",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -267,6 +277,22 @@ name = "protoc-gen-prost-validate"
 version = "0.0.1"
 
 [[package]]
+name = "protoc-gen-tonic"
+version = "0.1.0"
+dependencies = [
+ "heck",
+ "once_cell",
+ "prettyplease",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "protoc-gen-prost",
+ "regex",
+ "syn",
+ "tonic-build",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -331,6 +357,18 @@ dependencies = [
  "redox_syscall",
  "remove_dir_all",
  "winapi",
+]
+
+[[package]]
+name = "tonic-build"
+version = "0.6.2"
+source = "git+https://github.com/neoeinstein/tonic?branch=prost-0.10.0#d51b6172356e7a9aeb20cb3e5d355f9e69ba6c85"
+dependencies = [
+ "prettyplease",
+ "proc-macro2",
+ "prost-build",
+ "quote",
+ "syn",
 ]
 
 [[package]]

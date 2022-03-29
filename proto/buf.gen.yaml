@@ -13,7 +13,7 @@ plugins:
     path: ../target/debug/protoc-gen-prost-serde
   - name: tonic
     out: gen/src
-    path: ../protoc-gen-tonic/target/debug/protoc-gen-tonic
+    path: ../target/debug/protoc-gen-tonic
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types

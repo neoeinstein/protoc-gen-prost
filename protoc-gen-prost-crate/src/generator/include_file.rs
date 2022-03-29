@@ -24,26 +24,25 @@ impl<'a> IncludeFileGenerator<'a> {
 impl<'a> Generator for IncludeFileGenerator<'a> {
     fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
         let mut context = CodeGenContext::new();
-        let mut buf = String::new();
 
         let _: () = module_request_set
             .requests()
             .filter_map(|(module, request)| {
                 let filename = request.output_filename()?;
 
-                context.move_to(module, request.proto_package_name(), &mut buf);
-                context.push_include(filename, &mut buf);
-                context.push_insertion_point(request.proto_package_name(), &mut buf);
+                context.move_to(module, request.proto_package_name());
+                context.push_include(filename);
+                context.push_insertion_point(request.proto_package_name());
 
                 Some(())
             })
             .collect();
 
-        context.finish(&mut buf);
+        let content = context.finish();
 
         let file = File {
             name: Some(self.filename.to_string()),
-            content: Some(buf),
+            content: Some(content),
             ..File::default()
         };
 
@@ -54,10 +53,12 @@ impl<'a> Generator for IncludeFileGenerator<'a> {
 static ROOT_MODULE: Lazy<Module> = Lazy::new(|| Module::from_parts([] as [String; 0]));
 
 #[must_use]
+#[derive(Debug)]
 struct CodeGenContext<'a> {
     last: &'a Module,
     last_prefix: usize,
     indent: String,
+    buf: String,
 }
 
 const INDENT: &str = "    ";
@@ -68,6 +69,7 @@ impl<'a> CodeGenContext<'a> {
             last: &*ROOT_MODULE,
             last_prefix: 0,
             indent: String::new(),
+            buf: String::new(),
         }
     }
 
@@ -84,68 +86,69 @@ impl<'a> CodeGenContext<'a> {
         );
     }
 
-    fn push_indent(&self, buf: &mut String) {
-        buf.push_str(&self.indent);
+    fn push_indent(&mut self) {
+        self.buf.push_str(&self.indent);
     }
 
-    fn move_to(&mut self, next: &'a Module, package: &str, buf: &mut String) {
+    fn move_to(&mut self, next: &'a Module, package: &str) {
         let (down, prefix) = difference(self.last, next);
 
         for _ in 0..down {
-            self.close_module(buf);
+            self.close_module();
         }
 
         let take = next.len() - prefix - 1;
 
         for module_name in next.parts().skip(prefix).take(take) {
-            self.open_module(module_name, buf);
+            self.open_module(module_name);
         }
 
-        self.push_attribute_insertion_point(package, buf);
-        self.open_module(next.parts().last().unwrap(), buf);
+        self.push_attribute_insertion_point(package);
+        self.open_module(next.parts().last().unwrap());
 
         self.last = next;
         self.last_prefix = prefix;
     }
 
-    fn finish(mut self, buf: &mut String) {
+    fn finish(mut self) -> String {
         for _ in 0..=self.last_prefix {
-            self.close_module(buf)
+            self.close_module()
         }
+        self.buf
     }
 
-    fn push_include(&self, filename: &str, buf: &mut String) {
-        self.push_indent(buf);
-        buf.push_str("include!(\"");
-        buf.push_str(filename);
-        buf.push_str("\");\n");
+    fn push_include(&mut self, filename: &str) {
+        self.push_indent();
+        self.buf.push_str("include!(\"");
+        self.buf.push_str(filename);
+        self.buf.push_str("\");\n");
     }
 
-    fn push_insertion_point(&self, package_name: &str, buf: &mut String) {
-        self.push_indent(buf);
-        buf.push_str("// @@protoc_insertion_point(");
-        buf.push_str(package_name);
-        buf.push_str(")\n");
+    fn push_insertion_point(&mut self, package_name: &str) {
+        self.push_indent();
+        self.buf.push_str("// @@protoc_insertion_point(");
+        self.buf.push_str(package_name);
+        self.buf.push_str(")\n");
     }
 
-    fn push_attribute_insertion_point(&self, package_name: &str, buf: &mut String) {
-        self.push_indent(buf);
-        buf.push_str("// @@protoc_insertion_point(attribute:");
-        buf.push_str(package_name);
-        buf.push_str(")\n");
+    fn push_attribute_insertion_point(&mut self, package_name: &str) {
+        self.push_indent();
+        self.buf.push_str("// @@protoc_insertion_point(attribute:");
+        self.buf.push_str(package_name);
+        self.buf.push_str(")\n");
     }
 
-    fn close_module(&mut self, buf: &mut String) {
+    fn close_module(&mut self) {
         self.dedent();
-        self.push_indent(buf);
-        buf.push_str("}\n");
+        self.push_indent();
+        self.buf.push_str("}\n");
     }
 
-    fn open_module(&mut self, module_name: &str, buf: &mut String) {
-        self.push_indent(buf);
-        buf.push_str("pub mod ");
-        buf.push_str(module_name);
-        buf.push_str(" {\n");
+    fn open_module(&mut self, module_name: &str) {
+        self.push_indent();
+        self.buf.push_str("pub mod ");
+        self.buf.push_str(module_name);
+        self.buf.push_str(" {\n");
         self.indent();
     }
 }

@@ -48,7 +48,9 @@ impl CoreProstGenerator {
         request.write_to_file(move |buffer| {
             let _ = std::mem::replace(buffer, content);
 
-            buffer.push_str("// @@protoc_insertion_point(module)\n");
+            if !buffer.is_empty() {
+                buffer.push_str("// @@protoc_insertion_point(module)\n");
+            }
         })
     }
 }

@@ -28,3 +28,10 @@ protoc-gen-prost = { version = "0.1.0", path = "../protoc-gen-prost" }
 regex = { version = "1.5.5", default-features = false }
 syn = { version = "1.0.89", features = ["parsing", "full"] }
 tonic-build = { version = "0.6.2", features = ["compression"] }
+
+[patch.crates-io]
+prost-build = { git = "https://github.com/tokio-rs/prost", branch = "master" }
+prost-types = { git = "https://github.com/tokio-rs/prost", branch = "master" }
+prost = { git = "https://github.com/tokio-rs/prost", branch = "master" }
+
+[workspace]

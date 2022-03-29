@@ -1,14 +1,6 @@
 [workspace]
 members = [
     "protoc-gen-prost",
-    "protoc-gen-prost-serde",
     "protoc-gen-prost-crate",
-    "protoc-gen-tonic",
     "protoc-gen-prost-validate",
 ]
-
-[patch.crates-io]
-pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
-prost-build = { git = "https://github.com/tokio-rs/prost", branch = "master" }
-prost-types = { git = "https://github.com/tokio-rs/prost", branch = "master" }
-prost = { git = "https://github.com/tokio-rs/prost", branch = "master" }

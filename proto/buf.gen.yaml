@@ -10,10 +10,10 @@ plugins:
       - file_descriptor_set
   - name: prost-serde
     out: gen/src
-    path: ../target/debug/protoc-gen-prost-serde
+    path: ../protoc-gen-prost-serde/target/debug/protoc-gen-prost-serde
   - name: tonic
     out: gen/src
-    path: ../target/debug/protoc-gen-tonic
+    path: ../protoc-gen-tonic/target/debug/protoc-gen-tonic
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types

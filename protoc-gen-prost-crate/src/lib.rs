@@ -9,6 +9,7 @@ use prost_types::compiler::CodeGeneratorRequest;
 use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
 
 use crate::generator::FeaturesGenerator;
+use std::rc::Rc;
 use std::{fmt, str};
 
 mod generator;
@@ -31,10 +32,16 @@ pub fn execute(raw_request: &[u8]) -> Result {
         params.include_file.as_deref()
     };
 
-    let include_file_generator = IncludeFileGenerator::new(include_filename);
+    let limiter = Rc::new(params.only_include);
+
+    let include_file_generator = IncludeFileGenerator::new(include_filename, limiter.clone());
     let cargo_crate_generator = params.gen_crate.map(CargoCrateGenerator::new);
-    let features_generator = (!params.no_features)
-        .then(|| FeaturesGenerator::new(include_file_generator.filename().to_owned()));
+    let features_generator = (!params.no_features).then(|| {
+        FeaturesGenerator::new(
+            include_file_generator.filename().to_owned(),
+            limiter.clone(),
+        )
+    });
 
     let files = include_file_generator
         .chain(cargo_crate_generator)
@@ -60,6 +67,9 @@ struct Parameters {
 
     /// A path to a template for generating a Rust crate
     no_features: bool,
+
+    /// Limit generation of includes to packages in this list
+    only_include: PackageLimiter,
 }
 
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
@@ -90,6 +100,14 @@ impl str::FromStr for Parameters {
                 ("include_file", Some(filename), None) => {
                     ret_val.include_file = Some(filename.to_owned())
                 }
+                ("only_include", Some(package), None) => {
+                    if ret_val.only_include.push(package.to_owned()).is_err() {
+                        return Err(InvalidParameter(format!(
+                            "proto paths must begin with `.`: {}",
+                            capture.get(0).unwrap().as_str()
+                        )));
+                    }
+                }
                 ("gen_crate", Some(template), None) => {
                     ret_val.gen_crate = Some(template.to_owned())
                 }
@@ -119,3 +137,38 @@ impl fmt::Display for InvalidParameter {
 }
 
 impl std::error::Error for InvalidParameter {}
+
+#[derive(Debug, Default)]
+struct PackageLimiter {
+    include_prefixes: Vec<String>,
+}
+
+impl PackageLimiter {
+    fn push(&mut self, package: String) -> std::result::Result<(), ()> {
+        if package.starts_with('.') {
+            let mut prefix = package;
+            prefix.remove(0);
+            prefix.push('.');
+            self.include_prefixes.push(prefix);
+            Ok(())
+        } else {
+            Err(())
+        }
+    }
+
+    fn is_allowed(&self, package: &str) -> bool {
+        if self.include_prefixes.is_empty() {
+            true
+        } else {
+            let package = if package.starts_with('.') {
+                &package[1..]
+            } else {
+                package
+            };
+
+            self.include_prefixes
+                .iter()
+                .any(|prefix| package == &prefix[..prefix.len() - 1] || package.starts_with(prefix))
+        }
+    }
+}

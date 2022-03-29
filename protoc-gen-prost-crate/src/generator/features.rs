@@ -1,15 +1,21 @@
 use prost_types::compiler::code_generator_response::File;
 
+use crate::PackageLimiter;
 use protoc_gen_prost::{Generator, ModuleRequest, ModuleRequestSet, Result};
 use std::collections::{BTreeMap, BTreeSet};
+use std::rc::Rc;
 
 pub(crate) struct FeaturesGenerator {
     include_filename: String,
+    limiter: Rc<PackageLimiter>,
 }
 
 impl FeaturesGenerator {
-    pub(crate) fn new(include_filename: String) -> Self {
-        Self { include_filename }
+    pub(crate) fn new(include_filename: String, limiter: Rc<PackageLimiter>) -> Self {
+        Self {
+            include_filename,
+            limiter,
+        }
     }
 }
 
@@ -27,6 +33,10 @@ impl Generator for FeaturesGenerator {
         if !dep_tree.dependency_graph.is_empty() {
             buf.push_str("full = [");
             for feature in dep_tree.dependency_graph.keys() {
+                if !self.limiter.is_allowed(feature) {
+                    continue;
+                }
+
                 let feature_name = feature.replace('.', "_");
                 buf.push('"');
                 buf.push_str(&feature_name);
@@ -39,21 +49,33 @@ impl Generator for FeaturesGenerator {
                     ..File::default()
                 });
             }
-            let _ = buf.pop();
+            if let Some('[') = buf.pop() {
+                buf.push('[');
+            }
             buf.push_str("]\n");
 
             for (feature, dependencies) in dep_tree.dependency_graph {
+                if !self.limiter.is_allowed(feature) {
+                    continue;
+                }
+
                 buf.push_str(&feature.replace('.', "_"));
                 if dependencies.is_empty() {
                     buf.push_str(" = []\n");
                 } else {
                     buf.push_str(" = [");
                     for feature in dependencies {
+                        if !self.limiter.is_allowed(feature) {
+                            continue;
+                        }
+
                         buf.push('"');
                         buf.push_str(&feature.replace('.', "_"));
                         buf.push_str("\",");
                     }
-                    let _ = buf.pop();
+                    if let Some('[') = buf.pop() {
+                        buf.push('[');
+                    }
                     buf.push_str("]\n");
                 }
             }

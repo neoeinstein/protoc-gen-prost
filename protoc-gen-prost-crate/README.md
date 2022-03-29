@@ -35,6 +35,9 @@ The following options can be specified:
   defaults to `mod.rs`. The generated include file will add feature markers
    to each produced module to allow for faster compilation and reduced sizes
   for unnecessary features. This can be disabled by specifying `no_features`.
+* `only_include=<proto_path>`: Will only include packages with the specified
+  prefix in the generated include file and generated features list, if enabled.
+  Paths must be fully-qualified and begin with `.`.
 * `gen_crate=<template_path>`: Indicates that a Cargo crate should be generated
   with the manifest based on the template at the path provided. The template
   should include a placeholder to inject the crate features graph unless
@@ -85,6 +88,27 @@ plugins:
     strategy: all
     opt:
       - gen_crate=Cargo.toml.tpl
+```
+
+When working with private, vendored package dependencies, _buf_ tends to
+push more files for output than desired. To limit the packages that get
+put into the include file, used the `only_include` option:
+
+```yaml
+version: v1
+plugins:
+  - name: prost
+    out: gen/src
+    opt:
+      - bytes=.
+      - file_descriptor_set
+  - name: prost-crate
+    out: gen
+    strategy: all
+    opt:
+      - gen_crate=Cargo.toml.tpl
+      - only_include=.my_company
+
 ```
 
 ## Cargo manifest template

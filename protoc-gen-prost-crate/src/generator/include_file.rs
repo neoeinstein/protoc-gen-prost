@@ -1,18 +1,22 @@
+use crate::PackageLimiter;
 use once_cell::sync::Lazy;
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
 use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
+use std::rc::Rc;
 
 const DEFAULT_FILENAME: &str = "mod.rs";
 
 pub(crate) struct IncludeFileGenerator<'a> {
     filename: &'a str,
+    limiter: Rc<PackageLimiter>,
 }
 
 impl<'a> IncludeFileGenerator<'a> {
-    pub(crate) fn new(filename: Option<&'a str>) -> Self {
+    pub(crate) fn new(filename: Option<&'a str>, limiter: Rc<PackageLimiter>) -> Self {
         Self {
             filename: filename.unwrap_or(DEFAULT_FILENAME),
+            limiter,
         }
     }
 
@@ -29,12 +33,13 @@ impl<'a> Generator for IncludeFileGenerator<'a> {
             .requests()
             .filter_map(|(module, request)| {
                 let filename = request.output_filename()?;
-
-                context.move_to(module, request.proto_package_name());
-                context.push_include(filename);
-                context.push_insertion_point(request.proto_package_name());
-
-                Some(())
+                self.limiter
+                    .is_allowed(request.proto_package_name())
+                    .then(|| {
+                        context.move_to(module, request.proto_package_name());
+                        context.push_include(filename);
+                        context.push_insertion_point(request.proto_package_name());
+                    })
             })
             .collect();
 
@@ -56,7 +61,6 @@ static ROOT_MODULE: Lazy<Module> = Lazy::new(|| Module::from_parts([] as [String
 #[derive(Debug)]
 struct CodeGenContext<'a> {
     last: &'a Module,
-    last_prefix: usize,
     indent: String,
     buf: String,
 }
@@ -67,7 +71,6 @@ impl<'a> CodeGenContext<'a> {
     fn new() -> Self {
         Self {
             last: &*ROOT_MODULE,
-            last_prefix: 0,
             indent: String::new(),
             buf: String::new(),
         }
@@ -107,11 +110,10 @@ impl<'a> CodeGenContext<'a> {
         self.open_module(next.parts().last().unwrap());
 
         self.last = next;
-        self.last_prefix = prefix;
     }
 
     fn finish(mut self) -> String {
-        for _ in 0..=self.last_prefix {
+        while !self.indent.is_empty() {
             self.close_module()
         }
         self.buf

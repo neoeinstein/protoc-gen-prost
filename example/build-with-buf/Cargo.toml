@@ -18,8 +18,8 @@ protoc-gen-prost-serde = { version = "0.1.0", path = "../../protoc-gen-prost-ser
 protoc-gen-tonic = { version = "0.1.0", path = "../../protoc-gen-tonic" }
 
 [patch.crates-io]
-pbjson-types = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
-pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
+pbjson-types = { git = "https://github.com/influxdata/pbjson", branch = "main" }
+pbjson-build = { git = "https://github.com/influxdata/pbjson", branch = "main" }
 tonic-build = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
 tonic = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
 

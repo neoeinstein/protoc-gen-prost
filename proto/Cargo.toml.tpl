@@ -17,8 +17,8 @@ default = []
 
 # We're in the middle of everyone upgrading to Prost! 0.10.0. Until that happens, enjoy these patches.
 [patch.crates-io]
-pbjson-types = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
-pbjson-build = { git = "https://github.com/neoeinstein/pbjson", branch = "protoc-plugin-compat" }
+pbjson-types = { git = "https://github.com/influxdata/pbjson", branch = "main" }
+pbjson-build = { git = "https://github.com/influxdata/pbjson", branch = "main" }
 tonic = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
 
 [workspace]

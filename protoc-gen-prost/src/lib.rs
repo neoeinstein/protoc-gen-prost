@@ -158,7 +158,7 @@ impl ModuleRequest {
     /// Creates a code generation file from the output
     pub(crate) fn write_to_file<F: FnOnce(&mut String)>(&self, f: F) -> Option<File> {
         self.output_filename.as_deref().map(|name| {
-            let mut content = String::new();
+            let mut content = String::with_capacity(8_192);
             f(&mut content);
 
             File {

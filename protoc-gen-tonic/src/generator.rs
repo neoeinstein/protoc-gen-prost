@@ -80,9 +80,11 @@ impl TonicGenerator {
                 buf.push_str("\");\n");
             })?;
 
+            let file = syn::parse2(services).expect("valid rust file");
+
             let data = File {
                 name: Some(output_filename),
-                content: Some(pretty_file(services.to_string())),
+                content: Some(format!("// @generated\n{}", prettyplease::unparse(&file))),
                 ..File::default()
             };
 
@@ -130,9 +132,4 @@ impl TonicGenerator {
 
         Some(service)
     }
-}
-
-fn pretty_file(content: String) -> String {
-    let tokens: syn::File = syn::parse_str(&content).expect("valid rust file");
-    prettyplease::unparse(&tokens)
 }

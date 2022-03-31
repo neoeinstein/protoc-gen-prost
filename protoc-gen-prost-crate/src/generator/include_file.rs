@@ -60,10 +60,16 @@ const INDENT: &str = "    ";
 
 impl<'a> CodeGenContext<'a> {
     fn new() -> Self {
+        // Reserve an initial 16 kiB
+        let mut buf = String::with_capacity(16_384);
+        buf.push_str("// @generated\n");
+
+        let indent = String::with_capacity(INDENT.len() * 8);
+
         Self {
             last: &*ROOT_MODULE,
-            indent: String::new(),
-            buf: String::new(),
+            indent,
+            buf,
         }
     }
 

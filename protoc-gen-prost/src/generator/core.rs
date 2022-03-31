@@ -46,8 +46,8 @@ impl CoreProstGenerator {
             .expect("generated module that somehow wasn't in the original requests…");
 
         request.write_to_file(move |buffer| {
-            let _ = std::mem::replace(buffer, content);
-
+            buffer.push_str("// @generated\n");
+            buffer.push_str(&content);
             buffer.push_str("// @@protoc_insertion_point(module)\n");
         })
     }

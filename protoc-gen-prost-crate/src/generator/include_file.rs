@@ -5,23 +5,14 @@ use prost_types::compiler::code_generator_response::File;
 use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
 use std::rc::Rc;
 
-const DEFAULT_FILENAME: &str = "mod.rs";
-
 pub(crate) struct IncludeFileGenerator<'a> {
     filename: &'a str,
     limiter: Rc<PackageLimiter>,
 }
 
 impl<'a> IncludeFileGenerator<'a> {
-    pub(crate) fn new(filename: Option<&'a str>, limiter: Rc<PackageLimiter>) -> Self {
-        Self {
-            filename: filename.unwrap_or(DEFAULT_FILENAME),
-            limiter,
-        }
-    }
-
-    pub(crate) fn filename(&self) -> &str {
-        self.filename
+    pub(crate) fn new(filename: &'a str, limiter: Rc<PackageLimiter>) -> Self {
+        Self { filename, limiter }
     }
 }
 

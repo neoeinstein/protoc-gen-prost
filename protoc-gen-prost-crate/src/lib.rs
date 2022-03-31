@@ -27,21 +27,20 @@ pub fn execute(raw_request: &[u8]) -> Result {
     )?;
 
     let include_filename = if matches!(params.gen_crate, Some(_)) {
-        Some(params.include_file.as_deref().unwrap_or("src/lib.rs"))
+        params.include_file.as_deref().unwrap_or("src/lib.rs")
     } else {
-        params.include_file.as_deref()
+        params.include_file.as_deref().unwrap_or("mod.rs")
     };
 
     let limiter = Rc::new(params.only_include);
 
     let include_file_generator = IncludeFileGenerator::new(include_filename, limiter.clone());
-    let cargo_crate_generator = params.gen_crate.map(CargoCrateGenerator::new);
-    let features_generator = (!params.no_features).then(|| {
-        FeaturesGenerator::new(
-            include_file_generator.filename().to_owned(),
-            limiter.clone(),
-        )
-    });
+    let cargo_crate_generator = params
+        .gen_crate
+        .as_ref()
+        .map(|o| CargoCrateGenerator::new(o.as_deref()));
+    let features_generator =
+        (!params.no_features).then(|| FeaturesGenerator::new(include_filename, limiter.clone()));
 
     let files = include_file_generator
         .chain(cargo_crate_generator)
@@ -63,7 +62,7 @@ struct Parameters {
     include_file: Option<String>,
 
     /// A path to a template for generating a Rust crate
-    gen_crate: Option<String>,
+    gen_crate: Option<Option<String>>,
 
     /// A path to a template for generating a Rust crate
     no_features: bool,
@@ -95,7 +94,7 @@ impl str::FromStr for Parameters {
 
             match (param, key, value) {
                 ("default_package_filename", value, None) => {
-                    ret_val.default_package_filename = value.map(|s| s.to_string())
+                    ret_val.default_package_filename = value.map(ToOwned::to_owned)
                 }
                 ("include_file", Some(filename), None) => {
                     ret_val.include_file = Some(filename.to_owned())
@@ -108,8 +107,8 @@ impl str::FromStr for Parameters {
                         )));
                     }
                 }
-                ("gen_crate", Some(template), None) => {
-                    ret_val.gen_crate = Some(template.to_owned())
+                ("gen_crate", template, None) => {
+                    ret_val.gen_crate = Some(template.map(ToOwned::to_owned))
                 }
                 ("no_features", Some("true") | None, None) => ret_val.no_features = true,
                 ("no_features", Some("false"), None) => (),

@@ -65,6 +65,20 @@ plugins:
     out: gen
 ```
 
+The `protoc-gen-prost-serde` plugin is also published on the Buf Schema Registry as
+a plugin which you can execute remotely, without needing to explicitly install
+this tool. See the [plugin listing][1] to identify the latest published version
+for use. The plugin is referenced as follows:
+
+[1]: https://buf.build/prost/plugins/serde
+
+```yaml
+version: v1
+plugins:
+  - remote: buf.build/prost/plugins/serde:v0.1.0-3
+    out: gen
+```
+
 `protoc-gen-prost-serde` is also compatible with the `protoc-gen-prost-crate`
 plugin:
 

@@ -81,6 +81,20 @@ plugins:
       - type_attribute=.helloworld.v1.HelloWorld=#[derive(Eq\, Hash)]
 ```
 
+The `protoc-gen-prost` plugin is also published on the Buf Schema Registry as
+a plugin which you can execute remotely, without needing to explicitly install
+this tool. See the [plugin listing][1] to identify the latest published version
+for use. The plugin is referenced as follows:
+
+[1]: https://buf.build/prost/plugins/prost
+
+```yaml
+version: v1
+plugins:
+  - remote: buf.build/prost/plugins/prost:v0.1.3-2
+    out: gen
+```
+
 If an include file or generated crate is desired, then that should be run
 as a distinct step, as in the following example. For more information, see
 the `protoc-gen-prost-crate` plugin.

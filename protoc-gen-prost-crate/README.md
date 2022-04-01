@@ -114,6 +114,22 @@ plugins:
       - only_include=.my_company
 ```
 
+The `protoc-gen-prost-crate` plugin is also published on the Buf Schema Registry as
+a plugin which you can execute remotely, without needing to explicitly install
+this tool. See the [plugin listing][1] to identify the latest published version
+for use. Note that the remote plugin form is _not compatible_ with the `gen_crate`
+option, as the plugin is executed outside the context of the current file system,
+so template information cannot be used. The plugin is referenced as follows:
+
+[1]: https://buf.build/prost/plugins/crate
+
+```yaml
+version: v1
+plugins:
+  - remote: buf.build/prost/plugins/crate:v0.1.5-2
+    out: gen
+```
+
 ## Cargo manifest template
 
 When using the `gen_crate` option, the template specified will be placed in

@@ -36,19 +36,23 @@ each of those folders for more information.
 
 ## Example `buf.gen.yaml`
 
+Note: When executing `protoc-gen-prost-crate` with the `gen_crate` option, remote
+generation is not possible, as the manifest template is not made available to a
+remote plugin.
+
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - remote: buf.build/prost/plugins/prost:v0.1.3-2
     out: gen/src
     opt:
       - bytes=.
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
-  - name: prost-serde
+  - remote: buf.build/prost/plugins/serde:v0.1.0-3
     out: gen/src
-  - name: tonic
+  - remote: buf.build/prost/plugins/tonic:v0.1.0-3
     out: gen/src
     opt:
       - compile_well_known_types
@@ -57,7 +61,7 @@ plugins:
     out: gen
     strategy: all
     opt:
-      - gen_crate=Cargo.toml.tpl
+      - gen_crate=Cargo.toml
 ```
 
 See `example/build-with-buf` for an example of invoking `buf` as part of a

@@ -18,16 +18,6 @@ prost = "0.10.0"
 pbjson = "0.3"
 pbjson-types = "0.3"
 serde = "1.0"
-tonic = { version = "0.6.2", features = ["compression"] }
-
-[build-dependencies]
-protoc-gen-prost = { version = "0.1.0", path = "../../protoc-gen-prost" }
-protoc-gen-prost-crate = { version = "0.1.0", path = "../../protoc-gen-prost-crate" }
-protoc-gen-prost-serde = { version = "0.1.0", path = "../../protoc-gen-prost-serde" }
-protoc-gen-tonic = { version = "0.1.0", path = "../../protoc-gen-tonic" }
-
-[patch.crates-io]
-tonic-build = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
-tonic = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
+tonic = { version = "0.7", features = ["compression"] }
 
 [workspace]

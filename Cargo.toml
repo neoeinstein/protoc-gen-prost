@@ -6,6 +6,3 @@ members = [
     "protoc-gen-prost-validate",
     "protoc-gen-tonic",
 ]
-
-[patch.crates-io]
-tonic-build = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }

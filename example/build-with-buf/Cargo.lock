@@ -112,7 +112,7 @@ name = "build-with-buf"
 version = "0.1.0"
 dependencies = [
  "bytes",
- "pbjson 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pbjson",
  "pbjson-types",
  "prost",
  "protoc-gen-prost",
@@ -270,9 +270,9 @@ dependencies = [
 
 [[package]]
 name = "h2"
-version = "0.3.12"
+version = "0.3.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62eeb471aa3e3c9197aa4bfeabfe02982f6dc96f750486c0bb0009ac58b26d2b"
+checksum = "37a82c6d637fc9515a4694bbf1cb2457b79d81ce52b3108bdeea58b07dd34a57"
 dependencies = [
  "bytes",
  "fnv",
@@ -283,7 +283,7 @@ dependencies = [
  "indexmap",
  "slab",
  "tokio",
- "tokio-util 0.6.9",
+ "tokio-util 0.7.1",
  "tracing",
 ]
 
@@ -529,18 +529,9 @@ checksum = "87f3e037eac156d1775da914196f0f37741a274155e34a0b7e427c35d2a2ecb9"
 
 [[package]]
 name = "pbjson"
-version = "0.2.3"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "079e9b3d4073caf333009fe23e464c7d76f512112bb1ae034f6592958fadc0b8"
-dependencies = [
- "base64",
- "serde",
-]
-
-[[package]]
-name = "pbjson"
-version = "0.2.3"
-source = "git+https://github.com/influxdata/pbjson?branch=main#cd0d7a046a6ca28c02816a7bffc688e30da4fdcc"
+checksum = "d86c0a61b93c50f35af5d8a4f134790f47cbebf8803a7219dd1e7238cd1af022"
 dependencies = [
  "base64",
  "serde",
@@ -548,8 +539,9 @@ dependencies = [
 
 [[package]]
 name = "pbjson-build"
-version = "0.2.3"
-source = "git+https://github.com/influxdata/pbjson?branch=main#cd0d7a046a6ca28c02816a7bffc688e30da4fdcc"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "956a449e8a85fc040e9f8cd8fd4dd2e68059d179092401f0d8570ba059f76dae"
 dependencies = [
  "heck",
  "itertools",
@@ -559,12 +551,13 @@ dependencies = [
 
 [[package]]
 name = "pbjson-types"
-version = "0.2.3"
-source = "git+https://github.com/influxdata/pbjson?branch=main#cd0d7a046a6ca28c02816a7bffc688e30da4fdcc"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c20bd6ec3b4ba0073e7e5a1a770abd95723b431bf0e1941d2dd8aace9ffb97f"
 dependencies = [
  "bytes",
  "chrono",
- "pbjson 0.2.3 (git+https://github.com/influxdata/pbjson?branch=main)",
+ "pbjson",
  "pbjson-build",
  "prost",
  "prost-build",
@@ -981,6 +974,7 @@ dependencies = [
  "futures-sink",
  "pin-project-lite",
  "tokio",
+ "tracing",
 ]
 
 [[package]]

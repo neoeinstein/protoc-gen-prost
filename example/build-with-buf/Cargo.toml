@@ -15,8 +15,8 @@ example = []
 [dependencies]
 bytes = "1.1.0"
 prost = "0.10.0"
-pbjson = "0.2.3"
-pbjson-types = "0.2.3"
+pbjson = "0.3"
+pbjson-types = "0.3"
 serde = "1.0"
 tonic = { version = "0.6.2", features = ["compression"] }
 
@@ -27,8 +27,6 @@ protoc-gen-prost-serde = { version = "0.1.0", path = "../../protoc-gen-prost-ser
 protoc-gen-tonic = { version = "0.1.0", path = "../../protoc-gen-tonic" }
 
 [patch.crates-io]
-pbjson-types = { git = "https://github.com/influxdata/pbjson", branch = "main" }
-pbjson-build = { git = "https://github.com/influxdata/pbjson", branch = "main" }
 tonic-build = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
 tonic = { git = "https://github.com/neoeinstein/tonic", branch = "prost-0.10.0" }
 

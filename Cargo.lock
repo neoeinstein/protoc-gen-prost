@@ -143,8 +143,9 @@ checksum = "87f3e037eac156d1775da914196f0f37741a274155e34a0b7e427c35d2a2ecb9"
 
 [[package]]
 name = "pbjson-build"
-version = "0.2.3"
-source = "git+https://github.com/influxdata/pbjson?branch=main#cd0d7a046a6ca28c02816a7bffc688e30da4fdcc"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "956a449e8a85fc040e9f8cd8fd4dd2e68059d179092401f0d8570ba059f76dae"
 dependencies = [
  "heck",
  "itertools",

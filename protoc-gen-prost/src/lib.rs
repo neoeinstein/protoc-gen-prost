@@ -77,17 +77,21 @@ impl ModuleRequestSet {
             |mut acc, (proto, raw)| {
                 let module = Module::from_protobuf_package_name(proto.package());
                 let proto_filename = proto.name();
-                let entry = acc.entry(module).or_insert_with(|| {
-                    let mut request = ModuleRequest::new(proto.package().to_owned());
-                    if input_protos.contains(proto_filename) {
-                        let filename = match proto.package() {
-                            "" => default_package_filename.to_owned(),
-                            package => format!("{package}.rs"),
-                        };
-                        request.with_output_filename(filename);
-                    }
-                    request
-                });
+                let entry = acc
+                    .entry(module)
+                    .or_insert_with(|| ModuleRequest::new(proto.package().to_owned()));
+
+                // Must be checked for each `proto_filename` because the a single Protobuf package
+                // can be composed of multiple `.proto` files and we cannot do it when creating the initial
+                // entry because at creation time, `proto_filename` might not be actual file of the package
+                // that is going to be generated.
+                if input_protos.contains(proto_filename) {
+                    let filename = match proto.package() {
+                        "" => default_package_filename.to_owned(),
+                        package => format!("{package}.rs"),
+                    };
+                    entry.with_output_filename(filename);
+                }
 
                 entry.push_file_descriptor_proto(proto, raw);
                 acc

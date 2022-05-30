@@ -1,8 +1,17 @@
 use prost::Message;
 use protoc_gen_prost::GeneratorResultExt;
-use std::io::{self, Read, Write};
+use std::{
+    env,
+    io::{self, Read, Write},
+    process::exit,
+};
 
 fn main() -> io::Result<()> {
+    if let Some(_) = env::args().find(|x| x == "--version") {
+        println!(env!("CARGO_PKG_VERSION"));
+        exit(0);
+    }
+
     let mut buf = Vec::new();
     io::stdin().read_to_end(&mut buf)?;
 

@@ -7,7 +7,7 @@ use std::{
 };
 
 fn main() -> io::Result<()> {
-    if let Some(_) = env::args().find(|x| x == "--version") {
+    if env::args().any(|x| x == "--version") {
         println!(env!("CARGO_PKG_VERSION"));
         exit(0);
     }

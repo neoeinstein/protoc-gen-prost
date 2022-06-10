@@ -254,7 +254,7 @@ impl ProstParameters {
         &mut self,
         param: &str,
         key: Option<&str>,
-        value: Option<&str>,
+        value: Option<String>,
     ) -> std::result::Result<(), ()> {
         match (param, key, value) {
             ("btree_map", Some(value), None) => self.btree_map.push(value.to_string()),
@@ -271,15 +271,15 @@ impl ProstParameters {
             }
             ("retain_enum_prefix", Some("true") | None, None) => self.retain_enum_prefix = true,
             ("retain_enum_prefix", Some("false"), None) => (),
-            ("extern_path", Some(prefix), Some(module)) => self
-                .extern_path
-                .push((prefix.to_string(), module.to_string())),
-            ("type_attribute", Some(prefix), Some(module)) => self
-                .type_attribute
-                .push((prefix.to_string(), module.replace(r"\,", ","))),
-            ("field_attribute", Some(prefix), Some(module)) => self
-                .field_attribute
-                .push((prefix.to_string(), module.replace(r"\,", ","))),
+            ("extern_path", Some(prefix), Some(module)) => {
+                self.extern_path.push((prefix.to_string(), module))
+            }
+            ("type_attribute", Some(prefix), Some(module)) => {
+                self.type_attribute.push((prefix.to_string(), module))
+            }
+            ("field_attribute", Some(prefix), Some(module)) => {
+                self.field_attribute.push((prefix.to_string(), module))
+            }
             _ => return Err(()),
         }
 
@@ -289,7 +289,7 @@ impl ProstParameters {
 
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
     regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
+        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\=|\\\\)+))?)?)",
     )
     .unwrap()
 });
@@ -306,11 +306,16 @@ impl str::FromStr for Parameters {
                 .trim();
 
             let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
+            let value = capture.get(3).map(|m| {
+                m.as_str()
+                    .replace(r"\,", r",")
+                    .replace(r"\=", r"=")
+                    .replace(r"\\", r"\")
+            });
 
             if ret_val
                 .prost
-                .try_handle_parameter(param, key, value)
+                .try_handle_parameter(param, key, value.clone())
                 .is_err()
             {
                 match (param, key, value) {

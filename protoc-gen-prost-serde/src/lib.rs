@@ -43,7 +43,7 @@ struct Parameters {
 
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
     regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
+        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\=|\\\\)+))?)?)",
     )
     .unwrap()
 });
@@ -76,7 +76,12 @@ impl str::FromStr for Parameters {
                 .trim();
 
             let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
+            let value = capture.get(3).map(|m| {
+                m.as_str()
+                    .replace(r"\,", r",")
+                    .replace(r"\=", r"=")
+                    .replace(r"\\", r"\")
+            });
 
             match (param, key, value) {
                 ("default_package_filename", value, None) => {
@@ -86,9 +91,9 @@ impl str::FromStr for Parameters {
                     ret_val.retain_enum_prefix = true
                 }
                 ("retain_enum_prefix", Some("false"), None) => (),
-                ("extern_path", Some(prefix), Some(module)) => ret_val
-                    .extern_path
-                    .push((prefix.to_string(), module.to_string())),
+                ("extern_path", Some(prefix), Some(module)) => {
+                    ret_val.extern_path.push((prefix.to_string(), module))
+                }
                 _ => {
                     return Err(InvalidParameter(
                         capture.get(0).unwrap().as_str().to_string(),

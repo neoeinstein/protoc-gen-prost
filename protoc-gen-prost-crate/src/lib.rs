@@ -73,7 +73,7 @@ struct Parameters {
 
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
     regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
+        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\=|\\\\)+))?)?)",
     )
     .unwrap()
 });
@@ -90,7 +90,12 @@ impl str::FromStr for Parameters {
                 .trim();
 
             let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
+            let value = capture.get(3).map(|m| {
+                m.as_str()
+                    .replace(r"\,", r",")
+                    .replace(r"\=", r"=")
+                    .replace(r"\\", r"\")
+            });
 
             match (param, key, value) {
                 ("default_package_filename", value, None) => {

@@ -57,7 +57,7 @@ struct Parameters {
 
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
     regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
+        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\=|\\\\)+))?)?)",
     )
     .unwrap()
 });
@@ -74,15 +74,20 @@ impl str::FromStr for Parameters {
                 .trim();
 
             let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
+            let value = capture.get(3).map(|m| {
+                m.as_str()
+                    .replace(r"\,", r",")
+                    .replace(r"\=", r"=")
+                    .replace(r"\\", r"\")
+            });
 
             match (param, key, value) {
                 ("default_package_filename", value, None) => {
                     ret_val.default_package_filename = value.map(|s| s.to_string())
                 }
-                ("extern_path", Some(prefix), Some(module)) => ret_val
-                    .extern_path
-                    .push((prefix.to_string(), module.to_string())),
+                ("extern_path", Some(prefix), Some(module)) => {
+                    ret_val.extern_path.push((prefix.to_string(), module))
+                }
                 ("compile_well_known_types", Some("true") | None, None) => {
                     ret_val.compile_well_known_types = true
                 }
@@ -95,18 +100,18 @@ impl str::FromStr for Parameters {
                 ("no_server", Some("false"), None) => (),
                 ("no_client", Some("true") | None, None) => ret_val.no_client = true,
                 ("no_client", Some("false"), None) => (),
-                ("client_mod_attribute", Some(prefix), Some(attribute)) => ret_val
-                    .client_attributes
-                    .push_mod(prefix, attribute.replace(r"\,", ",")),
-                ("client_attribute", Some(prefix), Some(attribute)) => ret_val
-                    .client_attributes
-                    .push_struct(prefix, attribute.replace(r"\,", ",")),
-                ("server_mod_attribute", Some(prefix), Some(attribute)) => ret_val
-                    .server_attributes
-                    .push_mod(prefix, attribute.replace(r"\,", ",")),
-                ("server_attribute", Some(prefix), Some(attribute)) => ret_val
-                    .server_attributes
-                    .push_struct(prefix, attribute.replace(r"\,", ",")),
+                ("client_mod_attribute", Some(prefix), Some(attribute)) => {
+                    ret_val.client_attributes.push_mod(prefix, attribute)
+                }
+                ("client_attribute", Some(prefix), Some(attribute)) => {
+                    ret_val.client_attributes.push_struct(prefix, attribute)
+                }
+                ("server_mod_attribute", Some(prefix), Some(attribute)) => {
+                    ret_val.server_attributes.push_mod(prefix, attribute)
+                }
+                ("server_attribute", Some(prefix), Some(attribute)) => {
+                    ret_val.server_attributes.push_struct(prefix, attribute)
+                }
                 _ => {
                     return Err(InvalidParameter(
                         capture.get(0).unwrap().as_str().to_string(),

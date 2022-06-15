@@ -26,7 +26,7 @@ pub fn execute(raw_request: &[u8]) -> protoc_gen_prost::Result {
         params.default_package_filename.as_deref(),
     )?;
 
-    let files = PbJsonGenerator::new(builder).generate(&module_request_set)?;
+    let files = PbJsonGenerator::new(builder, !params.no_insert_include).generate(&module_request_set)?;
 
     Ok(files)
 }
@@ -39,6 +39,7 @@ struct Parameters {
     default_package_filename: Option<String>,
     extern_path: Vec<(String, String)>,
     retain_enum_prefix: bool,
+    no_insert_include: bool,
 }
 
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
@@ -86,6 +87,8 @@ impl str::FromStr for Parameters {
                     ret_val.retain_enum_prefix = true
                 }
                 ("retain_enum_prefix", Some("false"), None) => (),
+                ("no_insert_include", Some("true") | None, None) => ret_val.no_insert_include = true,
+                ("no_insert_include", Some("false"), None) => (),
                 ("extern_path", Some(prefix), Some(module)) => ret_val
                     .extern_path
                     .push((prefix.to_string(), module.to_string())),

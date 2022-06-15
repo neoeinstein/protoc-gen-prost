@@ -7,6 +7,7 @@ const GENERATED_HEADER: &str = "// @generated\n";
 pub struct PbJsonGenerator {
     builder: pbjson_build::Builder,
     prefixes: Vec<String>,
+    insert_include: bool,
 }
 
 impl Generator for PbJsonGenerator {
@@ -21,11 +22,15 @@ impl Generator for PbJsonGenerator {
 
                 let output_filename = format!("{}.serde.rs", request.proto_package_name());
 
-                let insertion = request.append_to_file(|buf| {
-                    buf.push_str("include!(\"");
-                    buf.push_str(&output_filename);
-                    buf.push_str("\");\n");
-                })?;
+                let mut res = Vec::with_capacity(2);
+
+                if self.insert_include {
+                    res.push(request.append_to_file(|buf| {
+                        buf.push_str("include!(\"");
+                        buf.push_str(&output_filename);
+                        buf.push_str("\");\n");
+                    })?);
+                }
 
                 let mut content = String::with_capacity(bytes.len() + GENERATED_HEADER.len());
                 content.push_str(GENERATED_HEADER);
@@ -33,13 +38,13 @@ impl Generator for PbJsonGenerator {
                     std::str::from_utf8(&bytes).expect("pbjson build produced non UTF-8 data"),
                 );
 
-                let data = File {
+                res.push(File {
                     name: Some(output_filename),
                     content: Some(content),
                     ..File::default()
-                };
+                });
 
-                Some([data, insertion])
+                Some(res)
             })
             .flatten()
             .map(Ok)
@@ -48,10 +53,11 @@ impl Generator for PbJsonGenerator {
 }
 
 impl PbJsonGenerator {
-    pub fn new(builder: pbjson_build::Builder) -> Self {
+    pub fn new(builder: pbjson_build::Builder, insert_include: bool) -> Self {
         Self {
             builder,
             prefixes: vec![".".to_owned()],
+            insert_include,
         }
     }
 }

@@ -159,11 +159,7 @@ impl PackageLimiter {
         if self.include_prefixes.is_empty() {
             true
         } else {
-            let package = if package.starts_with('.') {
-                &package[1..]
-            } else {
-                package
-            };
+            let package = package.strip_prefix('.').unwrap_or(package);
 
             self.include_prefixes
                 .iter()

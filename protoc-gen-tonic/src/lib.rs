@@ -33,6 +33,7 @@ pub fn execute(raw_request: &[u8]) -> protoc_gen_prost::Result {
         server_attributes: params.server_attributes,
         client_attributes: params.client_attributes,
         emit_package: !params.disable_package_emission,
+        insert_include: !params.no_include,
     };
 
     let files = generator.generate(&module_request_set)?;
@@ -53,6 +54,7 @@ struct Parameters {
     disable_package_emission: bool,
     no_server: bool,
     no_client: bool,
+    no_include: bool,
 }
 
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
@@ -95,6 +97,8 @@ impl str::FromStr for Parameters {
                 ("no_server", Some("false"), None) => (),
                 ("no_client", Some("true") | None, None) => ret_val.no_client = true,
                 ("no_client", Some("false"), None) => (),
+                ("no_include", Some("true") | None, None) => ret_val.no_include = true,
+                ("no_include", Some("false"), None) => (),
                 ("client_mod_attribute", Some(prefix), Some(attribute)) => ret_val
                     .client_attributes
                     .push_mod(prefix, attribute.replace(r"\,", ",")),

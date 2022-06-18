@@ -361,6 +361,7 @@ impl<'a> IntoIterator for Params<'a> {
     }
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum Param<'a> {
     Parameter {
         param: &'a str,
@@ -490,4 +491,24 @@ impl std::error::Error for InvalidParameter {}
 struct RawProtos {
     #[prost(bytes = "vec", repeated, tag = "15")]
     proto_file: Vec<Vec<u8>>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn compiler_option_string_with_three_plus_equals_parses_correctly() {
+        const INPUT: &str = r#"compile_well_known_types,disable_comments=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
+
+        let expected: &[Param] = &[
+            Param::Parameter { param: "compile_well_known_types" },
+            Param::Value { param: "disable_comments", value: "." },
+            Param::KeyValue { param: "extern_path", key: ".google.protobuf", value: "::pbjson_types".into() },
+            Param::KeyValue { param: "type_attribute", key: ".", value: r#"#[cfg(all(feature = "test", feature = "orange"))]"#.into() },
+        ];
+
+        let actual = Params::from_protoc_plugin_opts(INPUT).unwrap();
+        assert_eq!(actual.params, expected);
+    }
 }

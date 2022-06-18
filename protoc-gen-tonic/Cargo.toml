@@ -19,7 +19,6 @@ exclude = [
 
 [dependencies]
 heck = "0.4.0"
-once_cell = "1.10.0"
 prettyplease = "0.1.9"
 prost-build = { version = "0.10.0", default-features = false }
 prost-types = { version = "0.10.0", default-features = false }

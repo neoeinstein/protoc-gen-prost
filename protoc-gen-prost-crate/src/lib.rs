@@ -1,16 +1,15 @@
 #![doc = include_str!("../README.md")]
 
 use self::generator::{CargoCrateGenerator, IncludeFileGenerator};
-use once_cell::sync::Lazy;
 use prost::Message;
 
 use prost_types::compiler::CodeGeneratorRequest;
 
-use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
+use protoc_gen_prost::{Generator, InvalidParameter, ModuleRequestSet, Param, Params, Result};
 
 use crate::generator::FeaturesGenerator;
 use std::rc::Rc;
-use std::{fmt, str};
+use std::str;
 
 mod generator;
 
@@ -71,71 +70,55 @@ struct Parameters {
     only_include: PackageLimiter,
 }
 
-static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
-    regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
-    )
-    .unwrap()
-});
-
 impl str::FromStr for Parameters {
     type Err = InvalidParameter;
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         let mut ret_val = Self::default();
-        for capture in PARAMETER.captures_iter(s) {
-            let param = capture
-                .get(1)
-                .expect("any captured group will at least have the param name")
-                .as_str()
-                .trim();
-
-            let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
-
-            match (param, key, value) {
-                ("default_package_filename", value, None) => {
-                    ret_val.default_package_filename = value.map(ToOwned::to_owned)
+        for param in Params::from_protoc_plugin_opts(s)? {
+            match param {
+                Param::Parameter {
+                    param: "default_package_filename",
                 }
-                ("include_file", Some(filename), None) => {
-                    ret_val.include_file = Some(filename.to_owned())
-                }
-                ("only_include", Some(package), None) => {
+                | Param::Value {
+                    param: "default_package_filename",
+                    ..
+                } => ret_val.default_package_filename = param.value().map(|v| v.into_owned()),
+                Param::Value {
+                    param: "include_file",
+                    value: filename,
+                } => ret_val.include_file = Some(filename.to_owned()),
+                Param::Value {
+                    param: "only_include",
+                    value: package,
+                } => {
                     if ret_val.only_include.push(package.to_owned()).is_err() {
-                        return Err(InvalidParameter(format!(
-                            "proto paths must begin with `.`: {}",
-                            capture.get(0).unwrap().as_str()
+                        return Err(InvalidParameter::new(format!(
+                            "proto paths must begin with `.`: only_include={package}",
                         )));
                     }
                 }
-                ("gen_crate", template, None) => {
-                    ret_val.gen_crate = Some(template.map(ToOwned::to_owned))
+                Param::Parameter { param: "gen_crate" }
+                | Param::Value {
+                    param: "gen_crate", ..
+                } => ret_val.gen_crate = Some(param.value().map(|t| t.into_owned())),
+                Param::Parameter {
+                    param: "no_features",
                 }
-                ("no_features", Some("true") | None, None) => ret_val.no_features = true,
-                ("no_features", Some("false"), None) => (),
-                _ => {
-                    return Err(InvalidParameter(
-                        capture.get(0).unwrap().as_str().to_string(),
-                    ))
-                }
+                | Param::Value {
+                    param: "no_features",
+                    value: "true",
+                } => ret_val.no_features = true,
+                Param::Value {
+                    param: "no_features",
+                    value: "false",
+                } => (),
+                _ => return Err(InvalidParameter::from(param)),
             }
         }
 
         Ok(ret_val)
     }
 }
-
-/// An invalid parameter
-#[derive(Debug)]
-struct InvalidParameter(String);
-
-impl fmt::Display for InvalidParameter {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str("invalid parameter: ")?;
-        f.write_str(&self.0)
-    }
-}
-
-impl std::error::Error for InvalidParameter {}
 
 #[derive(Debug, Default)]
 struct PackageLimiter {

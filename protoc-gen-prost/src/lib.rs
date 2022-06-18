@@ -7,6 +7,7 @@ use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
 use prost_types::compiler::CodeGeneratorRequest;
 use prost_types::FileDescriptorProto;
+use std::borrow::Cow;
 use std::collections::{BTreeMap, HashSet};
 use std::{fmt, str};
 
@@ -253,80 +254,203 @@ impl ProstParameters {
         self.default_package_filename.as_deref()
     }
 
-    fn try_handle_parameter(
-        &mut self,
-        param: &str,
-        key: Option<&str>,
-        value: Option<&str>,
-    ) -> std::result::Result<(), ()> {
-        match (param, key, value) {
-            ("btree_map", Some(value), None) => self.btree_map.push(value.to_string()),
-            ("bytes", Some(value), None) => self.bytes.push(value.to_string()),
-            ("default_package_filename", value, None) => {
-                self.default_package_filename = value.map(|s| s.to_string())
+    fn try_handle_parameter<'a>(&mut self, param: Param<'a>) -> std::result::Result<(), Param<'a>> {
+        match param {
+            Param::Value {
+                param: "btree_map",
+                value,
+            } => self.btree_map.push(value.to_string()),
+            Param::Value {
+                param: "bytes",
+                value,
+            } => self.bytes.push(value.to_string()),
+            Param::Parameter {
+                param: "default_package_filename",
             }
-            ("compile_well_known_types", Some("true") | None, None) => {
-                self.compile_well_known_types = true
+            | Param::Value {
+                param: "default_package_filename",
+                ..
+            } => self.default_package_filename = param.value().map(|s| s.into_owned()),
+            Param::Parameter {
+                param: "compile_well_known_types",
             }
-            ("compile_well_known_types", Some("false"), None) => (),
-            ("disable_comments", Some(value), None) => {
-                self.disable_comments.push(value.to_string())
+            | Param::Value {
+                param: "compile_well_known_types",
+                value: "true",
+            } => self.compile_well_known_types = true,
+            Param::Value {
+                param: "compile_well_known_types",
+                value: "false",
+            } => (),
+            Param::Value {
+                param: "disable_comments",
+                value,
+            } => self.disable_comments.push(value.to_string()),
+            Param::Parameter {
+                param: "retain_enum_prefix",
             }
-            ("retain_enum_prefix", Some("true") | None, None) => self.retain_enum_prefix = true,
-            ("retain_enum_prefix", Some("false"), None) => (),
-            ("extern_path", Some(prefix), Some(module)) => self
-                .extern_path
-                .push((prefix.to_string(), module.to_string())),
-            ("type_attribute", Some(prefix), Some(module)) => self
-                .type_attribute
-                .push((prefix.to_string(), module.replace(r"\,", ","))),
-            ("field_attribute", Some(prefix), Some(module)) => self
-                .field_attribute
-                .push((prefix.to_string(), module.replace(r"\,", ","))),
-            _ => return Err(()),
+            | Param::Value {
+                param: "retain_enum_prefix",
+                value: "true",
+            } => self.retain_enum_prefix = true,
+            Param::Value {
+                param: "retain_enum_prefix",
+                value: "false",
+            } => (),
+            Param::KeyValue {
+                param: "extern_path",
+                key: prefix,
+                value: module,
+            } => self.extern_path.push((prefix.to_string(), module)),
+            Param::KeyValue {
+                param: "type_attribute",
+                key: prefix,
+                value: module,
+            } => self.type_attribute.push((
+                prefix.to_string(),
+                module.replace(r"\,", ",").replace(r"\\", r"\"),
+            )),
+            Param::KeyValue {
+                param: "field_attribute",
+                key: prefix,
+                value: module,
+            } => self.field_attribute.push((
+                prefix.to_string(),
+                module.replace(r"\,", ",").replace(r"\\", r"\"),
+            )),
+            _ => return Err(param),
         }
 
         Ok(())
     }
 }
 
+/// Standard parameter regular expression
+///
+/// Supports the following forms:
+///
+/// ```text
+/// parameter
+/// parameter=key
+/// parameter=key=value
+/// ```
+///
+/// * `parameter` is terminated on the first `=` or `,`
+/// * If `parameter` is terminated with `=`, then `key` follows, terminated
+///   by the first `=` or `,`.
+/// * If `key` is terminated with `=`, then `value` follows. It is terminated
+///   only by `,`. However, if that `,` is prefixed by `\` but not `\\`, then
+///   it will not terminate.
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
     regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
+        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,\\]|\\,|\\\\)+))?)?)",
     )
     .unwrap()
 });
+
+pub struct Params<'a> {
+    params: Vec<Param<'a>>,
+}
+
+impl<'a> IntoIterator for Params<'a> {
+    type IntoIter = <Vec<Param<'a>> as IntoIterator>::IntoIter;
+    type Item = <Vec<Param<'a>> as IntoIterator>::Item;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.params.into_iter()
+    }
+}
+
+pub enum Param<'a> {
+    Parameter {
+        param: &'a str,
+    },
+    Value {
+        param: &'a str,
+        value: &'a str,
+    },
+    KeyValue {
+        param: &'a str,
+        key: &'a str,
+        value: String,
+    },
+}
+
+impl<'a> Param<'a> {
+    pub fn value(self) -> Option<Cow<'a, str>> {
+        match self {
+            Self::Parameter { .. } => None,
+            Self::Value { value, .. } => Some(Cow::Borrowed(value)),
+            Self::KeyValue { value, .. } => Some(Cow::Owned(value)),
+        }
+    }
+}
+
+impl From<Param<'_>> for InvalidParameter {
+    fn from(param: Param<'_>) -> Self {
+        let message = match param {
+            Param::Parameter { param } => param.to_owned(),
+            Param::Value { param, value } => format!("{param}={value}"),
+            Param::KeyValue { param, key, value } => {
+                let value = value.replace('\\', r"\\").replace(',', r"\,");
+                format!("{param}={key}={value}")
+            }
+        };
+        InvalidParameter(message)
+    }
+}
+
+impl<'a> Params<'a> {
+    pub fn from_protoc_plugin_opts(s: &'a str) -> std::result::Result<Self, InvalidParameter> {
+        let params = PARAMETER
+            .captures_iter(s)
+            .map(|capture| {
+                let param = capture
+                    .get(1)
+                    .expect("any captured group will at least have the param name")
+                    .as_str()
+                    .trim();
+
+                let key = capture.get(2).map(|m| m.as_str());
+                let value = capture.get(3).map(|m| m.as_str());
+
+                match (key, value) {
+                    (None, None) => Ok(Param::Parameter { param }),
+                    (Some(value), None) => Ok(Param::Value { param, value }),
+                    (Some(key), Some(value)) => Ok(Param::KeyValue {
+                        param,
+                        key,
+                        value: value.replace(r"\,", ",").replace(r"\\", r"\"),
+                    }),
+                    _ => Err(InvalidParameter(
+                        capture.get(0).unwrap().as_str().to_string(),
+                    )),
+                }
+            })
+            .collect::<std::result::Result<_, _>>()?;
+        Ok(Self { params })
+    }
+}
 
 impl str::FromStr for Parameters {
     type Err = InvalidParameter;
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         let mut ret_val = Self::default();
-        for capture in PARAMETER.captures_iter(s) {
-            let param = capture
-                .get(1)
-                .expect("any captured group will at least have the param name")
-                .as_str()
-                .trim();
-
-            let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
-
-            if ret_val
-                .prost
-                .try_handle_parameter(param, key, value)
-                .is_err()
-            {
-                match (param, key, value) {
-                    // ("serde", _) => ret_val.generate_serde = true,
-                    ("file_descriptor_set", Some("true") | None, None) => {
-                        ret_val.file_descriptor_set = true
+        for param in Params::from_protoc_plugin_opts(s)? {
+            if let Err(param) = ret_val.prost.try_handle_parameter(param) {
+                match param {
+                    Param::Parameter {
+                        param: "file_descriptor_set",
                     }
-                    ("file_descriptor_set", Some("false"), None) => (),
-                    _ => {
-                        return Err(InvalidParameter(
-                            capture.get(0).unwrap().as_str().to_string(),
-                        ))
-                    }
+                    | Param::Value {
+                        param: "file_descriptior_set",
+                        value: "true",
+                    } => ret_val.file_descriptor_set = true,
+                    Param::Value {
+                        param: "file_descriptior_set",
+                        value: "false",
+                    } => (),
+                    _ => return Err(InvalidParameter::from(param)),
                 }
             }
         }
@@ -337,7 +461,13 @@ impl str::FromStr for Parameters {
 
 /// An invalid parameter
 #[derive(Debug)]
-struct InvalidParameter(String);
+pub struct InvalidParameter(String);
+
+impl InvalidParameter {
+    pub fn new(message: String) -> Self {
+        Self(message)
+    }
+}
 
 impl fmt::Display for InvalidParameter {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

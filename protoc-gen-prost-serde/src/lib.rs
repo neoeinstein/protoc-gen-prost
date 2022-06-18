@@ -1,11 +1,10 @@
 #![doc = include_str!("../README.md")]
 
 use self::generator::PbJsonGenerator;
-use once_cell::sync::Lazy;
 use prost::Message;
 use prost_types::compiler::CodeGeneratorRequest;
-use protoc_gen_prost::{Generator, ModuleRequestSet};
-use std::{fmt, str};
+use protoc_gen_prost::{Generator, InvalidParameter, ModuleRequestSet, Param, Params};
+use std::str;
 
 mod generator;
 
@@ -42,13 +41,6 @@ struct Parameters {
     no_include: bool,
 }
 
-static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
-    regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
-    )
-    .unwrap()
-});
-
 impl Parameters {
     fn to_pbjson_builder(&self) -> pbjson_build::Builder {
         let mut builder = pbjson_build::Builder::new();
@@ -69,50 +61,46 @@ impl str::FromStr for Parameters {
     type Err = InvalidParameter;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut ret_val = Self::default();
-        for capture in PARAMETER.captures_iter(s) {
-            let param = capture
-                .get(1)
-                .expect("any captured group will at least have the param name")
-                .as_str()
-                .trim();
-
-            let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
-
-            match (param, key, value) {
-                ("default_package_filename", value, None) => {
-                    ret_val.default_package_filename = value.map(|s| s.to_string())
+        for param in Params::from_protoc_plugin_opts(s)? {
+            match param {
+                Param::Parameter {
+                    param: "default_package_filename",
                 }
-                ("retain_enum_prefix", Some("true") | None, None) => {
-                    ret_val.retain_enum_prefix = true
+                | Param::Value {
+                    param: "default_package_filename",
+                    ..
+                } => ret_val.default_package_filename = param.value().map(|s| s.into_owned()),
+                Param::Parameter {
+                    param: "retain_enum_prefix",
                 }
-                ("retain_enum_prefix", Some("false"), None) => (),
-                ("no_include", Some("true") | None, None) => ret_val.no_include = true,
-                ("no_include", Some("false"), None) => (),
-                ("extern_path", Some(prefix), Some(module)) => ret_val
-                    .extern_path
-                    .push((prefix.to_string(), module.to_string())),
-                _ => {
-                    return Err(InvalidParameter(
-                        capture.get(0).unwrap().as_str().to_string(),
-                    ))
+                | Param::Value {
+                    param: "retain_enum_prefix",
+                    value: "true",
+                } => ret_val.retain_enum_prefix = true,
+                Param::Value {
+                    param: "retain_enum_prefix",
+                    value: "false",
+                } => (),
+                Param::Parameter {
+                    param: "no_include",
                 }
+                | Param::Value {
+                    param: "no_include",
+                    value: "true",
+                } => ret_val.no_include = true,
+                Param::Value {
+                    param: "no_include",
+                    value: "false",
+                } => (),
+                Param::KeyValue {
+                    param: "extern_path",
+                    key: prefix,
+                    value: module,
+                } => ret_val.extern_path.push((prefix.to_string(), module)),
+                _ => return Err(InvalidParameter::from(param)),
             }
         }
 
         Ok(ret_val)
     }
 }
-
-/// An invalid parameter
-#[derive(Debug)]
-struct InvalidParameter(String);
-
-impl fmt::Display for InvalidParameter {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str("invalid parameter: ")?;
-        f.write_str(&self.0)
-    }
-}
-
-impl std::error::Error for InvalidParameter {}

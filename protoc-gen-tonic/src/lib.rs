@@ -2,11 +2,10 @@
 
 use self::generator::TonicGenerator;
 use self::resolver::Resolver;
-use once_cell::sync::Lazy;
 use prost::Message;
 use prost_types::compiler::CodeGeneratorRequest;
-use protoc_gen_prost::{Generator, ModuleRequestSet};
-use std::{fmt, str};
+use protoc_gen_prost::{Generator, InvalidParameter, ModuleRequestSet, Param, Params};
+use std::str;
 use tonic_build::Attributes;
 
 mod generator;
@@ -57,81 +56,107 @@ struct Parameters {
     no_include: bool,
 }
 
-static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
-    regex::Regex::new(
-        r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,=\\]|\\,|\\)+))?)?)",
-    )
-    .unwrap()
-});
-
 impl str::FromStr for Parameters {
     type Err = InvalidParameter;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut ret_val = Self::default();
-        for capture in PARAMETER.captures_iter(s) {
-            let param = capture
-                .get(1)
-                .expect("any captured group will at least have the param name")
-                .as_str()
-                .trim();
-
-            let key = capture.get(2).map(|m| m.as_str());
-            let value = capture.get(3).map(|m| m.as_str());
-
-            match (param, key, value) {
-                ("default_package_filename", value, None) => {
-                    ret_val.default_package_filename = value.map(|s| s.to_string())
+        for param in Params::from_protoc_plugin_opts(s)? {
+            match param {
+                Param::Parameter {
+                    param: "default_package_filename",
                 }
-                ("extern_path", Some(prefix), Some(module)) => ret_val
-                    .extern_path
-                    .push((prefix.to_string(), module.to_string())),
-                ("compile_well_known_types", Some("true") | None, None) => {
-                    ret_val.compile_well_known_types = true
+                | Param::Value {
+                    param: "default_package_filename",
+                    ..
+                } => ret_val.default_package_filename = param.value().map(|s| s.to_string()),
+                Param::KeyValue {
+                    param: "extern_path",
+                    key: prefix,
+                    value: module,
+                } => ret_val.extern_path.push((prefix.to_string(), module)),
+                Param::Parameter {
+                    param: "compile_well_known_types",
                 }
-                ("compile_well_known_types", Some("false"), None) => (),
-                ("disable_package_emission", Some("true") | None, None) => {
-                    ret_val.disable_package_emission = true
+                | Param::Value {
+                    param: "compile_well_known_types",
+                    value: "true",
+                } => ret_val.compile_well_known_types = true,
+                Param::Value {
+                    param: "compile_well_known_types",
+                    value: "false",
+                } => (),
+                Param::Parameter {
+                    param: "disable_package_emission",
                 }
-                ("disable_package_emission", Some("false"), None) => (),
-                ("no_server", Some("true") | None, None) => ret_val.no_server = true,
-                ("no_server", Some("false"), None) => (),
-                ("no_client", Some("true") | None, None) => ret_val.no_client = true,
-                ("no_client", Some("false"), None) => (),
-                ("no_include", Some("true") | None, None) => ret_val.no_include = true,
-                ("no_include", Some("false"), None) => (),
-                ("client_mod_attribute", Some(prefix), Some(attribute)) => ret_val
+                | Param::Value {
+                    param: "disable_package_emission",
+                    value: "true",
+                } => ret_val.disable_package_emission = true,
+                Param::Value {
+                    param: "disable_package_emission",
+                    value: "false",
+                } => (),
+                Param::Parameter { param: "no_server" }
+                | Param::Value {
+                    param: "no_server",
+                    value: "true",
+                } => ret_val.no_server = true,
+                Param::Value {
+                    param: "no_server",
+                    value: "false",
+                } => (),
+                Param::Parameter { param: "no_client" }
+                | Param::Value {
+                    param: "no_client",
+                    value: "true",
+                } => ret_val.no_client = true,
+                Param::Value {
+                    param: "no_client",
+                    value: "false",
+                } => (),
+                Param::Parameter {
+                    param: "no_include",
+                }
+                | Param::Value {
+                    param: "no_include",
+                    value: "true",
+                } => ret_val.no_client = true,
+                Param::Value {
+                    param: "no_include",
+                    value: "false",
+                } => (),
+                Param::KeyValue {
+                    param: "client_mod_attribute",
+                    key: prefix,
+                    value: attribute,
+                } => ret_val
                     .client_attributes
-                    .push_mod(prefix, attribute.replace(r"\,", ",")),
-                ("client_attribute", Some(prefix), Some(attribute)) => ret_val
+                    .push_mod(prefix, attribute.replace(r"\,", ",").replace(r"\\", r"\")),
+                Param::KeyValue {
+                    param: "client_attribute",
+                    key: prefix,
+                    value: attribute,
+                } => ret_val
                     .client_attributes
-                    .push_struct(prefix, attribute.replace(r"\,", ",")),
-                ("server_mod_attribute", Some(prefix), Some(attribute)) => ret_val
+                    .push_struct(prefix, attribute.replace(r"\,", ",").replace(r"\\", r"\")),
+                Param::KeyValue {
+                    param: "server_mod_attribute",
+                    key: prefix,
+                    value: attribute,
+                } => ret_val
                     .server_attributes
-                    .push_mod(prefix, attribute.replace(r"\,", ",")),
-                ("server_attribute", Some(prefix), Some(attribute)) => ret_val
+                    .push_mod(prefix, attribute.replace(r"\,", ",").replace(r"\\", r"\")),
+                Param::KeyValue {
+                    param: "server_attribute",
+                    key: prefix,
+                    value: attribute,
+                } => ret_val
                     .server_attributes
-                    .push_struct(prefix, attribute.replace(r"\,", ",")),
-                _ => {
-                    return Err(InvalidParameter(
-                        capture.get(0).unwrap().as_str().to_string(),
-                    ))
-                }
+                    .push_struct(prefix, attribute.replace(r"\,", ",").replace(r"\\", r"\")),
+                _ => return Err(InvalidParameter::from(param)),
             }
         }
 
         Ok(ret_val)
     }
 }
-
-/// An invalid parameter
-#[derive(Debug)]
-struct InvalidParameter(String);
-
-impl fmt::Display for InvalidParameter {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str("invalid parameter: ")?;
-        f.write_str(&self.0)
-    }
-}
-
-impl std::error::Error for InvalidParameter {}

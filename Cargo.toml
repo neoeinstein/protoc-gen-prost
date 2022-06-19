@@ -6,3 +6,6 @@ members = [
     "protoc-gen-prost-validate",
     "protoc-gen-tonic",
 ]
+
+[profile.release]
+lto = "fat"

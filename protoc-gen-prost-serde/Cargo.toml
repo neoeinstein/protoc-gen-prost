@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-prost-serde"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin providing JSON serializations"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"
@@ -19,5 +19,5 @@ pbjson-build = "0.3.0"
 prost-build = { version = "0.10.0", default-features = false }
 prost-types = { version = "0.10.0", default-features = false }
 prost = { version = "0.10.0", default-features = false, features = ["std"] }
-protoc-gen-prost = { version = "0.1.0", path = "../protoc-gen-prost" }
+protoc-gen-prost = { version = "0.1.4", path = "../protoc-gen-prost" }
 regex = { version = "1.5.5", default-features = false }

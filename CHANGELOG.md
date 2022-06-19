@@ -4,10 +4,21 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+- `protoc-gen-prost` 0.1.4
+- `protoc-gen-prost-crate` 0.1.6
+- `protoc-gen-prost-serde` 0.1.1
+- `protoc-gen-tonic` 0.1.1
+
 ### Added
 
 - (serde, tonic) Added `no_include` option to avoid insertion error in non-chained `protoc` invocations ([#13])
 - Add `--version` option when invoking the plugin directly ([#9])
+
+### Changed
+
+- `prost-build` updated to 0.10.4
+- `pbjson-build` updated to 0.3.2
+- `tonic-build` updated to 0.7.2
 
 ### Fixed
 

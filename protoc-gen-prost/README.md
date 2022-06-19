@@ -91,7 +91,7 @@ for use. The plugin is referenced as follows:
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/prost:v0.1.3-2
+  - remote: buf.build/prost/plugins/prost:v0.1.4-1
     out: gen
 ```
 

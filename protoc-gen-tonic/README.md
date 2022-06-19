@@ -119,7 +119,7 @@ for use. The plugin is referenced as follows:
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/tonic:v0.1.0-3
+  - remote: buf.build/prost/plugins/tonic:v0.1.1-1
     out: gen
 ```
 

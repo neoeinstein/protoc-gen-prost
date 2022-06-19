@@ -43,16 +43,16 @@ remote plugin.
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/prost:v0.1.3-2
+  - remote: buf.build/prost/plugins/prost:v0.1.4-1
     out: gen/src
     opt:
       - bytes=.
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
-  - remote: buf.build/prost/plugins/serde:v0.1.0-3
+  - remote: buf.build/prost/plugins/serde:v0.1.1-1
     out: gen/src
-  - remote: buf.build/prost/plugins/tonic:v0.1.0-3
+  - remote: buf.build/prost/plugins/tonic:v0.1.1-1
     out: gen/src
     opt:
       - compile_well_known_types

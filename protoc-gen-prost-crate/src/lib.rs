@@ -30,6 +30,7 @@ pub fn execute(raw_request: &[u8]) -> Result {
     } else {
         params.include_file.as_deref().unwrap_or("mod.rs")
     };
+    let package_separator = params.package_separator.as_deref().unwrap_or("_");
 
     let limiter = Rc::new(params.only_include);
 
@@ -38,8 +39,8 @@ pub fn execute(raw_request: &[u8]) -> Result {
         .gen_crate
         .as_ref()
         .map(|o| CargoCrateGenerator::new(o.as_deref()));
-    let features_generator =
-        (!params.no_features).then(|| FeaturesGenerator::new(include_filename, limiter.clone()));
+    let features_generator = (!params.no_features)
+        .then(|| FeaturesGenerator::new(include_filename, package_separator, limiter.clone()));
 
     let files = include_file_generator
         .chain(cargo_crate_generator)
@@ -68,6 +69,17 @@ struct Parameters {
 
     /// Limit generation of includes to packages in this list
     only_include: PackageLimiter,
+
+    /// Replace the `.` separator in package names to this character for cargo feature flags.
+    /// Defaults to `_` for compatibility with crates.io (see
+    /// [the documentation](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section)
+    /// for more details).
+    ///
+    /// It is recommended to use `-` or `+` as a separator to be both compatible with crates.io and
+    /// avoid any conflict between pacakges with similar names (such as `foo.bar` and `foo_bar`).
+    ///
+    /// Allowed characters are `-`, `+`, `_`, `.`.
+    package_separator: Option<String>,
 }
 
 impl str::FromStr for Parameters {
@@ -112,6 +124,10 @@ impl str::FromStr for Parameters {
                     param: "no_features",
                     value: "false",
                 } => (),
+                Param::Value {
+                    param: "package_separator",
+                    value: value @ ("." | "-" | "+" | "_"),
+                } => ret_val.package_separator = Some(value.to_string()),
                 _ => return Err(InvalidParameter::from(param)),
             }
         }

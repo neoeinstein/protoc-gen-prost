@@ -30,7 +30,7 @@ pub fn execute(raw_request: &[u8]) -> Result {
     } else {
         params.include_file.as_deref().unwrap_or("mod.rs")
     };
-    let package_separator = params.package_separator.as_deref().unwrap_or("_");
+    let package_separator = params.package_separator.as_deref().unwrap_or("-");
 
     let limiter = Rc::new(params.only_include);
 
@@ -71,7 +71,7 @@ struct Parameters {
     only_include: PackageLimiter,
 
     /// Replace the `.` separator in package names to this character for cargo feature flags.
-    /// Defaults to `_` for compatibility with crates.io (see
+    /// Defaults to `-` for compatibility with crates.io (see
     /// [the documentation](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section)
     /// for more details).
     ///

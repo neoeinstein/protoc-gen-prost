@@ -7,13 +7,19 @@ use std::rc::Rc;
 
 pub(crate) struct FeaturesGenerator<'a> {
     include_filename: &'a str,
+    package_separator: &'a str,
     limiter: Rc<PackageLimiter>,
 }
 
 impl<'a> FeaturesGenerator<'a> {
-    pub(crate) fn new(include_filename: &'a str, limiter: Rc<PackageLimiter>) -> Self {
+    pub(crate) fn new(
+        include_filename: &'a str,
+        package_separator: &'a str,
+        limiter: Rc<PackageLimiter>,
+    ) -> Self {
         Self {
             include_filename,
+            package_separator,
             limiter,
         }
     }
@@ -38,15 +44,15 @@ impl<'a> Generator for FeaturesGenerator<'a> {
                     continue;
                 }
 
-                let feature_name = feature.replace('.', "_");
+                let feature_name = feature.replace('.', self.package_separator);
                 buf.push('"');
                 buf.push_str(&feature_name);
                 buf.push_str("\",");
 
                 files.push(File {
                     name: Some(self.include_filename.to_owned()),
-                    content: Some(format!("#[cfg(feature = \"{}\")]\n", feature_name)),
-                    insertion_point: Some(format!("attribute:{}", feature)),
+                    content: Some(format!("#[cfg(feature = \"{feature_name}\")]\n")),
+                    insertion_point: Some(format!("attribute:{feature}")),
                     ..File::default()
                 });
             }
@@ -60,7 +66,9 @@ impl<'a> Generator for FeaturesGenerator<'a> {
                     continue;
                 }
 
-                buf.push_str(&feature.replace('.', "_"));
+                buf.push('"');
+                buf.push_str(&feature.replace('.', self.package_separator));
+                buf.push('"');
                 if dependencies.is_empty() {
                     buf.push_str(" = []\n");
                 } else {
@@ -71,7 +79,7 @@ impl<'a> Generator for FeaturesGenerator<'a> {
                         }
 
                         buf.push('"');
-                        buf.push_str(&feature.replace('.', "_"));
+                        buf.push_str(&feature.replace('.', self.package_separator));
                         buf.push_str("\",");
                     }
                     if let Some('[') = buf.pop() {

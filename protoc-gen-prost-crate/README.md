@@ -190,6 +190,7 @@ customizations. Instead, I recommend using a subdirectory to host the generated
 code and include that file in `src/lib.rs` as in the `build-with-buf` example.
 
 `src/lib.rs`:
+
 ```no_compile
 include!("gen/mod.rs");
 
@@ -198,6 +199,7 @@ include!("gen/mod.rs");
 ```
 
 `Cargo.toml` (prior to first generation):
+
 ```toml
 [package]
 name = "my-cool-proto-defs"
@@ -213,6 +215,7 @@ prost = "0.10.0"
 ```
 
 `buf.gen.yaml`:
+
 ```yaml
 version: v1
 plugins:

@@ -78,18 +78,19 @@ jobs:
         with:
           command: build
           args: --release
-      - name: Generate greeter
-        run: buf generate -v --debug
+      - name: Generate and build greeter
+        run: |
+          export CARGO_TARGET_DIR=$(pwd)/target
+          buf generate -v --debug
+          cd gen
+          cargo build
+          cargo build --features proto_full
         working-directory: proto
-      - name: Build greeter
-        uses: actions-rs/cargo@v1
-        with:
-          command: build --manifest-path proto/gen/Cargo.toml --features proto_full
       - name: Generate example
-        run: buf generate -v --debug
+        run: |
+          export CARGO_TARGET_DIR=$(pwd)/target
+          buf generate -v --debug
+          cargo build
+          cargo build --no-default-features
         working-directory: example/build-with-buf
-      - name: Build greeter
-        uses: actions-rs/cargo@v1
-        with:
-          command: build --manifest-path example/build-with-buf/Cargo.toml
 

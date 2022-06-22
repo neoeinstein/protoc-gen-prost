@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - trying
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: cargo fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args:
+            --all -- --check
+      - name: cargo clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: -- -D warnings
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+      - name: cargo nextest
+        uses: actions-rs/cargo@v1
+        with:
+          command: nextest
+          args: run --no-fail-fast
+      - name: cargo doctest
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --doc
+
+  buf-gen:
+    name: Generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: cargo build --release
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - name: Generate greeter
+        run: buf generate -v --debug
+        working-directory: proto
+      - name: Build greeter
+        uses: actions-rs/cargo@v1
+        with:
+          command: build --manifest-path proto/gen/Cargo.toml --features proto_full
+      - name: Generate example
+        run: buf generate -v --debug
+        working-directory: example/build-with-buf
+      - name: Build greeter
+        uses: actions-rs/cargo@v1
+        with:
+          command: build --manifest-path example/build-with-buf/Cargo.toml
+

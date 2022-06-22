@@ -23,3 +23,8 @@ prost-build = { version = "0.10.0", default-features = false }
 prost-types = { version = "0.10.0", default-features = false }
 prost = { version = "0.10.0", default-features = false, features = ["std"] }
 regex = { version = "1.5.5", default-features = false }
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+debug = true

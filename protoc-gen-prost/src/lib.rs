@@ -502,10 +502,23 @@ mod tests {
         const INPUT: &str = r#"compile_well_known_types,disable_comments=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
 
         let expected: &[Param] = &[
-            Param::Parameter { param: "compile_well_known_types" },
-            Param::Value { param: "disable_comments", value: "." },
-            Param::KeyValue { param: "extern_path", key: ".google.protobuf", value: "::pbjson_types".into() },
-            Param::KeyValue { param: "type_attribute", key: ".", value: r#"#[cfg(all(feature = "test", feature = "orange"))]"#.into() },
+            Param::Parameter {
+                param: "compile_well_known_types",
+            },
+            Param::Value {
+                param: "disable_comments",
+                value: ".",
+            },
+            Param::KeyValue {
+                param: "extern_path",
+                key: ".google.protobuf",
+                value: "::pbjson_types".into(),
+            },
+            Param::KeyValue {
+                param: "type_attribute",
+                key: ".",
+                value: r#"#[cfg(all(feature = "test", feature = "orange"))]"#.into(),
+            },
         ];
 
         let actual = Params::from_protoc_plugin_opts(INPUT).unwrap();

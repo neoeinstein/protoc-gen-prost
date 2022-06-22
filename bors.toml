@@ -1,0 +1,12 @@
+# https://bors.tech/documentation/
+
+status = [
+    "Test",
+    "Lint",
+    "Build Binaries",
+    "Greeter Example",
+    "Build with Buf Example",
+]
+
+delete_merged_branches = true
+update_base_for_deletes = true

@@ -1,0 +1,154 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - trying
+  pull_request:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: cargo fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args:
+            --all -- --check
+      - name: cargo clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: -- -D warnings
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+      - name: cargo nextest
+        uses: actions-rs/cargo@v1
+        with:
+          command: nextest
+          args: run --no-fail-fast
+      - name: cargo doctest
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --doc
+
+  binaries:
+    name: Build Binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: cargo build --release
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: binary-release
+          path: |
+            target/release/protoc-gen-prost
+            target/release/protoc-gen-prost-crate
+            target/release/protoc-gen-prost-serde
+            target/release/protoc-gen-tonic
+
+  greeter:
+    name: Greeter Example
+    needs: binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: binary-release
+          path: bin
+      - name: Mark as executable
+        run: chmod +x bin/*
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: Generate greeter
+        run: |
+          export PATH=$GITHUB_WORKSPACE/bin:$PATH
+          buf generate -v --debug
+        working-directory: proto
+      - name: Build greeter
+        run: |
+          export CARGO_TARGET_DIR=$GITHUB_WORKSPACE/target
+          cargo build
+          cargo build --features proto_full
+        working-directory: proto/gen
+
+  build-with-buf:
+    name: Build with Buf Example
+    needs: binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: binary-release
+          path: bin
+      - name: Mark as executable
+        run: chmod +x bin/*
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: Generate example
+        run: |
+          export PATH=$GITHUB_WORKSPACE/bin:$PATH
+          buf generate -v --debug
+        working-directory: example/build-with-buf
+      - name: Build example
+        run: |
+          export CARGO_TARGET_DIR=$GITHUB_WORKSPACE/target
+          cargo build
+          cargo build --no-default-features
+        working-directory: example/build-with-buf

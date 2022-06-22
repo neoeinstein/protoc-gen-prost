@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-prost-crate"
-version = "0.1.6"
+version = "0.2.0"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin powered by Prost!"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"

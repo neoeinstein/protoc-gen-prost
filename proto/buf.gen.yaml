@@ -2,7 +2,6 @@ version: v1
 plugins:
   - name: prost
     out: gen/src
-    path: ../target/release/protoc-gen-prost
     opt:
       - bytes=.
       - compile_well_known_types
@@ -10,16 +9,13 @@ plugins:
       - file_descriptor_set
   - name: prost-serde
     out: gen/src
-    path: ../target/release/protoc-gen-prost-serde
   - name: tonic
     out: gen/src
-    path: ../target/release/protoc-gen-tonic
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
   - name: prost-crate
     out: gen
-    path: ../target/release/protoc-gen-prost-crate
     strategy: all
     opt:
       - gen_crate=Cargo.toml.tpl

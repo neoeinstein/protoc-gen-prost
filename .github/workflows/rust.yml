@@ -10,6 +10,9 @@ on:
     branches:
       - main
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   lint:
     name: Lint
@@ -59,11 +62,43 @@ jobs:
           command: test
           args: --doc
 
-  buf-gen:
-    name: Generate
+  binaries:
+    name: Build Binaries
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: Swatinem/rust-cache@v1.3.0
+      - name: cargo build --release
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: binary-release
+          path: |
+            target/release/protoc-gen-prost
+            target/release/protoc-gen-prost-crate
+            target/release/protoc-gen-prost-serde
+            target/release/protoc-gen-tonic
+
+  greeter:
+    name: Greeter Example
+    needs: binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: binary-release
+          path: bin
+      - name: Mark as executable
+        run: chmod +x bin/*
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -73,24 +108,47 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - uses: Swatinem/rust-cache@v1.3.0
-      - name: cargo build --release
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release
-      - name: Generate and build greeter
+      - name: Generate greeter
         run: |
-          export CARGO_TARGET_DIR=$(pwd)/target
+          export PATH=$GITHUB_WORKSPACE/bin:$PATH
           buf generate -v --debug
-          cd gen
+        working-directory: proto
+      - name: Build greeter
+        run: |
+          export CARGO_TARGET_DIR=$GITHUB_WORKSPACE/target
           cargo build
           cargo build --features proto_full
-        working-directory: proto
+        working-directory: proto/gen
+
+  build-with-buf:
+    name: Build with Buf Example
+    needs: binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: binary-release
+          path: bin
+      - name: Mark as executable
+        run: chmod +x bin/*
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - uses: Swatinem/rust-cache@v1.3.0
       - name: Generate example
         run: |
-          export CARGO_TARGET_DIR=$(pwd)/target
+          export PATH=$GITHUB_WORKSPACE/bin:$PATH
           buf generate -v --debug
+        working-directory: example/build-with-buf
+      - name: Build example
+        run: |
+          export CARGO_TARGET_DIR=$GITHUB_WORKSPACE/target
           cargo build
           cargo build --no-default-features
         working-directory: example/build-with-buf
-

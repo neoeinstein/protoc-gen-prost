@@ -3,7 +3,9 @@
 status = [
     "Test",
     "Lint",
-    "Generate"
+    "Build Binaries",
+    "Greeter Example",
+    "Build with Buf Example",
 ]
 
 delete_merged_branches = true

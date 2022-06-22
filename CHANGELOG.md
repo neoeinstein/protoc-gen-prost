@@ -4,6 +4,20 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2022-06-22]
+
+- `protoc-gen-prost-crate` 0.2.0
+
+### Added
+
+- (crate) Add option to specify the package part separator in created features: `package_separator`
+
+### Changed
+
+- (crate) The default package part separator has changed from `_` to `-`
+
+## [2022-06-18]
+
 - `protoc-gen-prost` 0.1.4
 - `protoc-gen-prost-crate` 0.1.6
 - `protoc-gen-prost-serde` 0.1.1

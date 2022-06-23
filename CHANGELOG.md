@@ -43,3 +43,5 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 [#11]: https://github.com/neoeinstein/protoc-gen-prost/pull/11
 [#12]: https://github.com/neoeinstein/protoc-gen-prost/pull/12
 [#13]: https://github.com/neoeinstein/protoc-gen-prost/pull/13
+
+<!-- markdownlint-disable-file MD024 -->

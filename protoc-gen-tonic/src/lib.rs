@@ -120,7 +120,7 @@ impl str::FromStr for Parameters {
                 | Param::Value {
                     param: "no_include",
                     value: "true",
-                } => ret_val.no_client = true,
+                } => ret_val.no_include = true,
                 Param::Value {
                     param: "no_include",
                     value: "false",

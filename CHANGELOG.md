@@ -6,7 +6,7 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [2022-07-26]
 
-- `protoc-gen-tonic` 0.1.2
+- `protoc-gen-tonic` 0.1.3
 
 ### Fixed
 

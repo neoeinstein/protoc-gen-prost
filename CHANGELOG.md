@@ -4,6 +4,16 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2022-07-26]
+
+- `protoc-gen-tonic` 0.1.2
+
+### Fixed
+
+- (tonic) Correct parsing of the `no_include` option ([#17])
+
+[#17]: https://github.com/neoeinstein/protoc-gen-prost/pull/17
+
 ## [2022-06-22]
 
 - `protoc-gen-prost-crate` 0.2.0

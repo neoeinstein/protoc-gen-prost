@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-tonic"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin for gRPC services powered by Prost! and Tonic"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"

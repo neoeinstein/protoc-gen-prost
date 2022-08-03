@@ -4,10 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-prost = "0.10.0"
-pbjson-types = "0.3"
+prost = "0.11.0"
+pbjson-types = "0.4"
 serde = "1.0"
-tonic = { version = "0.7", features = ["compression"] }
+tonic = { version = "0.8", features = ["gzip"] }
 
 [features]
 default = []

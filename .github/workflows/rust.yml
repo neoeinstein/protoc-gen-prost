@@ -108,6 +108,8 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - uses: Swatinem/rust-cache@v1.3.0
+      - name: Install protobuf compiler and protobuf resources
+        run: sudo apt install protobuf-compiler libprotobuf-dev
       - name: Generate greeter
         run: |
           export PATH=$GITHUB_WORKSPACE/bin:$PATH
@@ -141,6 +143,8 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - uses: Swatinem/rust-cache@v1.3.0
+      - name: Install protobuf compiler and protobuf resources
+        run: sudo apt install protobuf-compiler libprotobuf-dev
       - name: Generate example
         run: |
           export PATH=$GITHUB_WORKSPACE/bin:$PATH

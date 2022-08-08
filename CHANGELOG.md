@@ -4,6 +4,21 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2022-08-08]
+
+- `protoc-gen-prost` 0.2.0
+- `protoc-gen-prost-crate` 0.3.0
+- `protoc-gen-prost-serde` 0.2.0
+- `protoc-gen-tonic` 0.2.0
+
+### Changed
+
+- Updated prost dependency to 0.10.0 ([#23])
+- (serde) Updated pbjson dependency to 0.4.0 ([#23])
+- (tonic) Updated tonic dependency to 0.8.0 ([#23])
+
+[#23]: https://github.com/neoeinstein/protoc-gen-prost/pull/23
+
 ## [2022-07-26]
 
 - `protoc-gen-tonic` 0.1.3

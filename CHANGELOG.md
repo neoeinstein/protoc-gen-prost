@@ -4,6 +4,10 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+### Added
+
+- (serde) Add support for `preserve_proto_field_names` option ([#36])
+
 ### Changed
 
 - Updated prost dependency to 0.11.0 ([#35])
@@ -11,6 +15,7 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 - (serde) Updated pbjson dependency to 0.5.1 ([#35])
 
 [#35]: https://github.com/neoeinstein/protoc-gen-prost/pull/35
+[#36]: https://github.com/neoeinstein/protoc-gen-prost/pull/36
 
 ## [2022-08-08]
 

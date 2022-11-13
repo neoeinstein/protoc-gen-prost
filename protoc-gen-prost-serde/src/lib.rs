@@ -38,6 +38,7 @@ struct Parameters {
     default_package_filename: Option<String>,
     extern_path: Vec<(String, String)>,
     retain_enum_prefix: bool,
+    preserve_proto_field_names: bool,
     no_include: bool,
 }
 
@@ -51,6 +52,10 @@ impl Parameters {
 
         if self.retain_enum_prefix {
             builder.retain_enum_prefix();
+        }
+
+        if self.preserve_proto_field_names {
+            builder.preserve_proto_field_names();
         }
 
         builder
@@ -79,6 +84,17 @@ impl str::FromStr for Parameters {
                 } => ret_val.retain_enum_prefix = true,
                 Param::Value {
                     param: "retain_enum_prefix",
+                    value: "false",
+                } => (),
+                Param::Parameter {
+                    param: "preserve_proto_field_names",
+                }
+                | Param::Value {
+                    param: "preserve_proto_field_names",
+                    value: "true",
+                } => ret_val.preserve_proto_field_names = true,
+                Param::Value {
+                    param: "preserve_proto_field_names",
                     value: "false",
                 } => (),
                 Param::Parameter {

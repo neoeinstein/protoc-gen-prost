@@ -36,6 +36,7 @@ from that crate:
 * `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
 * `extern_path=<proto_path>=<rust_path>`:  [extern_path](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.extern_path)
 * `retain_enum_prefix(=<boolean>)`:  [retain_enum_prefix](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.retain_enum_prefix)
+* `preserve_proto_field_names=(<boolean>)`: `[preserve_proto_field_names](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.preserve_proto_field_names)
 
 In addition, the following options can also be specified:
 

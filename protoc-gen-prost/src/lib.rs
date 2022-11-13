@@ -28,7 +28,7 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
     )?;
     let file_descriptor_set_generator = params
         .file_descriptor_set
-        .then(|| FileDescriptorSetGenerator);
+        .then_some(FileDescriptorSetGenerator);
 
     let files = CoreProstGenerator::new(params.prost.to_prost_config())
         .chain(file_descriptor_set_generator)

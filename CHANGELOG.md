@@ -4,9 +4,16 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+- `protoc-wkt` 1.0.0+3.20.1
+
+*Note*: `prost-build` v0.11.2 introduces a `println!` that causes output to standard out which `protoc`
+does not expect. If you encounter this error, install the binaries with `--locked` or use the remote
+plugin.
+
 ### Added
 
 - (serde) Add support for `preserve_proto_field_names` option ([#36])
+- (wkt) Added new crate `protoc-wkt` for file descriptors ([#37])
 
 ### Changed
 
@@ -16,6 +23,7 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 [#35]: https://github.com/neoeinstein/protoc-gen-prost/pull/35
 [#36]: https://github.com/neoeinstein/protoc-gen-prost/pull/36
+[#37]: https://github.com/neoeinstein/protoc-gen-prost/pull/37
 
 ## [2022-08-08]
 

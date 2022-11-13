@@ -15,7 +15,7 @@ categories = ["encoding"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-pbjson-build = "0.4.0"
+pbjson-build = "0.5.1"
 prost-build = { version = "0.11.0", default-features = false }
 prost-types = { version = "0.11.0", default-features = false }
 prost = { version = "0.11.0", default-features = false, features = ["std"] }

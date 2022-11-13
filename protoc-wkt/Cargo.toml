@@ -1,0 +1,21 @@
+[package]
+name = "protoc-wkt"
+version = "1.0.0+3.20.1"
+autors = ["Marcus Griep <marcus@griep.us>"]
+description = "Google Protobuf well-known type file descriptor sets"
+repository = "https://github.com/neoeinstein/protoc-gen-prost"
+homepage = "https://github.com/neoeinstein/protoc-gen-prost"
+documentation = "https://docs.rs/protoc-wkt"
+license = "Apache-2.0"
+edition = "2021"
+readme = "README.md"
+keywords = ["protobuf", "grpc", "tonic", "prost"]
+categories = ["encoding"]
+exclude = [
+  "buf.gen.yaml",
+  "buf.work.yaml",
+  "proto",
+]
+
+[dependencies]
+

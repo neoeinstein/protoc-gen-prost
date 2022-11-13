@@ -4,6 +4,14 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+### Changed
+
+- Updated prost dependency to 0.11.0 ([#35])
+- Update various other internal dependencies ([#35])
+- (serde) Updated pbjson dependency to 0.5.1 ([#35])
+
+[#35]: https://github.com/neoeinstein/protoc-gen-prost/pull/35
+
 ## [2022-08-08]
 
 - `protoc-gen-prost` 0.2.0

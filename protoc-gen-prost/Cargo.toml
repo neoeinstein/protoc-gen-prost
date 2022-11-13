@@ -8,6 +8,7 @@ homepage = "https://github.com/neoeinstein/protoc-gen-prost"
 documentation = "https://docs.rs/protoc-gen-prost"
 license = "Apache-2.0"
 edition = "2021"
+rust-version = "1.62"
 readme = "README.md"
 keywords = ["protobuf", "serialization", "prost"]
 categories = ["encoding"]

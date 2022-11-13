@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 prost = "0.11.0"
-pbjson-types = "0.4"
+pbjson-types = "0.5"
 serde = "1.0"
 tonic = { version = "0.8", features = ["gzip"] }
 

@@ -18,67 +18,37 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@nightly
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v1.3.0
-      - name: cargo fmt
-        uses: actions-rs/cargo@v1
+          components: rustfmt
+      - run: cargo +nightly fmt --all -- --check
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          command: fmt
-          args:
-            --all -- --check
-      - name: cargo clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: -- -D warnings
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --all-targets --all-features --locked -- -D warnings
 
   test:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: Swatinem/rust-cache@v1.3.0
-      - name: Install nextest
-        uses: taiki-e/install-action@nextest
-      - name: cargo nextest
-        uses: actions-rs/cargo@v1
-        with:
-          command: nextest
-          args: run --no-fail-fast
-      - name: cargo doctest
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --doc
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@nextest
+      - run: cargo nextest run --no-fail-fast --all-features --locked
+      - run: cargo test --all-features --locked --doc
 
   binaries:
     name: Build Binaries
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: Swatinem/rust-cache@v1.3.0
-      - name: cargo build --release
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --locked
-      - uses: actions/upload-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release --locked
+      - uses: actions/upload-artifact@v3
         with:
           name: binary-release
           path: |
@@ -87,27 +57,33 @@ jobs:
             target/release/protoc-gen-prost-serde
             target/release/protoc-gen-tonic
 
+  vet:
+    name: Vet Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install --locked cargo-vet
+      - run: cargo vet --locked
+
   greeter:
     name: Greeter Example
     needs: binaries
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: binary-release
           path: bin
       - name: Mark as executable
         run: chmod +x bin/*
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
       - uses: bufbuild/buf-setup-action@v1
         with:
           github_token: ${{ github.token }}
-      - uses: Swatinem/rust-cache@v1.3.0
+      - uses: Swatinem/rust-cache@v2
       - name: Install protobuf compiler and protobuf resources
         run: sudo apt install protobuf-compiler libprotobuf-dev
       - name: Generate greeter
@@ -127,22 +103,18 @@ jobs:
     needs: binaries
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: binary-release
           path: bin
       - name: Mark as executable
         run: chmod +x bin/*
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
       - uses: bufbuild/buf-setup-action@v1
         with:
           github_token: ${{ github.token }}
-      - uses: Swatinem/rust-cache@v1.3.0
+      - uses: Swatinem/rust-cache@v2
       - name: Install protobuf compiler and protobuf resources
         run: sudo apt install protobuf-compiler libprotobuf-dev
       - name: Generate example

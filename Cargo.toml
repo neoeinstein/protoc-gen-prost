@@ -5,6 +5,7 @@ members = [
     "protoc-gen-prost-serde",
     "protoc-gen-prost-validate",
     "protoc-gen-tonic",
+    "protoc-wkt",
 ]
 
 [profile.release]

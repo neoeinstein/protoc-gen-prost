@@ -1,9 +1,11 @@
-use crate::PackageLimiter;
+use std::rc::Rc;
+
 use once_cell::sync::Lazy;
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
 use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
-use std::rc::Rc;
+
+use crate::PackageLimiter;
 
 pub(crate) struct IncludeFileGenerator<'a> {
     filename: &'a str,

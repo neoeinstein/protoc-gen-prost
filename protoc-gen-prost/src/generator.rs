@@ -1,14 +1,16 @@
 //! Code generator modules
 
+use prost_types::compiler::{
+    code_generator_response::{Feature, File},
+    CodeGeneratorResponse,
+};
+
 use crate::ModuleRequestSet;
-use prost_types::compiler::code_generator_response::{Feature, File};
-use prost_types::compiler::CodeGeneratorResponse;
 
 mod core;
 mod file_descriptor_set;
 
-pub(crate) use self::core::CoreProstGenerator;
-pub(crate) use self::file_descriptor_set::FileDescriptorSetGenerator;
+pub(crate) use self::{core::CoreProstGenerator, file_descriptor_set::FileDescriptorSetGenerator};
 
 /// A code generation result
 pub type Result = std::result::Result<Vec<File>, Error>;

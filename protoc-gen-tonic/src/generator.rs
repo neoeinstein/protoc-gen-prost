@@ -1,10 +1,11 @@
-use crate::resolver::Resolver;
-use crate::util;
 use prost_build::{Module, Service};
-use prost_types::compiler::code_generator_response::File;
-use prost_types::{FileDescriptorProto, ServiceDescriptorProto};
+use prost_types::{
+    compiler::code_generator_response::File, FileDescriptorProto, ServiceDescriptorProto,
+};
 use protoc_gen_prost::{Generator, ModuleRequest, ModuleRequestSet, Result};
 use tonic_build::Attributes;
+
+use crate::{resolver::Resolver, util};
 
 pub(crate) struct TonicGenerator {
     pub(crate) resolver: Resolver,

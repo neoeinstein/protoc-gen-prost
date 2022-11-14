@@ -1,15 +1,20 @@
 #![doc = include_str!("../README.md")]
 
-use self::generator::{CoreProstGenerator, FileDescriptorSetGenerator};
+use std::{
+    borrow::Cow,
+    collections::{BTreeMap, HashSet},
+    fmt, str,
+};
+
 use once_cell::sync::Lazy;
 use prost::Message;
 use prost_build::Module;
-use prost_types::compiler::code_generator_response::File;
-use prost_types::compiler::CodeGeneratorRequest;
-use prost_types::FileDescriptorProto;
-use std::borrow::Cow;
-use std::collections::{BTreeMap, HashSet};
-use std::{fmt, str};
+use prost_types::{
+    compiler::{code_generator_response::File, CodeGeneratorRequest},
+    FileDescriptorProto,
+};
+
+use self::generator::{CoreProstGenerator, FileDescriptorSetGenerator};
 
 mod generator;
 
@@ -336,11 +341,9 @@ impl ProstParameters {
 /// ```
 ///
 /// * `parameter` is terminated on the first `=` or `,`
-/// * If `parameter` is terminated with `=`, then `key` follows, terminated
-///   by the first `=` or `,`.
-/// * If `key` is terminated with `=`, then `value` follows. It is terminated
-///   only by `,`. However, if that `,` is prefixed by `\` but not `\\`, then
-///   it will not terminate.
+/// * If `parameter` is terminated with `=`, then `key` follows, terminated by the first `=` or `,`.
+/// * If `key` is terminated with `=`, then `value` follows. It is terminated only by `,`. However,
+///   if that `,` is prefixed by `\` but not `\\`, then it will not terminate.
 static PARAMETER: Lazy<regex::Regex> = Lazy::new(|| {
     regex::Regex::new(
         r"(?:(?P<param>[^,=]+)(?:=(?P<key>[^,=]+)(?:=(?P<value>(?:[^,\\]|\\,|\\\\)+))?)?)",

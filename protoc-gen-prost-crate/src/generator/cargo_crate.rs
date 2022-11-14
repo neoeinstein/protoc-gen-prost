@@ -1,8 +1,7 @@
-use prost_types::compiler::code_generator_response::File;
+use std::{fs, io, io::BufRead};
 
+use prost_types::compiler::code_generator_response::File;
 use protoc_gen_prost::{Generator, ModuleRequestSet, Result};
-use std::io::BufRead;
-use std::{fs, io};
 
 pub(crate) struct CargoCrateGenerator<'a> {
     manifest_template_path: Option<&'a str>,

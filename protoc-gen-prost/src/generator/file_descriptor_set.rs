@@ -1,6 +1,8 @@
-use crate::{Generator, ModuleRequest, ModuleRequestSet, Result};
-use prost_types::compiler::code_generator_response::File;
 use std::fmt::Write;
+
+use prost_types::compiler::code_generator_response::File;
+
+use crate::{Generator, ModuleRequest, ModuleRequestSet, Result};
 
 pub struct FileDescriptorSetGenerator;
 
@@ -55,7 +57,8 @@ fn append_file_descriptor_set_bytes(
     for chunck in chunks.by_ref() {
         writeln!(
             buffer,
-            "    {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x},",
+            "    {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, \
+             {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x}, {:#04x},",
             chunck[0],
             chunck[1],
             chunck[2],
@@ -72,7 +75,8 @@ fn append_file_descriptor_set_bytes(
             chunck[13],
             chunck[14],
             chunck[15],
-        ).unwrap();
+        )
+        .unwrap();
     }
 
     if !chunks.remainder().is_empty() {

@@ -1,10 +1,11 @@
-use prost::Message;
-use protoc_gen_prost::GeneratorResultExt;
 use std::{
     env,
     io::{self, Read, Write},
     process::exit,
 };
+
+use prost::Message;
+use protoc_gen_prost::GeneratorResultExt;
 
 fn main() -> io::Result<()> {
     if env::args().any(|x| x == "--version") {

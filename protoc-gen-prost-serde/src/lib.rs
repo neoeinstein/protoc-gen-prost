@@ -1,10 +1,12 @@
 #![doc = include_str!("../README.md")]
 
-use self::generator::PbJsonGenerator;
+use std::str;
+
 use prost::Message;
 use prost_types::compiler::CodeGeneratorRequest;
 use protoc_gen_prost::{Generator, InvalidParameter, ModuleRequestSet, Param, Params};
-use std::str;
+
+use self::generator::PbJsonGenerator;
 
 mod generator;
 

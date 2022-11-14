@@ -1,6 +1,7 @@
-use crate::{Generator, ModuleRequestSet, Result};
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
+
+use crate::{Generator, ModuleRequestSet, Result};
 
 pub struct CoreProstGenerator {
     config: prost_build::Config,

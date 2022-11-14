@@ -1,7 +1,8 @@
-use crate::util;
+use std::{collections::HashMap, iter};
+
 use prost_build::Module;
-use std::collections::HashMap;
-use std::iter;
+
+use crate::util;
 
 pub(crate) struct Resolver {
     extern_root: Node,

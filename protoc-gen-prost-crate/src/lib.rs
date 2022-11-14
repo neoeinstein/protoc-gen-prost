@@ -1,15 +1,13 @@
 #![doc = include_str!("../README.md")]
 
-use self::generator::{CargoCrateGenerator, IncludeFileGenerator};
+use std::{rc::Rc, str};
+
 use prost::Message;
-
 use prost_types::compiler::CodeGeneratorRequest;
-
 use protoc_gen_prost::{Generator, InvalidParameter, ModuleRequestSet, Param, Params, Result};
 
+use self::generator::{CargoCrateGenerator, IncludeFileGenerator};
 use crate::generator::FeaturesGenerator;
-use std::rc::Rc;
-use std::str;
 
 mod generator;
 

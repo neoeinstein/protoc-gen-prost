@@ -4,11 +4,16 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+- `protoc-gen-prost` 0.2.1
+- `protoc-gen-prost-crate` 0.3.1
+- `protoc-gen-prost-serde` 0.2.1
+- `protoc-gen-tonic` 0.2.1
 - `protoc-wkt` 1.0.0+3.20.1
 
 *Note*: `prost-build` v0.11.2 introduces a `println!` that causes output to standard out which `protoc`
 does not expect. If you encounter this error, install the binaries with `--locked` or use the remote
-plugin.
+plugin. The latest published versions are will only accept `0.11.0` and `0.11.1`. Once this is resolved
+above, a new release will be published that again accepts `^0.11.3`.
 
 ### Added
 

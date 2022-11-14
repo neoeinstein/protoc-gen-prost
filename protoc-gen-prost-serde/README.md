@@ -114,7 +114,7 @@ for use. The plugin is referenced as follows:
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/serde:v0.1.1-1
+  - remote: buf.build/prost/plugins/serde:v0.2.1-1
     out: gen
 ```
 

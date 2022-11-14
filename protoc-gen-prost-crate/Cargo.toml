@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-prost-crate"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin powered by Prost!"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"
@@ -16,7 +16,7 @@ categories = ["encoding"]
 
 [dependencies]
 once_cell = "1.10.0"
-prost-build = { version = "0.11.0", default-features = false }
+prost-build = { version = ">=0.11.0, <0.11.2", default-features = false }
 prost-types = { version = "0.11.0", default-features = false }
 prost = { version = "0.11.0", default-features = false, features = ["std"] }
 protoc-gen-prost = { version = "0.2.0", path = "../protoc-gen-prost" }

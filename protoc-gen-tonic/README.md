@@ -3,8 +3,8 @@
 A `protoc` plugin that generates _[Tonic]_ gRPC server and client code using
 the _[Prost!]_ code generation engine.
 
-[Tonic]: https://github.com/hyperium/tonic
-[Prost!]: https://github.com/tokio-rs/prost
+[tonic]: https://github.com/hyperium/tonic
+[prost!]: https://github.com/tokio-rs/prost
 
 When used in projects that use only Rust code, the preferred mechanism for
 generating gRPC services with _Tonic_ is to use [`tonic-build`] from
@@ -33,34 +33,35 @@ that are expected to have been completely handled in an earlier
 `protoc-gen-prost` step. For information on the effects of these settings,
 see the related documentation from `tonic-build`:
 
-* `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
-* `extern_path=<proto_path>=<rust_path>`:  [extern_path](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.extern_path)
-* `compile_well_known_types(=<boolean>)`: [compile_well_known_types](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.compile_well_known_types)
-* `disable_package_emission(=<boolean>)`: [disable_package_emission](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.disable_package_emission)
-* `server_attribute=<proto_path>=<attribute>`: [server_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.server_attribute)
-* `server_mod_attribute=<proto_path>=<attribute>`: [server_mod_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.server_mod_attribute)
-* `client_attribute=<proto_path>=<attribute>`: [client_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.client_attribute)
-* `client_mod_attribute=<proto_path>=<attribute>`: [client_mod_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.client_mod_attribute)
+- `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
+- `extern_path=<proto_path>=<rust_path>`: [extern_path](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.extern_path)
+- `compile_well_known_types(=<boolean>)`: [compile_well_known_types](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.compile_well_known_types)
+- `disable_package_emission(=<boolean>)`: [disable_package_emission](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.disable_package_emission)
+- `server_attribute=<proto_path>=<attribute>`: [server_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.server_attribute)
+- `server_mod_attribute=<proto_path>=<attribute>`: [server_mod_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.server_mod_attribute)
+- `client_attribute=<proto_path>=<attribute>`: [client_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.client_attribute)
+- `client_mod_attribute=<proto_path>=<attribute>`: [client_mod_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.client_mod_attribute)
 
 In addition, the following options can also be specified:
 
-* `no_server(=<boolean>)`: Disables generation of the server modules
-* `no_client(=<boolean>)`: Disables generation of the client modules
-* `no_include(=<boolean>)`:  Skips adding an include into the file generated
+- `no_server(=<boolean>)`: Disables generation of the server modules
+- `no_client(=<boolean>)`: Disables generation of the client modules
+- `no_transport(=<boolean>)`: Disables generation of connect method using `tonic::transport::Channel`
+- `no_include(=<boolean>)`: Skips adding an include into the file generated
   by `protoc-gen-prost`. This behavior may be desired if this plugin is run
   in a separate `protoc` invocation and you encounter a `Tried to insert into
-  file that doesn't exist` error.
+file that doesn't exist` error.
 
 A note on parameter values:
 
-* `<attribute>`: All `,`s appearing in the value must be `\` escaped
+- `<attribute>`: All `,`s appearing in the value must be `\` escaped
   (i.e. `\,`) This is due to the fact that internally, `protoc` joins all
   passed parameters with a `,` before sending it as a single string to the
   underlying plugin.
-* `<proto_path>`: Protobuf paths beginning with `.` will be matched from the
+- `<proto_path>`: Protobuf paths beginning with `.` will be matched from the
   global root (prefix matches). All other paths will be matched as suffix
   matches.
-* `(=<boolean>)`: Boolean values may be specified after a parameter, but if
+- `(=<boolean>)`: Boolean values may be specified after a parameter, but if
   not, the value is assumed to be `true` by virtue of having listed the
   parameter.
 

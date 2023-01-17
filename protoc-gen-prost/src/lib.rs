@@ -447,11 +447,11 @@ impl str::FromStr for Parameters {
                         param: "file_descriptor_set",
                     }
                     | Param::Value {
-                        param: "file_descriptior_set",
+                        param: "file_descriptor_set",
                         value: "true",
                     } => ret_val.file_descriptor_set = true,
                     Param::Value {
-                        param: "file_descriptior_set",
+                        param: "file_descriptor_set",
                         value: "false",
                     } => (),
                     _ => return Err(InvalidParameter::from(param)),

@@ -16,8 +16,8 @@ categories = ["encoding"]
 
 [dependencies]
 pbjson-build = "0.5.1"
-prost-build = { version = ">=0.11.0, <0.11.2", default-features = false }
-prost-types = { version = "0.11.0", default-features = false }
+prost-build = { version = "0.11.6", default-features = false }
+prost-types = { version = "0.11.6", default-features = false }
 prost = { version = "0.11.0", default-features = false, features = ["std"] }
 protoc-gen-prost = { version = "0.2.0", path = "../protoc-gen-prost" }
 regex = { version = "1.5.5", default-features = false }

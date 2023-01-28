@@ -219,6 +219,8 @@ struct ProstParameters {
     extern_path: Vec<(String, String)>,
     type_attribute: Vec<(String, String)>,
     field_attribute: Vec<(String, String)>,
+    enum_attribute: Vec<(String, String)>,
+    message_attribute: Vec<(String, String)>,
     compile_well_known_types: bool,
     retain_enum_prefix: bool,
 }
@@ -243,6 +245,12 @@ impl ProstParameters {
         }
         for (proto_path, attribute) in &self.field_attribute {
             config.field_attribute(proto_path, attribute);
+        }
+        for (proto_path, attribute) in &self.enum_attribute {
+            config.enum_attribute(proto_path, attribute);
+        }
+        for (proto_path, attribute) in &self.message_attribute {
+            config.message_attribute(proto_path, attribute);
         }
 
         if self.compile_well_known_types {
@@ -320,6 +328,22 @@ impl ProstParameters {
                 key: prefix,
                 value: module,
             } => self.field_attribute.push((
+                prefix.to_string(),
+                module.replace(r"\,", ",").replace(r"\\", r"\"),
+            )),
+            Param::KeyValue {
+                param: "enum_attribute",
+                key: prefix,
+                value: module,
+            } => self.enum_attribute.push((
+                prefix.to_string(),
+                module.replace(r"\,", ",").replace(r"\\", r"\"),
+            )),
+            Param::KeyValue {
+                param: "message_attribute",
+                key: prefix,
+                value: module,
+            } => self.message_attribute.push((
                 prefix.to_string(),
                 module.replace(r"\,", ",").replace(r"\\", r"\"),
             )),

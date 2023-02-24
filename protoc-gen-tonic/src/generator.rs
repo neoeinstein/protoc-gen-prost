@@ -11,6 +11,7 @@ pub(crate) struct TonicGenerator {
     pub(crate) resolver: Resolver,
     pub(crate) generate_server: bool,
     pub(crate) generate_client: bool,
+    pub(crate) generate_transport: bool,
     pub(crate) server_attributes: Attributes,
     pub(crate) client_attributes: Attributes,
     pub(crate) emit_package: bool,
@@ -46,22 +47,20 @@ impl TonicGenerator {
                     })
                     .flat_map(|service| {
                         let client = self.generate_client.then(|| {
-                            tonic_build::client::generate(
-                                &service,
-                                self.emit_package,
-                                PROTO_PATH,
-                                self.resolver.compile_well_known_types(),
-                                &self.client_attributes,
-                            )
+                            tonic_build::CodeGenBuilder::new()
+                                .emit_package(self.emit_package)
+                                .build_transport(self.generate_transport)
+                                .compile_well_known_types(self.resolver.compile_well_known_types())
+                                .attributes(self.client_attributes.clone())
+                                .generate_client(&service, PROTO_PATH)
                         });
                         let server = self.generate_server.then(|| {
-                            tonic_build::server::generate(
-                                &service,
-                                self.emit_package,
-                                PROTO_PATH,
-                                self.resolver.compile_well_known_types(),
-                                &self.server_attributes,
-                            )
+                            tonic_build::CodeGenBuilder::new()
+                                .emit_package(self.emit_package)
+                                .build_transport(self.generate_transport)
+                                .compile_well_known_types(self.resolver.compile_well_known_types())
+                                .attributes(self.server_attributes.clone())
+                                .generate_server(&service, PROTO_PATH)
                         });
 
                         client.into_iter().chain(server)

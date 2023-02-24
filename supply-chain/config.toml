@@ -16,6 +16,9 @@ audit-as-crates-io = false
 [policy.protoc-gen-tonic]
 audit-as-crates-io = false
 
+[policy.protoc-wkt]
+audit-as-crates-io = false
+
 [[exemptions.anyhow]]
 version = "1.0.66"
 criteria = "safe-to-deploy"
@@ -73,7 +76,7 @@ version = "1.4.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.libc]]
-version = "0.2.137"
+version = "0.2.139"
 criteria = "safe-to-deploy"
 
 [[exemptions.log]]

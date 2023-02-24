@@ -30,6 +30,7 @@ pub fn execute(raw_request: &[u8]) -> protoc_gen_prost::Result {
         resolver,
         generate_server: !params.no_server,
         generate_client: !params.no_client,
+        generate_transport: !params.no_transport,
         server_attributes: params.server_attributes,
         client_attributes: params.client_attributes,
         emit_package: !params.disable_package_emission,
@@ -54,6 +55,7 @@ struct Parameters {
     disable_package_emission: bool,
     no_server: bool,
     no_client: bool,
+    no_transport: bool,
     no_include: bool,
 }
 
@@ -113,6 +115,17 @@ impl str::FromStr for Parameters {
                 } => ret_val.no_client = true,
                 Param::Value {
                     param: "no_client",
+                    value: "false",
+                } => (),
+                Param::Parameter {
+                    param: "no_transport",
+                }
+                | Param::Value {
+                    param: "no_transport",
+                    value: "true",
+                } => ret_val.no_transport = true,
+                Param::Value {
+                    param: "no_transport",
                     value: "false",
                 } => (),
                 Param::Parameter {

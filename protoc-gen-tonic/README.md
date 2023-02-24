@@ -46,6 +46,7 @@ In addition, the following options can also be specified:
 
 * `no_server(=<boolean>)`: Disables generation of the server modules
 * `no_client(=<boolean>)`: Disables generation of the client modules
+* `no_transport(=<boolean>)`: Disables generation of connect method using `tonic::transport::Channel`
 * `no_include(=<boolean>)`:  Skips adding an include into the file generated
   by `protoc-gen-prost`. This behavior may be desired if this plugin is run
   in a separate `protoc` invocation and you encounter a `Tried to insert into

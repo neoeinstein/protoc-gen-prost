@@ -41,6 +41,9 @@ struct Parameters {
     extern_path: Vec<(String, String)>,
     retain_enum_prefix: bool,
     preserve_proto_field_names: bool,
+    ignore_unknown_fields: bool,
+    emit_fields: bool,
+    use_integers_for_enums: bool,
     no_include: bool,
 }
 
@@ -58,6 +61,18 @@ impl Parameters {
 
         if self.preserve_proto_field_names {
             builder.preserve_proto_field_names();
+        }
+
+        if self.ignore_unknown_fields {
+            builder.ignore_unknown_fields();
+        }
+
+        if self.emit_fields {
+            builder.emit_fields();
+        }
+
+        if self.use_integers_for_enums {
+            builder.use_integers_for_enums();
         }
 
         builder
@@ -99,6 +114,27 @@ impl str::FromStr for Parameters {
                     param: "preserve_proto_field_names",
                     value: "false",
                 } => (),
+                Param::Parameter {
+                    param: "ignore_unknown_fields",
+                }
+                | Param::Value {
+                    param: "ignore_unknown_fields",
+                    value: "true",
+                } => ret_val.ignore_unknown_fields = true,
+                Param::Parameter {
+                    param: "emit_fields",
+                }
+                | Param::Value {
+                    param: "emit_fields",
+                    value: "true",
+                } => ret_val.emit_fields = true,
+                Param::Parameter {
+                    param: "use_integers_for_enums",
+                }
+                | Param::Value {
+                    param: "use_integers_for_enums",
+                    value: "true",
+                } => ret_val.use_integers_for_enums = true,
                 Param::Parameter {
                     param: "no_include",
                 }

@@ -1,5 +1,103 @@
 
 # cargo-vet audits file
 
-[audits]
+[[audits.anyhow]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.66 -> 1.0.69"
+
+[[audits.bytes]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.2.1 -> 1.4.0"
+
+[[audits.either]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.8.0 -> 1.8.1"
+
+[[audits.fastrand]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.8.0 -> 1.9.0"
+
+[[audits.heck]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.4.0 -> 0.4.1"
+
+[[audits.indexmap]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.9.1 -> 1.9.2"
+
+[[audits.once_cell]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.16.0 -> 1.17.1"
+
+[[audits.petgraph]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.6.2 -> 0.6.3"
+
+[[audits.prettyplease]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.1.21 -> 0.1.23"
+
+[[audits.proc-macro2]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.47 -> 1.0.51"
+
+[[audits.prost]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.2 -> 0.11.8"
+
+[[audits.prost-build]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.1 -> 0.11.8"
+
+[[audits.prost-derive]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.2 -> 0.11.8"
+
+[[audits.prost-types]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.2 -> 0.11.8"
+
+[[audits.quote]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.21 -> 1.0.23"
+
+[[audits.regex]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.7.0 -> 1.7.1"
+
+[[audits.syn]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.103 -> 1.0.109"
+
+[[audits.tonic-build]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.8.2 -> 0.8.4"
+
+[[audits.unicode-ident]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.5 -> 1.0.6"
+
+[[audits.which]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "4.3.0 -> 4.4.0"
 

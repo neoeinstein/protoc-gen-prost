@@ -4,6 +4,31 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2023-02-25]
+
+- `protoc-gen-prost` 0.2.2
+- `protoc-gen-prost-serde` 0.2.2
+- `protoc-gen-tonic` 0.2.2
+
+### Fixed
+
+- (prost) Corrected matching for the file descriptor set option ([#46])
+
+### Added
+
+- (tonic) Add option to disable transport generation ([#43])
+- (prost) Support applying message and enum attributes ([#48])
+- (serde) Support additional pbjson features ([#50])
+
+### Changed
+
+- Updated various dependencies, prost to 0.11.8 ([#50])
+
+Thanks to @streamingfast, @stan-irl, @horacimacias, and @torkelrogstad for
+their contributions in these releases
+
+## [2022-11-13]
+
 - `protoc-gen-prost` 0.2.1
 - `protoc-gen-prost-crate` 0.3.1
 - `protoc-gen-prost-serde` 0.2.1

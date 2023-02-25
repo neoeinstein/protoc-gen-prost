@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-prost"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin powered by Prost!"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"
@@ -18,9 +18,9 @@ exclude = ["proto"]
 
 [dependencies]
 once_cell = "1.10.0"
-prost-build = { version = "0.11.6", default-features = false }
-prost-types = { version = "0.11.6", default-features = false }
-prost = { version = "0.11.6", default-features = false, features = ["std"] }
+prost-build = { version = "0.11.8", default-features = false }
+prost-types = { version = "0.11.8", default-features = false }
+prost = { version = "0.11.8", default-features = false, features = ["std"] }
 regex = { version = "1.5.5", default-features = false }
 
 [profile.release]

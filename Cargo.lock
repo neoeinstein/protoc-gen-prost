@@ -223,7 +223,7 @@ dependencies = [
 
 [[package]]
 name = "protoc-gen-prost"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "once_cell",
  "prost",
@@ -246,7 +246,7 @@ dependencies = [
 
 [[package]]
 name = "protoc-gen-prost-serde"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "pbjson-build",
  "prost",
@@ -262,7 +262,7 @@ version = "0.0.1"
 
 [[package]]
 name = "protoc-gen-tonic"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "heck",
  "prettyplease",

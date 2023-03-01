@@ -17,10 +17,9 @@ impl Generator for PbJsonGenerator {
         results
             .into_iter()
             .filter_map(|(package, bytes)| {
-                let request =
-                    module_request_set.for_module(&Module::from_protobuf_package_name(
-                        &package.to_string().replace("r#", ""),
-                    ))?;
+                let request = module_request_set.for_module(
+                    &Module::from_protobuf_package_name(&package.to_string().replace("r#", "")),
+                )?;
 
                 let output_filename = format!("{}.serde.rs", request.proto_package_name());
 

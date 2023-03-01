@@ -86,6 +86,11 @@ who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.0.103 -> 1.0.109"
 
+[[audits.tempfile]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "3.3.0 -> 3.4.0"
+
 [[audits.tonic-build]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"

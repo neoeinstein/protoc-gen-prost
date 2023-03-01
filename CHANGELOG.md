@@ -4,6 +4,14 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2023-03-01]
+
+- `protoc-gen-prost-serde` 0.2.3
+
+### Fixed
+
+- (serde) Handle module paths that contain keywords
+
 ## [2023-02-25]
 
 - `protoc-gen-prost` 0.2.2

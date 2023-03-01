@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-prost-serde"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin providing JSON serializations"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"

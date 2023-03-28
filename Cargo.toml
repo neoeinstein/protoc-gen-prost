@@ -3,6 +3,7 @@ members = [
     "protoc-gen-prost",
     "protoc-gen-prost-crate",
     "protoc-gen-prost-serde",
+    "protoc-gen-prost-utoipa",
     "protoc-gen-prost-validate",
     "protoc-gen-tonic",
     "protoc-wkt",

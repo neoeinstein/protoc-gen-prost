@@ -43,16 +43,16 @@ remote plugin.
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/prost:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-prost:v0.2.2
     out: gen/src
     opt:
       - bytes=.
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
-  - remote: buf.build/prost/plugins/serde:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-prost-serde:v0.2.3
     out: gen/src
-  - remote: buf.build/prost/plugins/tonic:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-tonic:v0.2.2
     out: gen/src
     opt:
       - compile_well_known_types

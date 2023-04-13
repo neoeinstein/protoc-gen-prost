@@ -86,12 +86,12 @@ a plugin which you can execute remotely, without needing to explicitly install
 this tool. See the [plugin listing][1] to identify the latest published version
 for use. The plugin is referenced as follows:
 
-[1]: https://buf.build/prost/plugins/prost
+[1]: https://buf.build/community/neoeinstein-prost
 
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/prost:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-prost:v0.2.2
     out: gen
 ```
 

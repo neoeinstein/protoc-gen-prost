@@ -115,12 +115,12 @@ a plugin which you can execute remotely, without needing to explicitly install
 this tool. See the [plugin listing][1] to identify the latest published version
 for use. The plugin is referenced as follows:
 
-[1]: https://buf.build/prost/plugins/tonic
+[1]: https://buf.build/community/neoeinstein-tonic
 
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/tonic:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-tonic:v0.2.2
     out: gen
 ```
 

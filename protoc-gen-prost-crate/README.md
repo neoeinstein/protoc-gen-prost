@@ -73,7 +73,7 @@ directory without any conditional compilation feature flags:
 ```yaml
 version: v1
 plugins:
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen
     strategy: all
     opt:
@@ -86,12 +86,12 @@ into the `src` directory which will be created by this plugin:
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen
     strategy: all
     opt:
@@ -105,12 +105,12 @@ put into the include file, used the `only_include` option:
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen
     strategy: all
     opt:
@@ -125,12 +125,12 @@ for use. Note that the remote plugin form is _not compatible_ with the `gen_crat
 option, as the plugin is executed outside the context of the current file system,
 so template information cannot be used. The plugin is referenced as follows:
 
-[1]: https://buf.build/prost/plugins/crate
+[1]: https://buf.build/community/neoeinstein-prost-crate
 
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/crate:v0.3.1-1
+  - plugin: buf.build/community/neoeinstein-prost-crate:v0.3.1
     out: gen
 ```
 
@@ -223,12 +223,12 @@ prost = "0.10.0"
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: src
     opt:
       - bytes=.
       - file_descriptor_set
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen
     strategy: all
     opt:

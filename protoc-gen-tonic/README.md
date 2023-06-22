@@ -101,9 +101,9 @@ When used with _buf_, options can be specified in the `buf.gen.yaml` file.
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen
-  - name: tonic
+  - plugin: tonic
     out: gen
 ```
 
@@ -115,12 +115,12 @@ a plugin which you can execute remotely, without needing to explicitly install
 this tool. See the [plugin listing][1] to identify the latest published version
 for use. The plugin is referenced as follows:
 
-[1]: https://buf.build/prost/plugins/tonic
+[1]: https://buf.build/community/neoeinstein-tonic
 
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/tonic:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-tonic:v0.2.2
     out: gen
 ```
 
@@ -132,19 +132,19 @@ or use the client.
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - name: prost-serde
+  - plugin: prost-serde
     out: gen/src
-  - name: tonic
+  - plugin: tonic
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - name: prost
+  - plugin: prost
     out: gen
     opt:
       - gen_crate=Cargo.toml.tpl

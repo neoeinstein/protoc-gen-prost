@@ -98,12 +98,12 @@ and `extern_path=.google.protobuf=::pbjson_types` options should be specified.
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - name: prost-serde
+  - plugin: prost-serde
     out: gen
 ```
 
@@ -112,12 +112,12 @@ a plugin which you can execute remotely, without needing to explicitly install
 this tool. See the [plugin listing][1] to identify the latest published version
 for use. The plugin is referenced as follows:
 
-[1]: https://buf.build/prost/plugins/serde
+[1]: https://buf.build/community/neoeinstein-prost-serde
 
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/serde:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-prost-serde:v0.2.3
     out: gen
 ```
 
@@ -127,14 +127,14 @@ plugin:
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - name: prost-serde
+  - plugin: prost-serde
     out: gen
-  - name: prost-crate
+  - plugin: prost-crate
     strategy: all
     out: gen
     opt:

@@ -37,7 +37,6 @@ impl TonicGenerator {
 
         let services = request
             .files()
-            .into_iter()
             .flat_map(|file| {
                 file.service
                     .iter()

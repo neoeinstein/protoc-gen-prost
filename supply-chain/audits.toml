@@ -105,4 +105,3 @@ delta = "1.0.5 -> 1.0.6"
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "4.3.0 -> 4.4.0"
-

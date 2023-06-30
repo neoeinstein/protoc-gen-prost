@@ -1,6 +1,9 @@
 
 # cargo-vet config file
 
+[cargo-vet]
+version = "0.8"
+
 [policy.protoc-gen-prost]
 audit-as-crates-io = false
 
@@ -159,10 +162,6 @@ criteria = "safe-to-deploy"
 version = "0.6.28"
 criteria = "safe-to-deploy"
 
-[[exemptions.remove_dir_all]]
-version = "0.5.3"
-criteria = "safe-to-deploy"
-
 [[exemptions.rustix]]
 version = "0.36.8"
 criteria = "safe-to-deploy"
@@ -238,4 +237,3 @@ criteria = "safe-to-deploy"
 [[exemptions.windows_x86_64_msvc]]
 version = "0.42.1"
 criteria = "safe-to-deploy"
-

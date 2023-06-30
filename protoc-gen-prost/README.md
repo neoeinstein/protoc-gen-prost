@@ -71,7 +71,7 @@ When used with _buf_, options can be specified in the `buf.gen.yaml` file:
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen
     opt:
       - bytes=.
@@ -86,12 +86,12 @@ a plugin which you can execute remotely, without needing to explicitly install
 this tool. See the [plugin listing][1] to identify the latest published version
 for use. The plugin is referenced as follows:
 
-[1]: https://buf.build/prost/plugins/prost
+[1]: https://buf.build/community/neoeinstein-prost
 
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/prost/plugins/prost:v0.2.1-1
+  - plugin: buf.build/community/neoeinstein-prost:v0.2.2
     out: gen
 ```
 
@@ -102,12 +102,12 @@ the `protoc-gen-prost-crate` plugin.
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen
     strategy: all
     opt:
@@ -136,14 +136,14 @@ Here is an example for _buf_ using the `protoc-gen-prost-serde` plugin:
 ```yaml
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - name: prost-serde
+  - plugin: prost-serde
     out: gen/src
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen
     strategy: all
     opt:

@@ -1,6 +1,6 @@
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: src/gen
     opt:
       - file_descriptor_set

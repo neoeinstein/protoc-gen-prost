@@ -1,20 +1,20 @@
 version: v1
 plugins:
-  - name: prost
+  - plugin: prost
     out: gen/src
     opt:
       - bytes=.
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
-  - name: prost-serde
+  - plugin: prost-serde
     out: gen/src
-  - name: tonic
+  - plugin: tonic
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - name: prost-crate
+  - plugin: prost-crate
     out: gen
     strategy: all
     opt:

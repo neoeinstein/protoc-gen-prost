@@ -4,6 +4,31 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2023-07-06]
+
+- `protoc-gen-prost` 0.2.3
+- `protoc-gen-tonic` 0.3.0
+
+### BREAKING CHANGES
+
+- (tonic) Updated code generation to support `tonic` 0.9 ([#72])
+
+### Fixed
+
+- (prost) Fixed missing outputs when multiple protos define the same package ([#71])
+- (docs) Update documentation for prost remote plugins ([#69])
+
+### Changed
+
+- Updated the version of `h2` used by the example crate ([#65])
+
+Thanks to @abrisco and @pkwarren for their contributions this release
+
+[#65]: https://github.com/neoeinstein/protoc-gen-prost/pull/65
+[#69]: https://github.com/neoeinstein/protoc-gen-prost/pull/69
+[#71]: https://github.com/neoeinstein/protoc-gen-prost/pull/71
+[#72]: https://github.com/neoeinstein/protoc-gen-prost/pull/72
+
 ## [2023-03-01]
 
 - `protoc-gen-prost-serde` 0.2.3
@@ -34,6 +59,11 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 Thanks to @streamingfast, @stan-irl, @horacimacias, and @torkelrogstad for
 their contributions in these releases
+
+[#43]: https://github.com/neoeinstein/protoc-gen-prost/pull/43
+[#46]: https://github.com/neoeinstein/protoc-gen-prost/pull/46
+[#48]: https://github.com/neoeinstein/protoc-gen-prost/pull/48
+[#50]: https://github.com/neoeinstein/protoc-gen-prost/pull/50
 
 ## [2022-11-13]
 

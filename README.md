@@ -43,7 +43,7 @@ remote plugin.
 ```yaml
 version: v1
 plugins:
-  - plugin: buf.build/community/neoeinstein-prost:v0.2.2
+  - plugin: buf.build/community/neoeinstein-prost:v0.2.3
     out: gen/src
     opt:
       - bytes=.

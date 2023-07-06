@@ -120,7 +120,7 @@ for use. The plugin is referenced as follows:
 ```yaml
 version: v1
 plugins:
-  - plugin: buf.build/community/neoeinstein-tonic:v0.2.2
+  - plugin: buf.build/community/neoeinstein-tonic:v0.3.0
     out: gen
 ```
 

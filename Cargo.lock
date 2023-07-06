@@ -315,7 +315,7 @@ version = "0.0.1"
 
 [[package]]
 name = "protoc-gen-tonic"
-version = "0.2.2"
+version = "0.3.0"
 dependencies = [
  "heck",
  "prettyplease 0.2.9",

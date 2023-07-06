@@ -52,7 +52,7 @@ plugins:
       - file_descriptor_set
   - plugin: buf.build/community/neoeinstein-prost-serde:v0.2.3
     out: gen/src
-  - plugin: buf.build/community/neoeinstein-tonic:v0.2.2
+  - plugin: buf.build/community/neoeinstein-tonic:v0.3.0
     out: gen/src
     opt:
       - compile_well_known_types

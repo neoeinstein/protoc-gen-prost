@@ -36,6 +36,11 @@ who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.16.0 -> 1.17.1"
 
+[[audits.once_cell]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.17.1 -> 1.18.0"
+
 [[audits.petgraph]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
@@ -46,22 +51,52 @@ who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "0.1.21 -> 0.1.23"
 
+[[audits.prettyplease]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.1.23 -> 0.2.9"
+
 [[audits.proc-macro2]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.0.47 -> 1.0.51"
+
+[[audits.proc-macro2]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.51 -> 1.0.63"
 
 [[audits.prost]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "0.11.2 -> 0.11.8"
 
+[[audits.prost]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.8 -> 0.11.9"
+
 [[audits.prost-build]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "0.11.1 -> 0.11.8"
 
+[[audits.prost-build]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.8 -> 0.11.9"
+
 [[audits.prost-derive]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.2 -> 0.11.8"
+
+[[audits.prost-derive]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.11.8 -> 0.11.9"
+
+[[audits.prost-types]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "0.11.2 -> 0.11.8"
@@ -69,22 +104,42 @@ delta = "0.11.2 -> 0.11.8"
 [[audits.prost-types]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
-delta = "0.11.2 -> 0.11.8"
+delta = "0.11.8 -> 0.11.9"
 
 [[audits.quote]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.0.21 -> 1.0.23"
 
+[[audits.quote]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.23 -> 1.0.29"
+
 [[audits.regex]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.7.0 -> 1.7.1"
 
+[[audits.regex]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.7.1 -> 1.8.4"
+
+[[audits.regex-syntax]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.6.28 -> 0.7.2"
+
 [[audits.syn]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.0.103 -> 1.0.109"
+
+[[audits.syn]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "1.0.109 -> 2.0.22"
 
 [[audits.tempfile]]
 who = "Marcus Griep <marcus@griep.us>"
@@ -95,6 +150,11 @@ delta = "3.3.0 -> 3.4.0"
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "0.8.2 -> 0.8.4"
+
+[[audits.tonic-build]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.8.4 -> 0.9.2"
 
 [[audits.unicode-ident]]
 who = "Marcus Griep <marcus@griep.us>"

@@ -26,3 +26,8 @@ regex = { version = "1.5.5", default-features = false }
 codegen-units = 1
 lto = "fat"
 debug = true
+
+[[bin]]
+
+name = "protoc-gen-prost-serde"
+path = "src/main.rs"

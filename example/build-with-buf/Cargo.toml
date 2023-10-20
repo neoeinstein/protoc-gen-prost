@@ -14,7 +14,7 @@ proto_full = ["example"]
 
 [dependencies]
 bytes = "1.1.0"
-prost = "0.11.0"
+prost = "0.12.1"
 pbjson = "0.5"
 pbjson-types = "0.5"
 serde = "1.0"

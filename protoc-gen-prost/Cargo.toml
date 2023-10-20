@@ -18,9 +18,9 @@ exclude = ["proto"]
 
 [dependencies]
 once_cell = "1.10.0"
-prost-build = { version = "0.11.8", default-features = false }
-prost-types = { version = "0.11.8", default-features = false }
-prost = { version = "0.11.8", default-features = false, features = ["std"] }
+prost-build = { version = "0.12.1", default-features = false }
+prost-types = { version = "0.12.1", default-features = false }
+prost = { version = "0.12.1", default-features = false, features = ["std"] }
 regex = { version = "1.5.5", default-features = false }
 
 [profile.release]

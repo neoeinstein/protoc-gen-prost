@@ -7,6 +7,7 @@ members = [
     "protoc-gen-tonic",
     "protoc-wkt",
 ]
+resolver = "2" # to use the edition 2021 resolver
 
 [profile.release]
 codegen-units = 1

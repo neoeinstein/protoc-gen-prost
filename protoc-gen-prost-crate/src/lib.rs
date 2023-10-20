@@ -23,11 +23,13 @@ pub fn execute(raw_request: &[u8]) -> Result {
         params.default_package_filename.as_deref(),
     )?;
 
-    let include_filename = if matches!(params.gen_crate, Some(_)) {
-        params.include_file.as_deref().unwrap_or("src/lib.rs")
-    } else {
-        params.include_file.as_deref().unwrap_or("mod.rs")
-    };
+    let include_filename = params.include_file.as_deref().unwrap_or_else(|| {
+        if params.gen_crate.is_some() {
+            "src/lib.rs"
+        } else {
+            "mod.rs"
+        }
+    });
     let package_separator = params.package_separator.as_deref().unwrap_or("-");
 
     let limiter = Rc::new(params.only_include);

@@ -7,7 +7,7 @@ edition = "2021"
 prost = "0.11.0"
 pbjson-types = "0.5"
 serde = "1.0"
-tonic = { version = "0.9", features = ["gzip"] }
+tonic = { version = "0.10", features = ["gzip"] }
 
 [features]
 default = []

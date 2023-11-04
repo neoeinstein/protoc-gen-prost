@@ -45,6 +45,7 @@ struct Parameters {
     emit_fields: bool,
     use_integers_for_enums: bool,
     no_include: bool,
+    btree_map: Vec<String>,
 }
 
 impl Parameters {
@@ -74,6 +75,12 @@ impl Parameters {
         if self.use_integers_for_enums {
             builder.use_integers_for_enums();
         }
+
+        if !self.btree_map.is_empty() {
+            builder.btree_map(self.btree_map.clone());
+        }
+
+        builder.btree_map(self.btree_map.clone());
 
         builder
     }
@@ -151,6 +158,10 @@ impl str::FromStr for Parameters {
                     key: prefix,
                     value: module,
                 } => ret_val.extern_path.push((prefix.to_string(), module)),
+                Param::Value {
+                    param: "btree_map",
+                    value,
+                } => ret_val.btree_map.push(value.to_string()),
                 _ => return Err(InvalidParameter::from(param)),
             }
         }

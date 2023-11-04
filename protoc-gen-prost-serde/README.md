@@ -33,6 +33,7 @@ This tool supports all the same options from `pbjson-build`. For more
 information on the effects of these settings, see the related documentation
 from that crate:
 
+* `btree_map=<proto_path>`: [btree_map](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.btree_map)
 * `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
 * `extern_path=<proto_path>=<rust_path>`:  [extern_path](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.extern_path)
 * `retain_enum_prefix(=<boolean>)`:  [retain_enum_prefix](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.retain_enum_prefix)

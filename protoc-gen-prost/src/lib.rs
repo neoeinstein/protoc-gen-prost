@@ -87,8 +87,8 @@ impl ModuleRequestSet {
                 let module = Module::from_protobuf_package_name(proto.package());
                 let proto_filename = proto.name();
                 let entry = acc
-                    .entry(module)
-                    .or_insert_with(|| ModuleRequest::new(proto.package().to_owned()));
+                    .entry(module.clone())
+                    .or_insert_with(|| ModuleRequest::new(proto.package().to_owned(), module));
 
                 if entry.output_filename().is_none() && input_protos.contains(proto_filename) {
                     let filename = match proto.package() {
@@ -115,20 +115,26 @@ impl ModuleRequestSet {
     pub fn for_module(&self, module: &Module) -> Option<&ModuleRequest> {
         self.requests.get(module)
     }
+
+    pub fn modules(&self) -> impl Iterator<Item=&Module> {
+        self.requests.keys()
+    }
 }
 
 /// A code generation request for a specific module
 pub struct ModuleRequest {
     proto_package_name: String,
+    module: Module,
     output_filename: Option<String>,
     files: Vec<FileDescriptorProto>,
     raw: Vec<Vec<u8>>,
 }
 
 impl ModuleRequest {
-    fn new(proto_package_name: String) -> Self {
+    fn new(proto_package_name: String, module: Module) -> Self {
         Self {
             proto_package_name,
+            module,
             output_filename: None,
             files: Vec::new(),
             raw: Vec::new(),
@@ -154,6 +160,21 @@ impl ModuleRequest {
         self.output_filename.as_deref()
     }
 
+    pub fn output_dir(&self) -> String {
+        let mut output_dir = self.module.parts().collect::<Vec<_>>().join("/");
+        if !output_dir.is_empty() {
+            output_dir.push('/');
+        }
+        output_dir
+    }
+
+    pub fn output_filepath(&self) -> Option<String> {
+        self.output_filename().map(|f| {
+            let dir = self.output_dir();
+            format!("{dir}{f}")
+        })
+    }
+
     /// An iterator of the file descriptors
     pub fn files(&self) -> impl Iterator<Item = &FileDescriptorProto> {
         self.files.iter()
@@ -166,12 +187,12 @@ impl ModuleRequest {
 
     /// Creates a code generation file from the output
     pub(crate) fn write_to_file<F: FnOnce(&mut String)>(&self, f: F) -> Option<File> {
-        self.output_filename.as_deref().map(|name| {
+        self.output_filepath().map(|name| {
             let mut content = String::with_capacity(8_192);
             f(&mut content);
 
             File {
-                name: Some(name.to_owned()),
+                name: Some(name),
                 content: Some(content),
                 ..Default::default()
             }
@@ -183,12 +204,12 @@ impl ModuleRequest {
     /// This is generally a good way to add includes referencing the output
     /// of other plugins or to directly append to the main file.
     pub fn append_to_file<F: FnOnce(&mut String)>(&self, f: F) -> Option<File> {
-        self.output_filename.as_deref().map(|name| {
+        self.output_filepath().map(|name| {
             let mut content = String::new();
             f(&mut content);
 
             File {
-                name: Some(name.to_owned()),
+                name: Some(name),
                 content: Some(content),
                 insertion_point: Some("module".to_owned()),
                 ..Default::default()

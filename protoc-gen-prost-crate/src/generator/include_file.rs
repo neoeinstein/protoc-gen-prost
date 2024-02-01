@@ -25,12 +25,12 @@ impl<'a> Generator for IncludeFileGenerator<'a> {
         let _: () = module_request_set
             .requests()
             .filter_map(|(module, request)| {
-                let filename = request.output_filename()?;
+                let filepath = request.output_filepath()?;
                 self.limiter
                     .is_allowed(request.proto_package_name())
                     .then(|| {
                         context.move_to(module, request.proto_package_name());
-                        context.push_include(filename);
+                        context.push_include(&filepath);
                         context.push_insertion_point(request.proto_package_name());
                     })
             })

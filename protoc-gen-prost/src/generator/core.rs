@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use prost_build::Module;
 use prost_types::compiler::code_generator_response::File;
 
@@ -9,7 +11,7 @@ pub struct CoreProstGenerator {
 
 impl Generator for CoreProstGenerator {
     fn generate(&mut self, module_request_set: &ModuleRequestSet) -> Result {
-        let prost_requests = module_request_set
+        let prost_requests: Vec<_> = module_request_set
             .requests()
             .flat_map(|(module, request)| {
                 request
@@ -19,11 +21,16 @@ impl Generator for CoreProstGenerator {
             })
             .collect();
 
-        let files = self
-            .config
-            .generate(prost_requests)?
+        let modules: HashSet<_> = prost_requests
+            .iter()
+            .map(|(module, _)| module.clone())
+            .collect();
+
+        let mut file_contents = self.config.generate(prost_requests)?;
+        let files = modules
             .into_iter()
-            .filter_map(|(module, content)| {
+            .filter_map(|module| {
+                let content = file_contents.remove(&module).unwrap_or_default();
                 Self::content_to_file(module, content, module_request_set)
             })
             .collect();

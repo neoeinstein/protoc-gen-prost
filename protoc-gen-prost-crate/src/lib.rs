@@ -23,7 +23,7 @@ pub fn execute(raw_request: &[u8]) -> Result {
         params.default_package_filename.as_deref(),
     )?;
 
-    let include_filename = if matches!(params.gen_crate, Some(_)) {
+    let include_filename = if params.gen_crate.is_some() {
         params.include_file.as_deref().unwrap_or("src/lib.rs")
     } else {
         params.include_file.as_deref().unwrap_or("mod.rs")

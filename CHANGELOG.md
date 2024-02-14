@@ -4,6 +4,27 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2024-02-14]
+
+- `protoc-gen-prost` 0.3.0
+- `protoc-gen-prost-serde` 0.3.0
+- `protoc-gen-prost-crate` 0.4.0
+- `protoc-gen-tonic` 0.4.0
+
+### BREAKING CHANGES
+
+- Updated code generation for latest tonic (0.11), prost (0.12), and pbjson (0.6)
+
+### Fixed
+
+- (serde) Fixed support for using BTree maps ([#79])
+
+### Changed
+
+- Updated the versions of `h2` and `rustix` used in example crates
+
+[#79]: https://github.com/neoeinstein/protoc-gen-prost/pull/79
+
 ## [2023-07-06]
 
 - `protoc-gen-prost` 0.2.3

@@ -31,6 +31,11 @@ who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.9.1 -> 1.9.2"
 
+[[audits.itertools]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.10.5 -> 0.11.0"
+
 [[audits.once_cell]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
@@ -165,3 +170,111 @@ delta = "1.0.5 -> 1.0.6"
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "4.3.0 -> 4.4.0"
+
+[[trusted.errno]]
+criteria = "safe-to-deploy"
+user-id = 6825 # Dan Gohman (sunfishcode)
+start = "2023-08-29"
+end = "2025-02-14"
+
+[[trusted.linux-raw-sys]]
+criteria = "safe-to-deploy"
+user-id = 6825 # Dan Gohman (sunfishcode)
+start = "2021-06-12"
+end = "2025-02-14"
+
+[[trusted.pbjson-build]]
+criteria = "safe-to-deploy"
+user-id = 133947 # Raphael Taylor-Davies (tustvold)
+start = "2021-09-28"
+end = "2025-02-14"
+
+[[trusted.prost]]
+criteria = "safe-to-deploy"
+user-id = 3959 # Lucio Franco (LucioFranco)
+start = "2021-07-08"
+end = "2025-02-14"
+
+[[trusted.prost-build]]
+criteria = "safe-to-deploy"
+user-id = 3959 # Lucio Franco (LucioFranco)
+start = "2021-07-08"
+end = "2025-02-14"
+
+[[trusted.prost-derive]]
+criteria = "safe-to-deploy"
+user-id = 3959 # Lucio Franco (LucioFranco)
+start = "2021-07-08"
+end = "2025-02-14"
+
+[[trusted.prost-types]]
+criteria = "safe-to-deploy"
+user-id = 3959 # Lucio Franco (LucioFranco)
+start = "2021-07-08"
+end = "2025-02-14"
+
+[[trusted.rustix]]
+criteria = "safe-to-deploy"
+user-id = 6825 # Dan Gohman (sunfishcode)
+start = "2021-10-29"
+end = "2025-02-14"
+
+[[trusted.tonic-build]]
+criteria = "safe-to-deploy"
+user-id = 3959 # Lucio Franco (LucioFranco)
+start = "2019-10-02"
+end = "2025-02-14"
+
+[[trusted.windows-sys]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2021-11-15"
+end = "2025-02-14"
+
+[[trusted.windows-targets]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2022-09-09"
+end = "2025-02-14"
+
+[[trusted.windows_aarch64_gnullvm]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2022-09-01"
+end = "2025-02-14"
+
+[[trusted.windows_aarch64_msvc]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2021-11-05"
+end = "2025-02-14"
+
+[[trusted.windows_i686_gnu]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2021-10-28"
+end = "2025-02-14"
+
+[[trusted.windows_i686_msvc]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2021-10-27"
+end = "2025-02-14"
+
+[[trusted.windows_x86_64_gnu]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2021-10-28"
+end = "2025-02-14"
+
+[[trusted.windows_x86_64_gnullvm]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2022-09-01"
+end = "2025-02-14"
+
+[[trusted.windows_x86_64_msvc]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2021-10-27"
+end = "2025-02-14"

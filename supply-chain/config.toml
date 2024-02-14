@@ -4,6 +4,12 @@
 [cargo-vet]
 version = "0.8"
 
+[imports.bytecode-alliance]
+url = "https://raw.githubusercontent.com/bytecodealliance/wasmtime/main/supply-chain/audits.toml"
+
+[imports.mozilla]
+url = "https://raw.githubusercontent.com/mozilla/supply-chain/main/audits.toml"
+
 [policy.protoc-gen-prost]
 audit-as-crates-io = false
 
@@ -26,36 +32,12 @@ audit-as-crates-io = false
 version = "1.0.66"
 criteria = "safe-to-deploy"
 
-[[exemptions.autocfg]]
-version = "1.1.0"
-criteria = "safe-to-deploy"
-
 [[exemptions.bitflags]]
 version = "1.3.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.bytes]]
 version = "1.2.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.cc]]
-version = "1.0.79"
-criteria = "safe-to-deploy"
-
-[[exemptions.cfg-if]]
-version = "1.0.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.either]]
-version = "1.8.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.errno]]
-version = "0.2.8"
-criteria = "safe-to-deploy"
-
-[[exemptions.errno-dragonfly]]
-version = "0.1.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.fastrand]]
@@ -66,14 +48,6 @@ criteria = "safe-to-deploy"
 version = "0.4.2"
 criteria = "safe-to-deploy"
 
-[[exemptions.hashbrown]]
-version = "0.12.3"
-criteria = "safe-to-deploy"
-
-[[exemptions.heck]]
-version = "0.4.0"
-criteria = "safe-to-deploy"
-
 [[exemptions.indexmap]]
 version = "1.9.1"
 criteria = "safe-to-deploy"
@@ -82,28 +56,12 @@ criteria = "safe-to-deploy"
 version = "0.1.12"
 criteria = "safe-to-deploy"
 
-[[exemptions.io-lifetimes]]
-version = "1.0.5"
-criteria = "safe-to-deploy"
-
 [[exemptions.itertools]]
 version = "0.10.5"
 criteria = "safe-to-deploy"
 
-[[exemptions.lazy_static]]
-version = "1.4.0"
-criteria = "safe-to-deploy"
-
 [[exemptions.libc]]
 version = "0.2.139"
-criteria = "safe-to-deploy"
-
-[[exemptions.linux-raw-sys]]
-version = "0.1.4"
-criteria = "safe-to-deploy"
-
-[[exemptions.log]]
-version = "0.4.17"
 criteria = "safe-to-deploy"
 
 [[exemptions.multimap]]
@@ -114,40 +72,12 @@ criteria = "safe-to-deploy"
 version = "1.16.0"
 criteria = "safe-to-deploy"
 
-[[exemptions.pbjson-build]]
-version = "0.5.1"
-criteria = "safe-to-deploy"
-
 [[exemptions.petgraph]]
 version = "0.6.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.prettyplease]]
 version = "0.1.21"
-criteria = "safe-to-deploy"
-
-[[exemptions.proc-macro2]]
-version = "1.0.47"
-criteria = "safe-to-deploy"
-
-[[exemptions.prost]]
-version = "0.11.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.prost-build]]
-version = "0.11.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.prost-derive]]
-version = "0.11.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.prost-types]]
-version = "0.11.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.quote]]
-version = "1.0.21"
 criteria = "safe-to-deploy"
 
 [[exemptions.redox_syscall]]
@@ -162,10 +92,6 @@ criteria = "safe-to-deploy"
 version = "0.6.28"
 criteria = "safe-to-deploy"
 
-[[exemptions.rustix]]
-version = "0.36.8"
-criteria = "safe-to-deploy"
-
 [[exemptions.syn]]
 version = "1.0.103"
 criteria = "safe-to-deploy"
@@ -174,66 +100,10 @@ criteria = "safe-to-deploy"
 version = "3.3.0"
 criteria = "safe-to-deploy"
 
-[[exemptions.tonic-build]]
-version = "0.8.2"
-criteria = "safe-to-deploy"
-
 [[exemptions.unicode-ident]]
 version = "1.0.5"
 criteria = "safe-to-deploy"
 
 [[exemptions.which]]
 version = "4.3.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.winapi]]
-version = "0.3.9"
-criteria = "safe-to-deploy"
-
-[[exemptions.winapi-i686-pc-windows-gnu]]
-version = "0.4.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.winapi-x86_64-pc-windows-gnu]]
-version = "0.4.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows-sys]]
-version = "0.42.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows-sys]]
-version = "0.45.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows-targets]]
-version = "0.42.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows_aarch64_gnullvm]]
-version = "0.42.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows_aarch64_msvc]]
-version = "0.42.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows_i686_gnu]]
-version = "0.42.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows_i686_msvc]]
-version = "0.42.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows_x86_64_gnu]]
-version = "0.42.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows_x86_64_gnullvm]]
-version = "0.42.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.windows_x86_64_msvc]]
-version = "0.42.1"
 criteria = "safe-to-deploy"

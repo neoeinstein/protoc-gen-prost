@@ -1,6 +1,7 @@
 version: v1
 plugins:
   - plugin: prost
+    #path: ../target/debug/protoc-gen-prost
     out: gen/src
     opt:
       - bytes=.
@@ -8,13 +9,16 @@ plugins:
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
   - plugin: prost-serde
+    #path: ../target/debug/protoc-gen-prost-serde
     out: gen/src
   - plugin: tonic
+    #path: ../target/debug/protoc-gen-tonic
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
   - plugin: prost-crate
+    #path: ../target/debug/protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:

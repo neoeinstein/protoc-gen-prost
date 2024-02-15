@@ -4,6 +4,12 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+### Added
+
+- (prost) Added support for `enable_type_names` ([#85])
+
+[#85]: https://github.com/neoeinstein/protoc-gen-prost/pull/85
+
 ## [2024-02-14]
 
 - `protoc-gen-prost` 0.3.0

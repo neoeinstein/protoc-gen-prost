@@ -4,6 +4,10 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2024-02-15]
+
+- `protoc-gen-prost` 0.3.1
+
 ### Added
 
 - (prost) Added support for `enable_type_names` ([#85])

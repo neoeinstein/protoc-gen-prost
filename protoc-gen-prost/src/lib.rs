@@ -223,6 +223,7 @@ struct ProstParameters {
     message_attribute: Vec<(String, String)>,
     compile_well_known_types: bool,
     retain_enum_prefix: bool,
+    enable_type_names: bool,
 }
 
 impl ProstParameters {
@@ -258,6 +259,9 @@ impl ProstParameters {
         }
         if self.retain_enum_prefix {
             config.retain_enum_prefix();
+        }
+        if self.enable_type_names {
+            config.enable_type_names();
         }
 
         config
@@ -347,6 +351,17 @@ impl ProstParameters {
                 prefix.to_string(),
                 module.replace(r"\,", ",").replace(r"\\", r"\"),
             )),
+            Param::Parameter {
+                param: "enable_type_names",
+            }
+            | Param::Value {
+                param: "enable_type_names",
+                value: "true",
+            } => self.enable_type_names = true,
+            Param::Value {
+                param: "enable_type_names",
+                value: "false",
+            } => (),
             _ => return Err(param),
         }
 
@@ -526,9 +541,12 @@ mod tests {
 
     #[test]
     fn compiler_option_string_with_three_plus_equals_parses_correctly() {
-        const INPUT: &str = r#"compile_well_known_types,disable_comments=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
+        const INPUT: &str = r#"enable_type_names,compile_well_known_types,disable_comments=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
 
         let expected: &[Param] = &[
+            Param::Parameter {
+                param: "enable_type_names",
+            },
             Param::Parameter {
                 param: "compile_well_known_types",
             },

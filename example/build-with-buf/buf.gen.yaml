@@ -8,6 +8,7 @@ plugins:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
+      - enable_type_names
   - plugin: prost-serde
     #path: ../../target/debug/protoc-gen-prost-serde
     out: src/gen

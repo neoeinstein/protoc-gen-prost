@@ -39,6 +39,7 @@ from that crate:
 * `retain_enum_prefix(=<boolean>)`:  [retain_enum_prefix](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.retain_enum_prefix)
 * `field_attribute=<proto_path>=<attribute>`: [field_attribute](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.field_attribute)
 * `type_attribute=<proto_path>=<attribute>`: [type_attribute](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.type_attribute)
+* `enable_type_names(=<boolean>)`: [enable_type_names](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.enable_type_names)
 
 In addition, the following options can also be specified:
 

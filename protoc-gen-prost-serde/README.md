@@ -35,12 +35,12 @@ from that crate:
 
 * `btree_map=<proto_path>`: [btree_map](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.btree_map)
 * `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
-* `extern_path=<proto_path>=<rust_path>`:  [extern_path](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.extern_path)
-* `retain_enum_prefix(=<boolean>)`:  [retain_enum_prefix](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.retain_enum_prefix)
-* `preserve_proto_field_names=(<boolean>)`: `[preserve_proto_field_names](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.preserve_proto_field_names)
-* `ignore_unknown_fields=(<boolean>)`: `[ignore_unknown_fields](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.ignore_unknown_fields)
-* `emit_fields=(<boolean>)`: `[emit_fields](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.emit_fields)
-* `use_integers_for_enums=(<boolean>)`: `[use_integers_for_enums](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.use_integers_for_enums)
+* `extern_path=<proto_path>=<rust_path>`: [extern_path](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.extern_path)
+* `retain_enum_prefix(=<boolean>)`: [retain_enum_prefix](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.retain_enum_prefix)
+* `preserve_proto_field_names=(<boolean>)`: [preserve_proto_field_names](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.preserve_proto_field_names)
+* `ignore_unknown_fields=(<boolean>)`: [ignore_unknown_fields](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.ignore_unknown_fields)
+* `emit_fields=(<boolean>)`: [emit_fields](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.emit_fields)
+* `use_integers_for_enums=(<boolean>)`: [use_integers_for_enums](https://docs.rs/pbjson-build/latest/pbjson_build/struct.Builder.html#method.use_integers_for_enums)
 
 In addition, the following options can also be specified:
 

@@ -34,7 +34,7 @@ that are expected to have been completely handled in an earlier
 see the related documentation from `tonic-build`:
 
 * `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
-* `extern_path=<proto_path>=<rust_path>`:  [extern_path](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.extern_path)
+* `extern_path=<proto_path>=<rust_path>`: [extern_path](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.extern_path)
 * `compile_well_known_types(=<boolean>)`: [compile_well_known_types](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.compile_well_known_types)
 * `disable_package_emission(=<boolean>)`: [disable_package_emission](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.disable_package_emission)
 * `server_attribute=<proto_path>=<attribute>`: [server_attribute](https://docs.rs/tonic-build/latest/tonic_build/struct.Builder.html#method.server_attribute)

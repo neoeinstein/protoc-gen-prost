@@ -30,6 +30,7 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         request.proto_file,
         raw_request,
         params.prost.default_package_filename(),
+        params.prost.flat_output_dir,
     )?;
     let file_descriptor_set_generator = params
         .file_descriptor_set
@@ -56,6 +57,7 @@ impl ModuleRequestSet {
         proto_file: Vec<FileDescriptorProto>,
         raw_request: &[u8],
         default_package_filename: Option<&str>,
+        flat_output_dir: bool,
     ) -> std::result::Result<Self, prost::DecodeError>
     where
         I: IntoIterator<Item = String>,
@@ -67,6 +69,7 @@ impl ModuleRequestSet {
             proto_file,
             raw_protos,
             default_package_filename.unwrap_or("_"),
+            flat_output_dir,
         ))
     }
 
@@ -75,6 +78,7 @@ impl ModuleRequestSet {
         proto_file: Vec<FileDescriptorProto>,
         raw_protos: RawProtos,
         default_package_filename: &str,
+        flat_output_dir: bool,
     ) -> Self
     where
         I: IntoIterator<Item = String>,
@@ -88,7 +92,7 @@ impl ModuleRequestSet {
                 let proto_filename = proto.name();
                 let entry = acc
                     .entry(module.clone())
-                    .or_insert_with(|| ModuleRequest::new(proto.package().to_owned(), module));
+                    .or_insert_with(|| ModuleRequest::new(proto.package().to_owned(), module, flat_output_dir));
 
                 if entry.output_filename().is_none() && input_protos.contains(proto_filename) {
                     let filename = match proto.package() {
@@ -125,16 +129,18 @@ impl ModuleRequestSet {
 pub struct ModuleRequest {
     proto_package_name: String,
     module: Module,
+    flat_output_dir: bool,
     output_filename: Option<String>,
     files: Vec<FileDescriptorProto>,
     raw: Vec<Vec<u8>>,
 }
 
 impl ModuleRequest {
-    fn new(proto_package_name: String, module: Module) -> Self {
+    fn new(proto_package_name: String, module: Module, flat_output_dir: bool) -> Self {
         Self {
             proto_package_name,
             module,
+            flat_output_dir,
             output_filename: None,
             files: Vec::new(),
             raw: Vec::new(),
@@ -161,6 +167,9 @@ impl ModuleRequest {
     }
 
     pub fn output_dir(&self) -> String {
+        if self.flat_output_dir {
+            return String::new();
+        }
         let mut output_dir = self.module.parts().collect::<Vec<_>>().join("/");
         if !output_dir.is_empty() {
             output_dir.push('/');
@@ -246,6 +255,7 @@ struct ProstParameters {
     compile_well_known_types: bool,
     retain_enum_prefix: bool,
     enable_type_names: bool,
+    flat_output_dir: bool,
 }
 
 impl ProstParameters {
@@ -387,6 +397,17 @@ impl ProstParameters {
             } => self.enable_type_names = true,
             Param::Value {
                 param: "enable_type_names",
+                value: "false",
+            } => (),
+            Param::Parameter {
+                param: "flat_output_dir",
+            }
+            | Param::Value {
+                param: "flat_output_dir",
+                value: "true",
+            } => self.flat_output_dir = true,
+            Param::Value {
+                param: "flat_output_dir",
                 value: "false",
             } => (),
             _ => return Err(param),
@@ -568,9 +589,12 @@ mod tests {
 
     #[test]
     fn compiler_option_string_with_three_plus_equals_parses_correctly() {
-        const INPUT: &str = r#"enable_type_names,compile_well_known_types,disable_comments=.,skip_debug=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
+        const INPUT: &str = r#"flat_output_dir,enable_type_names,compile_well_known_types,disable_comments=.,skip_debug=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
 
         let expected: &[Param] = &[
+            Param::Parameter {
+                param: "flat_output_dir",
+            },
             Param::Parameter {
                 param: "enable_type_names",
             },

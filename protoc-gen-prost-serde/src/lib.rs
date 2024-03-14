@@ -25,6 +25,7 @@ pub fn execute(raw_request: &[u8]) -> protoc_gen_prost::Result {
         request.proto_file,
         raw_request,
         params.default_package_filename.as_deref(),
+        params.flat_output_dir,
     )?;
 
     let files = PbJsonGenerator::new(builder, !params.no_include).generate(&module_request_set)?;
@@ -46,6 +47,7 @@ struct Parameters {
     use_integers_for_enums: bool,
     no_include: bool,
     btree_map: Vec<String>,
+    flat_output_dir: bool,
 }
 
 impl Parameters {
@@ -162,6 +164,17 @@ impl str::FromStr for Parameters {
                     param: "btree_map",
                     value,
                 } => ret_val.btree_map.push(value.to_string()),
+                Param::Parameter {
+                    param: "flat_output_dir",
+                }
+                | Param::Value {
+                    param: "flat_output_dir",
+                    value: "true",
+                } => ret_val.flat_output_dir = true,
+                Param::Value {
+                    param: "flat_output_dir",
+                    value: "false",
+                } => (),
                 _ => return Err(InvalidParameter::from(param)),
             }
         }

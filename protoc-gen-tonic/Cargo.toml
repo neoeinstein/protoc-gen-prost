@@ -18,15 +18,10 @@ exclude = ["proto"]
 [dependencies]
 heck = "0.4.0"
 prettyplease = "0.2.9"
-prost-build = { version = "0.12.3", default-features = false }
-prost-types = { version = "0.12.3", default-features = false }
-prost = { version = "0.12.3", default-features = false, features = ["std"] }
+prost-build.workspace = true
+prost-types.workspace = true
+prost.workspace = true
 protoc-gen-prost = { version = "0.3.1", path = "../protoc-gen-prost" }
-regex = { version = "1.5.5", default-features = false }
+regex.workspace = true
 syn = { version = "2.0.22", features = ["parsing", "full"] }
-tonic-build = { version = "0.11.0", features = [] }
-
-[profile.release]
-codegen-units = 1
-lto = "fat"
-debug = true
+tonic-build.workspace = true

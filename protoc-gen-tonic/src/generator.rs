@@ -1,8 +1,11 @@
-use prost_build::{Module, Service};
+use proc_macro2::TokenStream;
+use prost_build::{Method, Module, Service};
 use prost_types::{
     compiler::code_generator_response::File, FileDescriptorProto, ServiceDescriptorProto,
 };
 use protoc_gen_prost::{Generator, ModuleRequest, ModuleRequestSet, Result};
+use quote::ToTokens;
+use syn::Path;
 use tonic_build::Attributes;
 
 use crate::{resolver::Resolver, util};
@@ -29,6 +32,100 @@ impl Generator for TonicGenerator {
     }
 }
 
+/// A new type wrapper for a prost [`Service`] that implements [`tonic_build::Service`].
+struct ProstService(Service, Vec<ProstMethod>);
+
+impl tonic_build::Service for ProstService {
+    type Comment = String;
+    type Method = ProstMethod;
+
+    fn name(&self) -> &str {
+        &self.0.name
+    }
+
+    fn package(&self) -> &str {
+        &self.0.package
+    }
+
+    fn identifier(&self) -> &str {
+        &self.0.proto_name
+    }
+
+    fn methods(&self) -> &[Self::Method] {
+        &self.1[..]
+    }
+
+    fn comment(&self) -> &[Self::Comment] {
+        &self.0.comments.leading[..]
+    }
+}
+
+/// A new type wrapper for a prost [`Method`] that implements [`tonic_build::Method`].
+struct ProstMethod(Method);
+
+impl tonic_build::Method for ProstMethod {
+    type Comment = String;
+
+    fn name(&self) -> &str {
+        &self.0.name
+    }
+
+    fn identifier(&self) -> &str {
+        &self.0.proto_name
+    }
+
+    fn codec_path(&self) -> &str {
+        "tonic::codec::ProstCodec"
+    }
+
+    fn client_streaming(&self) -> bool {
+        self.0.client_streaming
+    }
+
+    fn server_streaming(&self) -> bool {
+        self.0.server_streaming
+    }
+
+    fn comment(&self) -> &[Self::Comment] {
+        &self.0.comments.leading[..]
+    }
+
+    fn request_response_name(
+        &self,
+        proto_path: &str,
+        compile_well_known_types: bool,
+    ) -> (TokenStream, TokenStream) {
+        // This implementation was copied from
+        // https://github.com/hyperium/tonic/blob/941726cc46b995dcc393c9d2b462d440bd3514f3/tonic-build/src/prost.rs#L159-L190
+
+        // Non-path Rust types allowed for request/response types.
+        const NON_PATH_TYPE_ALLOWLIST: &[&str] = &["()"];
+
+        fn is_google_type(ty: &str) -> bool {
+            ty.starts_with(".google.protobuf")
+        }
+
+        let convert_type = |proto_type: &str, rust_type: &str| -> TokenStream {
+            if (is_google_type(proto_type) && !compile_well_known_types)
+                || rust_type.starts_with("::")
+                || NON_PATH_TYPE_ALLOWLIST.iter().any(|ty| *ty == rust_type)
+            {
+                rust_type.parse::<TokenStream>().unwrap()
+            } else if rust_type.starts_with("crate::") {
+                syn::parse_str::<Path>(rust_type).unwrap().to_token_stream()
+            } else {
+                syn::parse_str::<Path>(&format!("{}::{}", proto_path, rust_type))
+                    .unwrap()
+                    .to_token_stream()
+            }
+        };
+
+        let request = convert_type(&self.0.input_proto_type, &self.0.input_type);
+        let response = convert_type(&self.0.output_proto_type, &self.0.output_type);
+        (request, response)
+    }
+}
+
 impl TonicGenerator {
     fn handle_module_request(&self, module: &Module, request: &ModuleRequest) -> Option<Vec<File>> {
         const PROTO_PATH: &str = "super";
@@ -44,7 +141,12 @@ impl TonicGenerator {
                     .filter_map(|(service_index, descriptor)| {
                         self.prepare_service(module, file, descriptor, service_index)
                     })
-                    .flat_map(|service| {
+                    .flat_map(|mut service| {
+                        let methods = std::mem::take(&mut service.methods)
+                            .into_iter()
+                            .map(ProstMethod)
+                            .collect();
+                        let service = ProstService(service, methods);
                         let client = self.generate_client.then(|| {
                             tonic_build::CodeGenBuilder::new()
                                 .emit_package(self.emit_package)

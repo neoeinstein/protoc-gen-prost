@@ -16,12 +16,14 @@ exclude = ["proto"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-heck = "0.4.0"
+heck = "0.5.0"
 prettyplease = "0.2.9"
+proc-macro2 = "1.0"
 prost-build.workspace = true
 prost-types.workspace = true
 prost.workspace = true
 protoc-gen-prost = { version = "0.3.1", path = "../protoc-gen-prost" }
+quote = "1.0"
 regex.workspace = true
 syn = { version = "2.0.22", features = ["parsing", "full"] }
 tonic-build.workspace = true

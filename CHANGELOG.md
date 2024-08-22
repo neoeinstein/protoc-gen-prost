@@ -4,6 +4,25 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2024-08-22]
+
+- `protoc-gen-prost` 0.4.0
+- `protoc-gen-prost-crate` 0.4.1
+- `protoc-gen-prost-serde` 0.3.1
+- `protoc-gen-tonic` 0.4.1
+
+### BREAKING CHANGES
+
+- Updated code generation for latest tonic (0.12), prost (0.13), and pbjson (0.7)  ([#97])
+  - In these cases, only core prost code generation results in potentially breaking due to a new trait method
+  - Thanks to @mbrobbel!
+
+### Changed
+
+- Updated the versions of `heck`, `itertools`, `syn`, `quote`, `proc-macro2`, `prettyplease`
+
+[#97]: https://github.com/neoeinstein/protoc-gen-prost/pull/97
+
 ## [2024-02-15]
 
 - `protoc-gen-prost` 0.3.1

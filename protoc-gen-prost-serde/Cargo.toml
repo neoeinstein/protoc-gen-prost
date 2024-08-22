@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-prost-serde"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin providing JSON serializations"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"
@@ -19,5 +19,5 @@ pbjson-build.workspace = true
 prost-build.workspace = true
 prost-types.workspace = true
 prost.workspace = true
-protoc-gen-prost = { version = "0.3.1", path = "../protoc-gen-prost" }
+protoc-gen-prost = { version = "0.4.0", path = "../protoc-gen-prost" }
 regex.workspace = true

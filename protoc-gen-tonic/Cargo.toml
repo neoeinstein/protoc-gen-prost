@@ -1,6 +1,6 @@
 [package]
 name = "protoc-gen-tonic"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Marcus Griep <marcus@griep.us>"]
 description = "Protocol Buffers compiler plugin for gRPC services powered by Prost! and Tonic"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"
@@ -22,7 +22,7 @@ proc-macro2 = "1.0"
 prost-build.workspace = true
 prost-types.workspace = true
 prost.workspace = true
-protoc-gen-prost = { version = "0.3.1", path = "../protoc-gen-prost" }
+protoc-gen-prost = { version = "0.4.0", path = "../protoc-gen-prost" }
 quote = "1.0"
 regex.workspace = true
 syn = { version = "2.0.22", features = ["parsing", "full"] }

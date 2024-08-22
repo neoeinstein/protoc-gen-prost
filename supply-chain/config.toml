@@ -7,6 +7,9 @@ version = "0.9"
 [imports.bytecode-alliance]
 url = "https://raw.githubusercontent.com/bytecodealliance/wasmtime/main/supply-chain/audits.toml"
 
+[imports.google]
+url = "https://raw.githubusercontent.com/google/supply-chain/main/audits.toml"
+
 [imports.mozilla]
 url = "https://raw.githubusercontent.com/mozilla/supply-chain/main/audits.toml"
 
@@ -32,16 +35,8 @@ audit-as-crates-io = false
 version = "1.0.66"
 criteria = "safe-to-deploy"
 
-[[exemptions.bitflags]]
-version = "1.3.2"
-criteria = "safe-to-deploy"
-
 [[exemptions.bytes]]
 version = "1.2.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.fastrand]]
-version = "1.8.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.fixedbitset]]
@@ -76,10 +71,6 @@ criteria = "safe-to-deploy"
 version = "0.6.2"
 criteria = "safe-to-deploy"
 
-[[exemptions.prettyplease]]
-version = "0.1.21"
-criteria = "safe-to-deploy"
-
 [[exemptions.redox_syscall]]
 version = "0.2.16"
 criteria = "safe-to-deploy"
@@ -92,18 +83,10 @@ criteria = "safe-to-deploy"
 version = "0.6.28"
 criteria = "safe-to-deploy"
 
-[[exemptions.syn]]
-version = "1.0.103"
-criteria = "safe-to-deploy"
-
 [[exemptions.tempfile]]
 version = "3.3.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.unicode-ident]]
 version = "1.0.5"
-criteria = "safe-to-deploy"
-
-[[exemptions.which]]
-version = "4.3.0"
 criteria = "safe-to-deploy"

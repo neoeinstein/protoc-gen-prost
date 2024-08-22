@@ -9,6 +9,15 @@ members = [
     "protoc-wkt",
 ]
 
+[workspace.dependencies]
+once_cell = "1.10.0"
+pbjson-build = "0.7.0"
+prost = { version = "0.13.1", default-features = false, features = ["std"] }
+prost-build = { version = "0.13.1", default-features = false }
+prost-types = { version = "0.13.1", default-features = false }
+regex = { version = "1.5.5", default-features = false }
+tonic-build = "0.12.0"
+
 [profile.release]
 codegen-units = 1
 lto = "fat"

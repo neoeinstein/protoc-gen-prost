@@ -36,6 +36,11 @@ who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "0.10.5 -> 0.11.0"
 
+[[audits.itertools]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.12.1 -> 0.13.0"
+
 [[audits.once_cell]]
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
@@ -45,6 +50,11 @@ delta = "1.16.0 -> 1.17.1"
 who = "Marcus Griep <marcus@griep.us>"
 criteria = "safe-to-deploy"
 delta = "1.17.1 -> 1.18.0"
+
+[[audits.pbjson-build]]
+who = "Marcus Griep <marcus@griep.us>"
+criteria = "safe-to-deploy"
+delta = "0.6.2 -> 0.7.0"
 
 [[audits.petgraph]]
 who = "Marcus Griep <marcus@griep.us>"
@@ -189,6 +199,12 @@ user-id = 133947 # Raphael Taylor-Davies (tustvold)
 start = "2021-09-28"
 end = "2025-02-14"
 
+[[trusted.prettyplease]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2022-01-04"
+end = "2025-08-22"
+
 [[trusted.prost]]
 criteria = "safe-to-deploy"
 user-id = 3959 # Lucio Franco (LucioFranco)
@@ -218,6 +234,12 @@ criteria = "safe-to-deploy"
 user-id = 6825 # Dan Gohman (sunfishcode)
 start = "2021-10-29"
 end = "2025-02-14"
+
+[[trusted.syn]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-01"
+end = "2025-08-22"
 
 [[trusted.tonic-build]]
 criteria = "safe-to-deploy"

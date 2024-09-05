@@ -71,9 +71,9 @@ The following will just produce an include file `mod.rs` in the output `gen`
 directory without any conditional compilation feature flags:
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost-crate
+  - local: prost-crate
     out: gen
     strategy: all
     opt:
@@ -84,14 +84,14 @@ When using the `gen_crate` option, later Rust generators should generate
 into the `src` directory which will be created by this plugin:
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - plugin: prost-crate
+  - local: prost-crate
     out: gen
     strategy: all
     opt:
@@ -103,14 +103,14 @@ push more files for output than desired. To limit the packages that get
 put into the include file, used the `only_include` option:
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - plugin: prost-crate
+  - local: prost-crate
     out: gen
     strategy: all
     opt:
@@ -128,9 +128,9 @@ so template information cannot be used. The plugin is referenced as follows:
 [1]: https://buf.build/community/neoeinstein-prost-crate
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: buf.build/community/neoeinstein-prost-crate:v0.3.1
+  - remote: buf.build/community/neoeinstein-prost-crate:v0.4.1
     out: gen
 ```
 
@@ -221,14 +221,14 @@ prost = "0.10.0"
 `buf.gen.yaml`:
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: prost
     out: src
     opt:
       - bytes=.
       - file_descriptor_set
-  - plugin: prost-crate
+  - local: prost-crate
     out: gen
     strategy: all
     opt:

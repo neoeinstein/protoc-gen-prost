@@ -99,11 +99,11 @@ When used with _buf_, options can be specified in the `buf.gen.yaml` file.
 `protoc-gen-prost` steps.
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: prost
     out: gen
-  - plugin: tonic
+  - local: tonic
     out: gen
 ```
 
@@ -118,9 +118,9 @@ for use. The plugin is referenced as follows:
 [1]: https://buf.build/community/neoeinstein-tonic
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: buf.build/community/neoeinstein-tonic:v0.3.0
+  - remote: buf.build/community/neoeinstein-tonic:v0.4.1
     out: gen
 ```
 
@@ -130,21 +130,21 @@ Then you can depend on this crate from the binary that will host the server
 or use the client.
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: prost
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - plugin: prost-serde
+  - local: prost-serde
     out: gen/src
-  - plugin: tonic
+  - local: tonic
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - plugin: prost
+  - local: prost
     out: gen
     opt:
       - gen_crate=Cargo.toml.tpl

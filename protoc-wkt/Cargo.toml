@@ -11,11 +11,6 @@ edition = "2021"
 readme = "README.md"
 keywords = ["protobuf", "grpc", "tonic", "prost"]
 categories = ["encoding"]
-exclude = [
-  "buf.gen.yaml",
-  "buf.work.yaml",
-  "proto",
-]
+exclude = ["buf.gen.yaml", "proto"]
 
 [dependencies]
-

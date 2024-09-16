@@ -48,6 +48,7 @@ struct Parameters {
     no_include: bool,
     btree_map: Vec<String>,
     flat_output_dir: bool,
+    exclude: Vec<String>,
 }
 
 impl Parameters {
@@ -83,6 +84,10 @@ impl Parameters {
         }
 
         builder.btree_map(self.btree_map.clone());
+        
+        if !self.exclude.is_empty() {
+            builder.exclude(self.exclude.clone());
+        }
 
         builder
     }
@@ -175,6 +180,10 @@ impl str::FromStr for Parameters {
                     param: "flat_output_dir",
                     value: "false",
                 } => (),
+                Param::Value {
+                    param: "exclude",
+                    value: prefix,
+                } => ret_val.exclude.push(prefix.to_string()),
                 _ => return Err(InvalidParameter::from(param)),
             }
         }

@@ -23,6 +23,7 @@ pub fn execute(raw_request: &[u8]) -> protoc_gen_prost::Result {
         request.proto_file,
         raw_request,
         params.default_package_filename.as_deref(),
+        params.flat_output_dir,
     )?;
 
     let resolver = Resolver::new(params.extern_path, params.compile_well_known_types);
@@ -57,6 +58,7 @@ struct Parameters {
     no_client: bool,
     no_transport: bool,
     no_include: bool,
+    flat_output_dir: bool,
 }
 
 impl str::FromStr for Parameters {
@@ -167,6 +169,17 @@ impl str::FromStr for Parameters {
                 } => ret_val
                     .server_attributes
                     .push_struct(prefix, attribute.replace(r"\,", ",").replace(r"\\", r"\")),
+                Param::Parameter {
+                    param: "flat_output_dir",
+                }
+                | Param::Value {
+                    param: "flat_output_dir",
+                    value: "true",
+                } => ret_val.flat_output_dir = true,
+                Param::Value {
+                    param: "flat_output_dir",
+                    value: "false",
+                } => (),
                 _ => return Err(InvalidParameter::from(param)),
             }
         }

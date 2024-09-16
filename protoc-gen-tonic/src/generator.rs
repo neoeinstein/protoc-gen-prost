@@ -188,8 +188,9 @@ impl TonicGenerator {
                 })?);
             }
 
+            let out_dir = request.output_dir();
             res.push(File {
-                name: Some(output_filename),
+                name: Some(out_dir + &output_filename),
                 content: Some(format!("// @generated\n{}", prettyplease::unparse(&file))),
                 ..File::default()
             });

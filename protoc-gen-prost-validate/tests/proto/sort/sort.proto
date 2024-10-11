@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tests.harness.cases.sort;
+option go_package = "tests/proto/cases/sort;sort";
+
+enum Direction {
+    UNKNOWN_DIRECTION = 0;
+    ASC = 1;
+    DESC = 2;
+}

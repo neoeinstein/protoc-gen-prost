@@ -20,5 +20,6 @@ pbjson-types = "0.8.0"
 serde = "1.0.228"
 tonic = { version = "0.14.2", features = ["gzip"] }
 tonic-prost = "0.14.2"
+prost-validate = { version = "0.2.9" }
 
 [workspace]

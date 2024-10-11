@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package example;
 
+import "validate/validate.proto";
+
 message ExampleRequest {
-    string example = 1;
+    string example = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
 }

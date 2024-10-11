@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package company.product.v1;
+
+import "validate/validate.proto";
+
+enum X {
+  e1 = 0;
+  e2 = 1;
+  e3 = 2;
+}
+
+message A {
+  enum Y {
+    e1 = 0;
+    e2 = 1;
+    e3 = 2;
+  }
+  message B {
+    enum Z {
+      e1 = 0;
+      e2 = 1;
+      e3 = 2;
+    }
+    oneof o {
+      option (validate.required) = true;
+      string s = 1 [(validate.rules).string.min_len = 1];
+      int32 i = 2 [(validate.rules).int32.lt = 10];
+      Y y = 3 [(validate.rules).enum.defined_only = true];
+    }
+    message C {
+      oneof o {
+        option (validate.required) = true;
+        string s = 1 [(validate.rules).string.min_len = 1];
+        int32 i = 2 [(validate.rules).int32.lt = 10];
+        Z z = 3 [(validate.rules).enum.defined_only = true];
+      }
+    }
+     Z z = 4 [(validate.rules).enum.defined_only = true];
+  }
+  oneof o {
+    option (validate.required) = true;
+    string s = 1 [(validate.rules).string.min_len = 1];
+    int32 i = 2 [(validate.rules).int32.lt = 10];
+    Y y2 = 3 [(validate.rules).enum.defined_only = true];
+  }
+  X x = 4 [(validate.rules).enum.defined_only = true];
+  Y y = 5 [(validate.rules).enum.defined_only = true];
+}

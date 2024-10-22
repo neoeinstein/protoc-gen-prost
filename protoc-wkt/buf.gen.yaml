@@ -1,6 +1,6 @@
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: src/gen
     opt:
       - file_descriptor_set

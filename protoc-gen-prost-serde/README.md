@@ -99,12 +99,12 @@ and `extern_path=.google.protobuf=::pbjson_types` options should be specified.
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - local: prost-serde
+  - local: protoc-gen-prost-serde
     out: gen
 ```
 
@@ -128,14 +128,14 @@ plugin:
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - local: prost-serde
+  - local: protoc-gen-prost-serde
     out: gen
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     strategy: all
     out: gen
     opt:

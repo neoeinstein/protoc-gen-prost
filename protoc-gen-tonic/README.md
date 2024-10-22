@@ -101,9 +101,9 @@ When used with _buf_, options can be specified in the `buf.gen.yaml` file.
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen
-  - local: tonic
+  - local: protoc-gen-tonic
     out: gen
 ```
 
@@ -132,19 +132,19 @@ or use the client.
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - local: prost-serde
+  - local: protoc-gen-prost-serde
     out: gen/src
-  - local: tonic
+  - local: protoc-gen-tonic
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - local: prost
+  - local: protoc-gen-prost
     out: gen
     opt:
       - gen_crate=Cargo.toml.tpl

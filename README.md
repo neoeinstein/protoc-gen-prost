@@ -57,7 +57,7 @@ plugins:
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:

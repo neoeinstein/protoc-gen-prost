@@ -77,7 +77,7 @@ When used with _buf_, options can be specified in the `buf.gen.yaml` file:
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen
     opt:
       - bytes=.
@@ -108,12 +108,12 @@ the `protoc-gen-prost-crate` plugin.
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:
@@ -142,14 +142,14 @@ Here is an example for _buf_ using the `protoc-gen-prost-serde` plugin:
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - local: prost-serde
+  - local: protoc-gen-prost-serde
     out: gen/src
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:

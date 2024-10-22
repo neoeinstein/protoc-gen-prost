@@ -73,7 +73,7 @@ directory without any conditional compilation feature flags:
 ```yaml
 version: v2
 plugins:
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:
@@ -86,12 +86,12 @@ into the `src` directory which will be created by this plugin:
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:
@@ -105,12 +105,12 @@ put into the include file, used the `only_include` option:
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:
@@ -223,12 +223,12 @@ prost = "0.10.0"
 ```yaml
 version: v2
 plugins:
-  - local: prost
+  - local: protoc-gen-prost
     out: src
     opt:
       - bytes=.
       - file_descriptor_set
-  - local: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:

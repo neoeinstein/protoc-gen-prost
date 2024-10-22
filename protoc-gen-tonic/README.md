@@ -95,7 +95,7 @@ protoc -I proto proto/greeter/v1/greeter.proto \
 ### Usage with _buf_
 
 When used with _buf_, options can be specified in the `buf.gen.yaml` file.
-`protoc-gen-prost-tonic` should appear as a plugin step after any
+`protoc-gen-tonic` should appear as a plugin step after any
 `protoc-gen-prost` steps.
 
 ```yaml
@@ -144,7 +144,7 @@ plugins:
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - local: protoc-gen-prost
+  - local: protoc-gen-prost-crate
     out: gen
     opt:
       - gen_crate=Cargo.toml.tpl

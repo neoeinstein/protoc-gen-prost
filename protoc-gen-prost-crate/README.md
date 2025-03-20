@@ -132,6 +132,8 @@ version: v1
 plugins:
   - plugin: buf.build/community/neoeinstein-prost-crate:v0.3.1
     out: gen
+    opt:
+      - no_features
 ```
 
 ## Cargo manifest template

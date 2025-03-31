@@ -20,7 +20,4 @@ pbjson-types = "0.7"
 serde = "1.0"
 tonic = { version = "0.13", features = ["gzip"] }
 
-[patch.crates-io]
-tonic = { git = "https://github.com/hyperium/tonic", branch = "master", revision = "5e9a5bc" } # tonic v0.13 (not yet released)
-
 [workspace]

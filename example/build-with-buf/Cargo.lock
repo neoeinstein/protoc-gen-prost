@@ -939,7 +939,8 @@ dependencies = [
 [[package]]
 name = "tonic"
 version = "0.13.0"
-source = "git+https://github.com/hyperium/tonic?branch=master#5e9a5bcdee2d89b9c88d2387ab95e2370a86a43d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85839f0b32fd242bb3209262371d07feda6d780d16ee9d2bc88581b89da1549b"
 dependencies = [
  "async-trait",
  "axum",

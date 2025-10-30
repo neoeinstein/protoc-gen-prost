@@ -75,7 +75,7 @@ impl tonic_build::Method for ProstMethod {
     }
 
     fn codec_path(&self) -> &str {
-        "tonic::codec::ProstCodec"
+        "tonic_prost::ProstCodec"
     }
 
     fn client_streaming(&self) -> bool {

@@ -33,6 +33,7 @@ from that crate:
 * `btree_map=<proto_path>`: [btree_map](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.btree_map)
 * `bytes=<proto_path>`: [bytes](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.bytes)
 * `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)
+* `skip_debug=<value>`: [skip_debug](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.skip_debug)
 * `disable_comments=<proto_path>`: [disable_comments](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.disable_comments)
 * `extern_path=<proto_path>=<rust_path>`: [extern_path](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.extern_path)
 * `compile_well_known_types(=<boolean>)`: [compile_well_known_types](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.compile_well_known_types)

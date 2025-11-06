@@ -201,34 +201,34 @@ impl ModuleRequest {
 ///
 /// [`Generator`]: crate::Generator
 #[derive(Debug, Default)]
-struct Parameters {
+pub struct Parameters {
     /// Prost parameters, used to generate [`prost_build::Config`]
-    prost: ProstParameters,
+    pub prost: ProstParameters,
 
     /// Whether a file descriptor set has been requested in each module
-    file_descriptor_set: bool,
+    pub file_descriptor_set: bool,
 }
 
 /// Parameters used to configure the underlying Prost generator
 #[derive(Debug, Default)]
-struct ProstParameters {
-    btree_map: Vec<String>,
-    bytes: Vec<String>,
-    disable_comments: Vec<String>,
-    default_package_filename: Option<String>,
-    extern_path: Vec<(String, String)>,
-    type_attribute: Vec<(String, String)>,
-    field_attribute: Vec<(String, String)>,
-    enum_attribute: Vec<(String, String)>,
-    message_attribute: Vec<(String, String)>,
-    compile_well_known_types: bool,
-    retain_enum_prefix: bool,
-    enable_type_names: bool,
+pub struct ProstParameters {
+    pub btree_map: Vec<String>,
+    pub bytes: Vec<String>,
+    pub disable_comments: Vec<String>,
+    pub default_package_filename: Option<String>,
+    pub extern_path: Vec<(String, String)>,
+    pub type_attribute: Vec<(String, String)>,
+    pub field_attribute: Vec<(String, String)>,
+    pub enum_attribute: Vec<(String, String)>,
+    pub message_attribute: Vec<(String, String)>,
+    pub compile_well_known_types: bool,
+    pub retain_enum_prefix: bool,
+    pub enable_type_names: bool,
 }
 
 impl ProstParameters {
     /// Builds a [`prost_build::Config`] from the parameters
-    fn to_prost_config(&self) -> prost_build::Config {
+    pub fn to_prost_config(&self) -> prost_build::Config {
         let mut config = prost_build::Config::new();
         config.btree_map(self.btree_map.iter());
         config.bytes(self.bytes.iter());
@@ -267,11 +267,11 @@ impl ProstParameters {
         config
     }
 
-    fn default_package_filename(&self) -> Option<&str> {
+    pub fn default_package_filename(&self) -> Option<&str> {
         self.default_package_filename.as_deref()
     }
 
-    fn try_handle_parameter<'a>(&mut self, param: Param<'a>) -> std::result::Result<(), Param<'a>> {
+    pub fn try_handle_parameter<'a>(&mut self, param: Param<'a>) -> std::result::Result<(), Param<'a>> {
         match param {
             Param::Value {
                 param: "btree_map",

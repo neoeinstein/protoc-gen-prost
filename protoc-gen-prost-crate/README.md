@@ -33,7 +33,7 @@ The following options can be specified:
   not specified, then the default value depends on whether `gen_crate` is
   specified. If it is, then `<value>` defaults to `src/lib.rs`. Otherwise, it
   defaults to `mod.rs`. The generated include file will add feature markers
-   to each produced module to allow for faster compilation and reduced sizes
+  to each produced module to allow for faster compilation and reduced sizes
   for unnecessary features. This can be disabled by specifying `no_features`.
 * `only_include=<proto_path>`: Will only include packages with the specified
   prefix in the generated include file and generated features list, if enabled.

@@ -215,6 +215,7 @@ struct ProstParameters {
     btree_map: Vec<String>,
     bytes: Vec<String>,
     disable_comments: Vec<String>,
+    skip_debug: Vec<String>,
     default_package_filename: Option<String>,
     extern_path: Vec<(String, String)>,
     type_attribute: Vec<(String, String)>,
@@ -233,6 +234,7 @@ impl ProstParameters {
         config.btree_map(self.btree_map.iter());
         config.bytes(self.bytes.iter());
         config.disable_comments(self.disable_comments.iter());
+        config.skip_debug(self.skip_debug.iter());
 
         if let Some(filename) = self.default_package_filename.as_deref() {
             config.default_package_filename(filename);
@@ -303,6 +305,10 @@ impl ProstParameters {
                 param: "disable_comments",
                 value,
             } => self.disable_comments.push(value.to_string()),
+            Param::Value {
+                param: "skip_debug",
+                value,
+            } => self.skip_debug.push(value.to_string()),
             Param::Parameter {
                 param: "retain_enum_prefix",
             }
@@ -541,7 +547,7 @@ mod tests {
 
     #[test]
     fn compiler_option_string_with_three_plus_equals_parses_correctly() {
-        const INPUT: &str = r#"enable_type_names,compile_well_known_types,disable_comments=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
+        const INPUT: &str = r#"enable_type_names,compile_well_known_types,disable_comments=.,skip_debug=.,extern_path=.google.protobuf=::pbjson_types,type_attribute=.=#[cfg(all(feature = "test"\, feature = "orange"))]"#;
 
         let expected: &[Param] = &[
             Param::Parameter {
@@ -552,6 +558,10 @@ mod tests {
             },
             Param::Value {
                 param: "disable_comments",
+                value: ".",
+            },
+            Param::Value {
+                param: "skip_debug",
                 value: ".",
             },
             Param::KeyValue {

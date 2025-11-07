@@ -17,7 +17,7 @@ bytes = "1.10.1"
 prost = "0.14.1"
 pbjson = "0.8.0"
 pbjson-types = "0.8.0"
-serde = "1.0.219"
-tonic = { version = "0.14.0", features = ["gzip"] }
+serde = "1.0.228"
+tonic = { version = "0.14.2", features = ["gzip"] }
 
 [workspace]

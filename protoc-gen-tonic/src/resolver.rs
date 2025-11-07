@@ -107,8 +107,7 @@ impl Resolver {
 
         let (down, prefix) = difference(from, &to);
 
-        iter::repeat("super".to_owned())
-            .take(down)
+        iter::repeat_n("super".to_owned(), down)
             .chain(to.parts().skip(prefix).map(|s| s.to_owned()))
             .chain(iter::once(util::to_upper_camel(type_name)))
             .reduce(|mut l, r| {

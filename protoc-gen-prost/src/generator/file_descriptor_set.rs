@@ -82,7 +82,7 @@ fn append_file_descriptor_set_bytes(
     if !chunks.remainder().is_empty() {
         buffer.push_str("    ");
         for byte in chunks.remainder() {
-            write!(buffer, "{:#04x}, ", byte).unwrap();
+            write!(buffer, "{byte:#04x}, ").unwrap();
         }
         let _ = buffer.pop();
         buffer.push('\n');

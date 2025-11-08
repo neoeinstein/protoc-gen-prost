@@ -252,7 +252,6 @@ struct ProstParameters {
     field_attribute: Vec<(String, String)>,
     enum_attribute: Vec<(String, String)>,
     message_attribute: Vec<(String, String)>,
-    skip_debug: Vec<String>,
     compile_well_known_types: bool,
     retain_enum_prefix: bool,
     enable_type_names: bool,
@@ -287,7 +286,6 @@ impl ProstParameters {
         for (proto_path, attribute) in &self.message_attribute {
             config.message_attribute(proto_path, attribute);
         }
-        config.skip_debug(&self.skip_debug);
 
         if self.compile_well_known_types {
             config.compile_well_known_types();
@@ -390,10 +388,6 @@ impl ProstParameters {
                 prefix.to_string(),
                 module.replace(r"\,", ",").replace(r"\\", r"\"),
             )),
-            Param::Value {
-                param: "skip_debug",
-                value,
-            } => self.skip_debug.push(value.to_string()),
             Param::Parameter {
                 param: "enable_type_names",
             }

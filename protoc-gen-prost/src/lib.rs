@@ -90,9 +90,9 @@ impl ModuleRequestSet {
             |mut acc, (proto, raw)| {
                 let module = Module::from_protobuf_package_name(proto.package());
                 let proto_filename = proto.name();
-                let entry = acc
-                    .entry(module.clone())
-                    .or_insert_with(|| ModuleRequest::new(proto.package().to_owned(), module, flat_output_dir));
+                let entry = acc.entry(module.clone()).or_insert_with(|| {
+                    ModuleRequest::new(proto.package().to_owned(), module, flat_output_dir)
+                });
 
                 if entry.output_filename().is_none() && input_protos.contains(proto_filename) {
                     let filename = match proto.package() {
@@ -120,7 +120,7 @@ impl ModuleRequestSet {
         self.requests.get(module)
     }
 
-    pub fn modules(&self) -> impl Iterator<Item=&Module> {
+    pub fn modules(&self) -> impl Iterator<Item = &Module> {
         self.requests.keys()
     }
 }

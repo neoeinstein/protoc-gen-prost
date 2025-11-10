@@ -39,8 +39,9 @@ impl Generator for PbJsonGenerator {
                     std::str::from_utf8(&bytes).expect("pbjson build produced non UTF-8 data"),
                 );
 
+                let out_dir = request.output_dir();
                 res.push(File {
-                    name: Some(output_filename),
+                    name: Some(out_dir + &output_filename),
                     content: Some(content),
                     ..File::default()
                 });

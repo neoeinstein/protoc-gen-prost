@@ -52,6 +52,10 @@ In addition, the following options can also be specified:
   exposure of useless or excess information. In addition, this module
   embeds the raw file descriptors without having first decoded them with
   _Prost!_, ensuring that extensions and unexpected tags are preserved.
+* `flat_output_dir(=<boolean>)`: When specified, the output directory
+  structure will be flattened, with all generated files placed directly
+  into the specified output directory. By default, the output directory
+  structure mirrors the input protobuf file paths.
 
 A note on parameter values:
 

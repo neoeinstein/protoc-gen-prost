@@ -21,6 +21,7 @@ pub fn execute(raw_request: &[u8]) -> Result {
         request.proto_file,
         raw_request,
         params.default_package_filename.as_deref(),
+        params.flat_output_dir,
     )?;
 
     let include_filename = if params.gen_crate.is_some() {
@@ -78,6 +79,7 @@ struct Parameters {
     ///
     /// Allowed characters are `-`, `+`, `_`, `.`.
     package_separator: Option<String>,
+    flat_output_dir: bool,
 }
 
 impl str::FromStr for Parameters {
@@ -126,6 +128,17 @@ impl str::FromStr for Parameters {
                     param: "package_separator",
                     value: value @ ("." | "-" | "+" | "_"),
                 } => ret_val.package_separator = Some(value.to_string()),
+                Param::Parameter {
+                    param: "flat_output_dir",
+                }
+                | Param::Value {
+                    param: "flat_output_dir",
+                    value: "true",
+                } => ret_val.flat_output_dir = true,
+                Param::Value {
+                    param: "flat_output_dir",
+                    value: "false",
+                } => (),
                 _ => return Err(InvalidParameter::from(param)),
             }
         }

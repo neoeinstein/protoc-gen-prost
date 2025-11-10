@@ -75,9 +75,9 @@ A note on parameter values:
 When used with _buf_, options can be specified in the `buf.gen.yaml` file:
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: protoc-gen-prost
     out: gen
     opt:
       - bytes=.
@@ -95,9 +95,9 @@ for use. The plugin is referenced as follows:
 [1]: https://buf.build/community/neoeinstein-prost
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: buf.build/community/neoeinstein-prost:v0.2.3
+  - remote: buf.build/community/neoeinstein-prost:v0.2.3
     out: gen
 ```
 
@@ -106,14 +106,14 @@ as a distinct step, as in the following example. For more information, see
 the `protoc-gen-prost-crate` plugin.
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: protoc-gen-prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - plugin: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:
@@ -140,16 +140,16 @@ Within the include file:
 Here is an example for _buf_ using the `protoc-gen-prost-serde` plugin:
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: protoc-gen-prost
     out: gen/src
     opt:
       - bytes=.
       - file_descriptor_set
-  - plugin: prost-serde
+  - local: protoc-gen-prost-serde
     out: gen/src
-  - plugin: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:

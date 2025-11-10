@@ -41,23 +41,23 @@ generation is not possible, as the manifest template is not made available to a
 remote plugin.
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: buf.build/community/neoeinstein-prost:v0.2.3
+  - remote: buf.build/community/neoeinstein-prost:v0.4.0
     out: gen/src
     opt:
       - bytes=.
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
-  - plugin: buf.build/community/neoeinstein-prost-serde:v0.2.3
+  - remote: buf.build/community/neoeinstein-prost-serde:v0.3.1
     out: gen/src
-  - plugin: buf.build/community/neoeinstein-tonic:v0.3.0
+  - remote: buf.build/community/neoeinstein-tonic:v0.4.1
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - plugin: prost-crate
+  - local: protoc-gen-prost-crate
     out: gen
     strategy: all
     opt:

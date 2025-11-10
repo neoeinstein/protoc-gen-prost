@@ -97,14 +97,14 @@ When used with _buf_, options can be specified in the `buf.gen.yaml` file.
 and `extern_path=.google.protobuf=::pbjson_types` options should be specified.
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: protoc-gen-prost
     out: gen
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - plugin: prost-serde
+  - local: protoc-gen-prost-serde
     out: gen
 ```
 
@@ -116,9 +116,9 @@ for use. The plugin is referenced as follows:
 [1]: https://buf.build/community/neoeinstein-prost-serde
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: buf.build/community/neoeinstein-prost-serde:v0.2.3
+  - remote: buf.build/community/neoeinstein-prost-serde:v0.3.1
     out: gen
 ```
 
@@ -126,16 +126,16 @@ plugins:
 plugin:
 
 ```yaml
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: protoc-gen-prost
     out: gen
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - plugin: prost-serde
+  - local: protoc-gen-prost-serde
     out: gen
-  - plugin: prost-crate
+  - local: protoc-gen-prost-crate
     strategy: all
     out: gen
     opt:

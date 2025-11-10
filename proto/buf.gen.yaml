@@ -1,6 +1,6 @@
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: protoc-gen-prost
     #path: ../target/debug/protoc-gen-prost
     out: gen/src
     opt:
@@ -8,16 +8,16 @@ plugins:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
-  - plugin: prost-serde
+  - local: protoc-gen-prost-serde
     #path: ../target/debug/protoc-gen-prost-serde
     out: gen/src
-  - plugin: tonic
+  - local: protoc-gen-tonic
     #path: ../target/debug/protoc-gen-tonic
     out: gen/src
     opt:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
-  - plugin: prost-crate
+  - local: protoc-gen-prost-crate
     #path: ../target/debug/protoc-gen-prost-crate
     out: gen
     strategy: all

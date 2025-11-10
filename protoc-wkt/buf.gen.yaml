@@ -1,6 +1,8 @@
-version: v1
+version: v2
 plugins:
-  - plugin: prost
+  - local: protoc-gen-prost
     out: src/gen
     opt:
       - file_descriptor_set
+inputs:
+  - directory: proto

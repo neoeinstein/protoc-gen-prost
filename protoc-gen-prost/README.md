@@ -30,6 +30,7 @@ This tool supports all the same options from `prost-build`. For more
 information on the effects of these settings, see the related documentation
 from that crate:
 
+* `boxed=<proto_path>`: [boxed](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.boxed)
 * `btree_map=<proto_path>`: [btree_map](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.btree_map)
 * `bytes=<proto_path>`: [bytes](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.bytes)
 * `default_package_filename=<value>`: [default_package_filename](https://docs.rs/prost-build/latest/prost_build/struct.Config.html#method.default_package_filename)

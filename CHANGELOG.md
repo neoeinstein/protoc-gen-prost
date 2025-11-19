@@ -4,6 +4,37 @@ This changelog is based on the format from [Keep a Changelog](https://keepachang
 
 ## [Unreleased]
 
+## [2025-11-19]
+
+- `protoc-gen-prost` 0.5.0
+- `protoc-gen-prost-crate` 0.5.0
+- `protoc-gen-prost-serde` 0.4.0
+- `protoc-gen-tonic` 0.5.0
+
+### BREAKING CHANGES
+
+- Updated code generation for latest tonic (0.14.1), prost (0.14.1), and pbjson (0.8.0) ([#123])
+  - Thanks to @ouillie!
+
+### Added
+
+- (prost) Added support for `boxed` configuration parameter ([#110])
+- (prost) Added support for `skip_debug` parameter ([#124])
+- (prost) Added support for organizing output by packages with `flat_output_dir` flag ([#89])
+  - Thanks to @aminfa, @ItsBlank, and @Jinwei1987!
+
+### Changed
+
+- Bumped buf config files to v2 ([#101])
+- Updated various dependencies
+  - Thanks to @stefanvanburen!
+
+[#89]: https://github.com/neoeinstein/protoc-gen-prost/pull/89
+[#101]: https://github.com/neoeinstein/protoc-gen-prost/pull/101
+[#110]: https://github.com/neoeinstein/protoc-gen-prost/pull/110
+[#123]: https://github.com/neoeinstein/protoc-gen-prost/pull/123
+[#124]: https://github.com/neoeinstein/protoc-gen-prost/pull/124
+
 ## [2024-08-22]
 
 - `protoc-gen-prost` 0.4.0

@@ -1,7 +1,7 @@
 [package]
 name = "protoc-wkt"
 version = "1.0.0+3.20.1"
-authors = ["Marcus Griep <marcus@griep.us>"]
+authors = ["Marcus Griep <marcus@griep.us>", "Sienna Meridian Satterwhite <sienna@r3t.io>"]
 description = "Google Protobuf well-known type file descriptor sets"
 repository = "https://github.com/neoeinstein/protoc-gen-prost"
 homepage = "https://github.com/neoeinstein/protoc-gen-prost"

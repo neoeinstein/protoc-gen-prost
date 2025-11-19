@@ -1,7 +1,7 @@
 [package]
 name = "protoc-gen-prost-validate"
 version = "0.0.1"
-authors = ["Marcus Griep <marcus@griep.us>"]
+authors = ["Marcus Griep <marcus@griep.us>", "Sienna Meridian Satterwhite <sienna@r3t.io>"]
 description = "Coming soon…"
 license = "Apache-2.0"
 edition = "2021"

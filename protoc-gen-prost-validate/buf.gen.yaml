@@ -1,0 +1,14 @@
+version: v2
+plugins:
+  - local: ../target/debug/protoc-gen-prost
+    out: tests/cases/gen
+    strategy: all
+  - local: ../target/debug/protoc-gen-prost-validate
+    out: tests/cases/gen
+    strategy: all
+  - local: ../target/debug/protoc-gen-prost-crate
+    out: .
+    strategy: all
+    opt:
+      - include_file=tests/cases/gen/mod.rs
+      - no_features

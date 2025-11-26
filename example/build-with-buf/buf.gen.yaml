@@ -4,13 +4,13 @@ plugins:
     #path: ../../target/debug/protoc-gen-prost
     out: src/gen
     opt:
-#      - bytes=.
-      - compile_well_known_types
-      - extern_path=.google.protobuf=::pbjson_types
+    # - bytes=.
+    # - compile_well_known_types
+    # - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
       - enable_type_names
   - local: protoc-gen-prost-serde
-    #path: ../../target/debug/protoc-gen-prost-serde
+    # path: ../../target/debug/protoc-gen-prost-serde
     out: src/gen
   - local: protoc-gen-tonic
     #path: ../../target/debug/protoc-gen-tonic
@@ -25,5 +25,15 @@ plugins:
     opt:
       - include_file=src/gen/mod.rs
       - gen_crate
+  - local: protoc-gen-prost-validate
+    # path: ../../target/debug/protoc-gen-prost-validate
+    out: src/gen
+    strategy: all
+    opt:
+    # - bytes=.
+    # - compile_well_known_types
+    # - extern_path=.google.protobuf=::pbjson_types
+    - enable_type_names
+
 inputs:
   - directory: proto

@@ -3,7 +3,8 @@
 use std::{
     borrow::Cow,
     collections::{BTreeMap, HashSet},
-    fmt, str,
+    fmt,
+    str::{self},
 };
 
 use once_cell::sync::Lazy;
@@ -36,7 +37,36 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         .file_descriptor_set
         .then_some(FileDescriptorSetGenerator);
 
-    let files = CoreProstGenerator::new(params.prost.to_prost_config())
+    let mut config = params.prost.to_prost_config();
+
+    if params.file_descriptor_set && params.prost_reflect {
+        let mut messages = Vec::new();
+        for (_, request) in module_request_set.requests() {
+            for file in request.files() {
+                let package_name = file.package();
+                for message in file.message_type.iter() {
+                    messages.push(format!("{}.{}", package_name, message.name()));
+                }
+            }
+        }
+
+        for full_name in &messages {
+            config
+                .type_attribute(full_name, "#[derive(::prost_reflect::ReflectMessage)]")
+                .type_attribute(
+                    full_name,
+                    // This relies on the fact that file_descriptor_set_generator will create a variable
+                    // named FILE_DESCRIPTOR_SET which contains the raw bytes of the file descriptor set.
+                    r#"#[prost_reflect(file_descriptor_set_bytes = "FILE_DESCRIPTOR_SET")]"#,
+                )
+                .type_attribute(
+                    full_name,
+                    format!("#[prost_reflect(message_name = \"{}\")]", full_name),
+                );
+        }
+    }
+
+    let files = CoreProstGenerator::new(config)
         .chain(file_descriptor_set_generator)
         .generate(&module_request_set)?;
 
@@ -237,6 +267,10 @@ struct Parameters {
 
     /// Whether a file descriptor set has been requested in each module
     file_descriptor_set: bool,
+
+    /// Whether to generate prost-reflect trait implementations for the generated
+    /// rust types using prost-reflect-build
+    prost_reflect: bool,
 }
 
 /// Parameters used to configure the underlying Prost generator
@@ -547,6 +581,17 @@ impl str::FromStr for Parameters {
                     } => ret_val.file_descriptor_set = true,
                     Param::Value {
                         param: "file_descriptor_set",
+                        value: "false",
+                    } => (),
+                    Param::Parameter {
+                        param: "prost_reflect",
+                    }
+                    | Param::Value {
+                        param: "prost_reflect",
+                        value: "true",
+                    } => ret_val.prost_reflect = true,
+                    Param::Value {
+                        param: "prost_reflect",
                         value: "false",
                     } => (),
                     _ => return Err(InvalidParameter::from(param)),

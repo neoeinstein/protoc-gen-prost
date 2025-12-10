@@ -33,9 +33,18 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         params.prost.default_package_filename(),
         params.prost.flat_output_dir,
     )?;
-    let file_descriptor_set_generator = params
-        .file_descriptor_set
-        .then_some(FileDescriptorSetGenerator);
+
+    let file_descriptor_set_generator = if params.file_descriptor_set {
+        Some(if params.prost_reflect {
+            // When using prost-reflect, we need to include all dependencies
+            FileDescriptorSetGenerator::with_all_dependencies()
+        } else {
+            // Normal mode: only include files from each module
+            FileDescriptorSetGenerator::new()
+        })
+    } else {
+        None
+    };
 
     let mut config = params.prost.to_prost_config();
 

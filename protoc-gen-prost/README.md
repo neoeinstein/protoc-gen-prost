@@ -57,6 +57,11 @@ In addition, the following options can also be specified:
   structure will be flattened, with all generated files placed directly
   into the specified output directory. By default, the output directory
   structure mirrors the input protobuf file paths.
+* `prost_reflect`: When specified together with `file_descriptor_set`, generate
+  implementations of [prost_reflect::ReflectMessage](https://docs.rs/prost-reflect/latest/prost_reflect/trait.ReflectMessage.html) trait for the generated rust struct. Note that this option
+  depends on `file_descriptor_set`, and when enabled, the generated `FileDescriptorSet`
+  *will* include all the dependent protobuf files in addition to the module being generated,
+  which required for prost_reflect descriptor to work.
 
 A note on parameter values:
 
@@ -85,6 +90,7 @@ plugins:
       - compile_well_known_types
       - extern_path=.google.protobuf=::pbjson_types
       - file_descriptor_set
+      - prost_reflect
       - type_attribute=.helloworld.v1.HelloWorld=#[derive(Eq\, Hash)]
 ```
 

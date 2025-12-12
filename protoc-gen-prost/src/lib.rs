@@ -64,8 +64,9 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
                 .type_attribute(full_name, "#[derive(::prost_reflect::ReflectMessage)]")
                 .type_attribute(
                     full_name,
-                    // This relies on the fact that file_descriptor_set_generator will create a variable
-                    // named FILE_DESCRIPTOR_SET which contains the raw bytes of the file descriptor set.
+                    // This relies on the fact that file_descriptor_set_generator will create a
+                    // variable named FILE_DESCRIPTOR_SET which contains the
+                    // raw bytes of the file descriptor set.
                     r#"#[prost_reflect(file_descriptor_set_bytes = "FILE_DESCRIPTOR_SET")]"#,
                 )
                 .type_attribute(

@@ -48,6 +48,9 @@ In addition, the following options can also be specified:
   by `protoc-gen-prost`. This behavior may be desired if this plugin is run
   in a separate `protoc` invocation and you encounter a `Tried to insert into
   file that doesn't exist` error.
+* `feature(=<string>)`:  Adds feature gate to all generated includes. If `no_include`
+  is set, this option has no effect. If the `<string>` value is not specified,
+  default feature name `"serde"` will be used.
 
 A note on parameter values:
 

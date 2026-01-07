@@ -8,6 +8,7 @@ pub struct PbJsonGenerator {
     builder: pbjson_build::Builder,
     prefixes: Vec<String>,
     insert_include: bool,
+    feature_name: Option<String>,
 }
 
 impl Generator for PbJsonGenerator {
@@ -27,6 +28,11 @@ impl Generator for PbJsonGenerator {
 
                 if self.insert_include {
                     res.push(request.append_to_file(|buf| {
+                        if let Some(feature_name) = &self.feature_name {
+                            buf.push_str("#[cfg(feature = ");
+                            buf.push_str(feature_name);
+                            buf.push_str(")]");
+                        }
                         buf.push_str("include!(\"");
                         buf.push_str(&output_filename);
                         buf.push_str("\");\n");
@@ -55,11 +61,16 @@ impl Generator for PbJsonGenerator {
 }
 
 impl PbJsonGenerator {
-    pub fn new(builder: pbjson_build::Builder, insert_include: bool) -> Self {
+    pub fn new(
+        builder: pbjson_build::Builder,
+        insert_include: bool,
+        feature_name: Option<String>,
+    ) -> Self {
         Self {
             builder,
             prefixes: vec![".".to_owned()],
             insert_include,
+            feature_name,
         }
     }
 }

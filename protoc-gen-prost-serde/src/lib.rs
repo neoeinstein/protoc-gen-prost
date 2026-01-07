@@ -28,7 +28,8 @@ pub fn execute(raw_request: &[u8]) -> protoc_gen_prost::Result {
         params.flat_output_dir,
     )?;
 
-    let files = PbJsonGenerator::new(builder, !params.no_include).generate(&module_request_set)?;
+    let files = PbJsonGenerator::new(builder, !params.no_include, params.feature)
+        .generate(&module_request_set)?;
 
     Ok(files)
 }
@@ -49,6 +50,7 @@ struct Parameters {
     btree_map: Vec<String>,
     flat_output_dir: bool,
     exclude: Vec<String>,
+    feature: Option<String>,
 }
 
 impl Parameters {
@@ -92,6 +94,9 @@ impl Parameters {
         builder
     }
 }
+
+/// This name will be used as a gate feature name when "feature" parameter is passed without value
+const DEFAULT_FEATURE_NAME: &str = "serde";
 
 impl str::FromStr for Parameters {
     type Err = InvalidParameter;
@@ -184,6 +189,13 @@ impl str::FromStr for Parameters {
                     param: "exclude",
                     value: prefix,
                 } => ret_val.exclude.push(prefix.to_string()),
+                Param::Parameter { param: "feature" } => {
+                    ret_val.feature = Some(DEFAULT_FEATURE_NAME.to_string())
+                }
+                Param::Value {
+                    param: "feature",
+                    value,
+                } => ret_val.feature = Some(value.to_string()),
                 _ => return Err(InvalidParameter::from(param)),
             }
         }

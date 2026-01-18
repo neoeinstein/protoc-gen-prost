@@ -29,9 +29,9 @@ impl Generator for PbJsonGenerator {
                 if self.insert_include {
                     res.push(request.append_to_file(|buf| {
                         if let Some(feature_name) = &self.feature_name {
-                            buf.push_str("#[cfg(feature = ");
+                            buf.push_str("#[cfg(feature = \"");
                             buf.push_str(feature_name);
-                            buf.push_str(")]");
+                            buf.push_str("\")]\n");
                         }
                         buf.push_str("include!(\"");
                         buf.push_str(&output_filename);

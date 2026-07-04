@@ -67,3 +67,6 @@ plugins:
 See `example/build-with-buf` for an example of invoking `buf` as part of a
 `build.rs` build script. This may be useful when you want to extend the
 generated files with additional trait or inherent implementations.
+
+See `example/wkt-reflection-with-buf` for registering well-known type file
+descriptor sets from `protoc-wkt` when exposing a gRPC reflection endpoint.

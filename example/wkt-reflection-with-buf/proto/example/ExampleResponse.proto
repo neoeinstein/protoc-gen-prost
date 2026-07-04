@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package example;
+
+message ExampleResponse {
+    sint32 count = 1;
+}

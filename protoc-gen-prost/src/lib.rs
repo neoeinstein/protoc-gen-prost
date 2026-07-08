@@ -12,7 +12,7 @@ use prost::Message;
 use prost_build::Module;
 use prost_types::{
     compiler::{code_generator_response::File, CodeGeneratorRequest},
-    FileDescriptorProto,
+    DescriptorProto, FileDescriptorProto,
 };
 
 use self::generator::{CoreProstGenerator, FileDescriptorSetGenerator};
@@ -52,10 +52,7 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         let mut messages = Vec::new();
         for (_, request) in module_request_set.requests() {
             for file in request.files() {
-                let package_name = file.package();
-                for message in file.message_type.iter() {
-                    messages.push(format!("{}.{}", package_name, message.name()));
-                }
+                collect_message_names(file.package(), &file.message_type, &mut messages);
             }
         }
 
@@ -81,6 +78,16 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         .generate(&module_request_set)?;
 
     Ok(files)
+}
+
+/// Recursively collect the fully-qualified names of all messages, including
+/// messages nested inside other messages.
+fn collect_message_names(package_name: &str, messages: &[DescriptorProto], out: &mut Vec<String>) {
+    for message in messages {
+        let full_name = format!("{}.{}", package_name, message.name());
+        out.push(full_name.clone());
+        collect_message_names(&full_name, &message.nested_type, out);
+    }
 }
 
 /// A set of requests to generate code for a series of modules
@@ -686,5 +693,63 @@ mod tests {
 
         let actual = Params::from_protoc_plugin_opts(INPUT).unwrap();
         assert_eq!(actual.params, expected);
+    }
+
+    #[test]
+    fn prost_reflect_applies_to_nested_messages() {
+        use prost::Message;
+        use prost_types::{
+            compiler::CodeGeneratorRequest,
+            field_descriptor_proto::{Label, Type},
+            FieldDescriptorProto,
+        };
+
+        let request = CodeGeneratorRequest {
+            file_to_generate: vec!["example.proto".to_owned()],
+            parameter: Some("file_descriptor_set,prost_reflect".to_owned()),
+            proto_file: vec![FileDescriptorProto {
+                name: Some("example.proto".to_owned()),
+                package: Some("example".to_owned()),
+                message_type: vec![DescriptorProto {
+                    name: Some("TestMessage".to_owned()),
+                    nested_type: vec![DescriptorProto {
+                        name: Some("MyInnerMessage".to_owned()),
+                        field: vec![FieldDescriptorProto {
+                            name: Some("value".to_owned()),
+                            number: Some(1),
+                            r#type: Some(Type::String as i32),
+                            label: Some(Label::Optional as i32),
+                            ..Default::default()
+                        }],
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }],
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
+
+        let encoded = request.encode_to_vec();
+        let files = execute(&encoded).expect("code generation failed");
+
+        let example_rs = files
+            .iter()
+            .find(|f| f.name.as_deref() == Some("example/example.rs"))
+            .map(|f| f.content.as_deref().unwrap_or_default())
+            .expect("example/example.rs not generated");
+
+        assert!(
+            example_rs.contains(r#"#[prost_reflect(message_name = "example.TestMessage")]"#),
+            "outer message should derive ReflectMessage:\n{}",
+            example_rs
+        );
+        assert!(
+            example_rs.contains(
+                r#"#[prost_reflect(message_name = "example.TestMessage.MyInnerMessage")]"#
+            ),
+            "nested message should derive ReflectMessage:\n{}",
+            example_rs
+        );
     }
 }

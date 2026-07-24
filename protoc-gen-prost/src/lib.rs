@@ -52,19 +52,25 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
         let mut messages = Vec::new();
         for (_, request) in module_request_set.requests() {
             for file in request.files() {
-                collect_message_names(file.package(), &file.message_type, &mut messages);
+                collect_message_names(file.package(), &file.message_type, 0, &mut messages);
             }
         }
 
-        for full_name in &messages {
+        for (full_name, nesting_depth) in &messages {
+            // file_descriptor_set_generator declares FILE_DESCRIPTOR_SET in the package-level
+            // module. A message nested `nesting_depth` levels deep lives in that many
+            // `pub mod <parent>` wrappers below it, so the reference needs a matching number of
+            // `super::` segments -- an unqualified name only resolves for top-level messages.
+            let file_descriptor_set_path =
+                format!("{}FILE_DESCRIPTOR_SET", "super::".repeat(*nesting_depth));
             config
                 .type_attribute(full_name, "#[derive(::prost_reflect::ReflectMessage)]")
                 .type_attribute(
                     full_name,
-                    // This relies on the fact that file_descriptor_set_generator will create a
-                    // variable named FILE_DESCRIPTOR_SET which contains the
-                    // raw bytes of the file descriptor set.
-                    r#"#[prost_reflect(file_descriptor_set_bytes = "FILE_DESCRIPTOR_SET")]"#,
+                    format!(
+                        r#"#[prost_reflect(file_descriptor_set_bytes = "{}")]"#,
+                        file_descriptor_set_path
+                    ),
                 )
                 .type_attribute(
                     full_name,
@@ -80,13 +86,18 @@ pub fn execute(raw_request: &[u8]) -> generator::Result {
     Ok(files)
 }
 
-/// Recursively collect the fully-qualified names of all messages, including
-/// messages nested inside other messages.
-fn collect_message_names(package_name: &str, messages: &[DescriptorProto], out: &mut Vec<String>) {
+/// Recursively collect the fully-qualified names of all messages, including messages nested
+/// inside other messages, together with each message's nesting depth (0 for top-level messages).
+fn collect_message_names(
+    package_name: &str,
+    messages: &[DescriptorProto],
+    nesting_depth: usize,
+    out: &mut Vec<(String, usize)>,
+) {
     for message in messages {
         let full_name = format!("{}.{}", package_name, message.name());
-        out.push(full_name.clone());
-        collect_message_names(&full_name, &message.nested_type, out);
+        out.push((full_name.clone(), nesting_depth));
+        collect_message_names(&full_name, &message.nested_type, nesting_depth + 1, out);
     }
 }
 
@@ -721,6 +732,17 @@ mod tests {
                             label: Some(Label::Optional as i32),
                             ..Default::default()
                         }],
+                        nested_type: vec![DescriptorProto {
+                            name: Some("MyDeepestMessage".to_owned()),
+                            field: vec![FieldDescriptorProto {
+                                name: Some("value".to_owned()),
+                                number: Some(1),
+                                r#type: Some(Type::String as i32),
+                                label: Some(Label::Optional as i32),
+                                ..Default::default()
+                            }],
+                            ..Default::default()
+                        }],
                         ..Default::default()
                     }],
                     ..Default::default()
@@ -749,6 +771,38 @@ mod tests {
                 r#"#[prost_reflect(message_name = "example.TestMessage.MyInnerMessage")]"#
             ),
             "nested message should derive ReflectMessage:\n{}",
+            example_rs
+        );
+        assert!(
+            example_rs.contains(
+                r#"#[prost_reflect(message_name = "example.TestMessage.MyInnerMessage.MyDeepestMessage")]"#
+            ),
+            "doubly-nested message should derive ReflectMessage:\n{}",
+            example_rs
+        );
+
+        // The `file_descriptor_set_bytes` path must be qualified with one `super::` per level of
+        // message nesting, since FILE_DESCRIPTOR_SET is declared at the package-module level while
+        // nested messages live inside `pub mod <parent>` wrappers. This is the fix for
+        // https://github.com/neoeinstein/protoc-gen-prost/issues/139.
+        assert!(
+            example_rs
+                .contains(r#"#[prost_reflect(file_descriptor_set_bytes = "FILE_DESCRIPTOR_SET")]"#),
+            "top-level message should reference FILE_DESCRIPTOR_SET directly:\n{}",
+            example_rs
+        );
+        assert!(
+            example_rs.contains(
+                r#"#[prost_reflect(file_descriptor_set_bytes = "super::FILE_DESCRIPTOR_SET")]"#
+            ),
+            "singly-nested message should reference super::FILE_DESCRIPTOR_SET:\n{}",
+            example_rs
+        );
+        assert!(
+            example_rs.contains(
+                r#"#[prost_reflect(file_descriptor_set_bytes = "super::super::FILE_DESCRIPTOR_SET")]"#
+            ),
+            "doubly-nested message should reference super::super::FILE_DESCRIPTOR_SET:\n{}",
             example_rs
         );
     }
